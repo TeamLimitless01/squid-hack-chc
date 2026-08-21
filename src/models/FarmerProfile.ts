@@ -1,8 +1,4 @@
-import mongoose, {
-  Document,
-  Model,
-  Schema,
-} from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 
 export interface IFarmerProfile extends Document {
   farmSize: {
@@ -12,11 +8,7 @@ export interface IFarmerProfile extends Document {
 
   crops: string[];
 
-  farmingType?:
-    | "small"
-    | "medium"
-    | "large"
-    | "commercial";
+  farmingType?: "small" | "medium" | "large" | "commercial";
 
   creditScore: number;
   creditLimit: number;
@@ -65,7 +57,7 @@ const farmerProfileSchema = new Schema<IFarmerProfile>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const FarmerProfile: Model<IFarmerProfile> =

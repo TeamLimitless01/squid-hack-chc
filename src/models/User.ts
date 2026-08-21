@@ -1,16 +1,8 @@
-import mongoose, {
-  Document,
-  Model,
-  Schema,
-  Types,
-} from "mongoose";
+import mongoose, { Document, Model, Schema, Types } from "mongoose";
 
 export type UserRole = "farmer" | "chc" | "driver";
 
-export type ProfileModel =
-  | "FarmerProfile"
-  | "CHCProfile"
-  | "DriverProfile";
+export type ProfileModel = "FarmerProfile" | "CHCProfile" | "DriverProfile";
 
 export interface IUser extends Document {
   name: string;
@@ -125,7 +117,7 @@ const userSchema = new Schema<IUser>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 userSchema.index({ location: "2dsphere" });
