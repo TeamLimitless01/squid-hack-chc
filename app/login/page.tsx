@@ -1,12 +1,13 @@
 "use client";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, ArrowRight, Mail, Lock } from "lucide-react";
 import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -34,9 +35,9 @@ export default function Login() {
         throw new Error(res.error);
       }
 
-      router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Login failed");
+      router.push(searchParams.get("from") || "/dashboard");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }
