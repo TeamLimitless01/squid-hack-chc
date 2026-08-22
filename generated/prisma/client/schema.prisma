@@ -1,0 +1,267 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  phone        String   @unique
+  password     String
+  role         String // "farmer", "chc", "driver"
+  profileModel String // "FarmerProfile", "CHCProfile", "DriverProfile"
+  profileId    String // String reference to the profile's ID
+  profileImage String?
+  address      String?
+  city         String?
+  state        String?
+  lat          Float    @default(0)
+  lng          Float    @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  farmerProfile FarmerProfile?
+  chcProfile    CHCProfile?
+  driverProfile DriverProfile?
+
+  bookingsAsFarmer Booking[]      @relation("FarmerBookings")
+  payments         Payment[]
+  reviews          Review[]
+  notifications    Notification[]
+}
+
+model FarmerProfile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  farmSizeValue Float
+  farmSizeUnit  String   @default("acre")
+  crops         String[]
+  farmingType   String?
+  creditScore   Int      @default(0)
+  creditLimit   Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model CHCProfile {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  centerName         String
+  registrationNumber String?  @unique
+  description        String?
+  verificationStatus String   @default("pending")
+  rating             Float    @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  drivers    DriverProfile[]
+  equipments Equipment[]
+  services   CHCService[]
+  bookings   Booking[]
+  payments   Payment[]
+  reviews    Review[]
+}
+
+model DriverProfile {
+  id                 String      @id @default(cuid())
+  userId             String      @unique
+  user               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  licenseNumber      String      @unique
+  licenseType        String?
+  licenseExpiry      DateTime?
+  experienceYears    Int         @default(0)
+  assignedCHCId      String?
+  assignedCHC        CHCProfile? @relation(fields: [assignedCHCId], references: [id])
+  availabilityStatus String      @default("available")
+  rating             Float       @default(0)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  bookings Booking[]
+}
+
+model PlatformService {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  description       String?
+  resourcesRequired String[]
+  pricingUnit       String
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  chcServices CHCService[]
+}
+
+model CHCService {
+  id        String          @id @default(cuid())
+  chcId     String
+  chc       CHCProfile      @relation(fields: [chcId], references: [id], onDelete: Cascade)
+  serviceId String
+  service   PlatformService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  price     Float
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  bookings Booking[]
+
+  @@unique([chcId, serviceId])
+}
+
+model Equipment {
+  id                 String     @id @default(cuid())
+  chcId              String
+  chc                CHCProfile @relation(fields: [chcId], references: [id], onDelete: Cascade)
+  name               String
+  type               String
+  brand              String?
+  model              String?
+  registrationNumber String?    @unique
+  purchaseYear       Int?
+  status             String     @default("available")
+  lat                Float      @default(0)
+  lng                Float      @default(0)
+  usageHours         Float      @default(0)
+  fuelLevel          Float?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  assignedResources AssignedResource[]
+}
+
+model Booking {
+  id            String     @id @default(cuid())
+  farmerId      String
+  farmer        User       @relation("FarmerBookings", fields: [farmerId], references: [id])
+  chcServiceId  String
+  chcService    CHCService @relation(fields: [chcServiceId], references: [id])
+  chcId         String
+  chc           CHCProfile @relation(fields: [chcId], references: [id])
+  bookingDate   DateTime
+  area          Float
+  bookingStatus String     @default("requested")
+
+  // Vendor Proposal
+  vpBasePrice        Float?
+  vpFinalAmount      Float?
+  vpProposedAt       DateTime?
+  vpFarmerApproved   Boolean   @default(false)
+  vpFarmerApprovedAt DateTime?
+
+  // Trip
+  tripStatus    String    @default("not_started")
+  tripStarted   Boolean   @default(false)
+  tripStartTime DateTime?
+  tripStartLat  Float?
+  tripStartLng  Float?
+  tripDestLat   Float?
+  tripDestLng   Float?
+
+  // Work
+  workStatus       String    @default("not_started")
+  workStarted      Boolean   @default(false)
+  workStartTime    DateTime?
+  workEndTime      DateTime?
+  workCompleteTime DateTime?
+
+  workImages String[] @default([])
+
+  assignedDriverId String?
+  assignedDriver   DriverProfile? @relation(fields: [assignedDriverId], references: [id])
+
+  assignedResources AssignedResource[]
+  additionalCharges AdditionalCharge[]
+
+  payment       Payment?
+  review        Review?
+  notifications Notification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AssignedResource {
+  id           String    @id @default(cuid())
+  bookingId    String
+  booking      Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  equipmentId  String
+  equipment    Equipment @relation(fields: [equipmentId], references: [id])
+  resourceType String
+}
+
+model AdditionalCharge {
+  id        String  @id @default(cuid())
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  reason    String
+  amount    Float
+}
+
+model Payment {
+  id                String     @id @default(cuid())
+  bookingId         String     @unique
+  booking           Booking    @relation(fields: [bookingId], references: [id])
+  farmerId          String
+  farmer            User       @relation(fields: [farmerId], references: [id])
+  chcId             String
+  chc               CHCProfile @relation(fields: [chcId], references: [id])
+  amount            Float
+  currency          String     @default("INR")
+  status            String     @default("created")
+  method            String?
+  razorpayOrderId   String     @unique
+  razorpayPaymentId String?    @unique
+  razorpaySignature String?
+  paidAt            DateTime?
+  failureReason     String?
+  refundAmount      Float      @default(0)
+  refundedAt        DateTime?
+  webhookReceived   Boolean    @default(false)
+  webhookEvent      String?
+  webhookReceivedAt DateTime?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  notifications Notification[]
+}
+
+model Review {
+  id          String     @id @default(cuid())
+  farmerId    String
+  farmer      User       @relation(fields: [farmerId], references: [id])
+  chcId       String
+  chc         CHCProfile @relation(fields: [chcId], references: [id])
+  bookingId   String     @unique
+  booking     Booking    @relation(fields: [bookingId], references: [id])
+  rating      Float
+  comment     String?
+  isPublished Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Notification {
+  id          String    @id @default(cuid())
+  recipientId String
+  recipient   User      @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  type        String
+  title       String
+  message     String
+  bookingId   String?
+  booking     Booking?  @relation(fields: [bookingId], references: [id])
+  paymentId   String?
+  payment     Payment?  @relation(fields: [paymentId], references: [id])
+  isRead      Boolean   @default(false)
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
