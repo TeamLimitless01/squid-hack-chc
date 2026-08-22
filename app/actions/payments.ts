@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import Razorpay from "razorpay";
 import crypto from "crypto";
+import { notifyBookingUpdate } from "@/src/lib/pusherServer";
 
 // Initialize Razorpay instance
 const razorpay = new Razorpay({
@@ -121,6 +122,7 @@ export async function verifyPayment(
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     return { success: true };
 
   } catch (error: any) {
@@ -176,6 +178,7 @@ export async function payInCash(bookingId: string) {
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     return { success: true };
   } catch (error: any) {
     console.error("Error requesting cash payment:", error);

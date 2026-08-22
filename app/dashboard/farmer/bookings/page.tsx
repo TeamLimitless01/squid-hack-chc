@@ -42,20 +42,32 @@ export default async function FarmerBookingsPage() {
         include: {
           user: true
         }
-      }
+      },
+      farmer: true
     },
     orderBy: {
       bookingDate: 'desc',
     }
   });
 
-  const activeBookings = bookings.filter(b =>
+  const currentBookings = bookings.filter(b =>
     b.tripStatus === 'STARTED' ||
     b.workStatus === 'IN_PROGRESS' ||
     (b.workStatus === 'COMPLETED' && b.payment?.status !== 'PAID')
   );
 
-  const otherBookings = bookings.filter(b => !activeBookings.includes(b));
+  const upcomingBookings = bookings.filter(b =>
+    (b.bookingStatus === 'REQUESTED' || b.bookingStatus === 'ACCEPTED') &&
+    b.tripStatus === 'NOT_STARTED' &&
+    b.workStatus === 'NOT_STARTED' &&
+    b.payment?.status !== 'PAID'
+  );
+
+  const previousBookings = bookings.filter(b =>
+    (b.workStatus === 'COMPLETED' && b.payment?.status === 'PAID') ||
+    b.bookingStatus === 'REJECTED' ||
+    b.bookingStatus === 'CANCELLED'
+  );
 
   return (
     <div className="p-6 lg:p-10 max-w-6xl mx-auto">
@@ -79,35 +91,51 @@ export default async function FarmerBookingsPage() {
         </div>
       ) : (
         <div className="space-y-12">
-          {activeBookings.length > 0 && (
+          {currentBookings.length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                   <Route className="w-4 h-4 text-blue-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900">Currently Working</h2>
-                <span className="ml-2 bg-blue-100 text-blue-700 py-1 px-3 rounded-full text-xs font-black animate-pulse">{activeBookings.length}</span>
+                <h2 className="text-2xl font-bold text-slate-900">Current Bookings & Works</h2>
+                <span className="ml-2 bg-blue-100 text-blue-700 py-1 px-3 rounded-full text-xs font-black animate-pulse">{currentBookings.length}</span>
               </div>
 
               <div className="grid gap-6">
-                {activeBookings.map((booking) => (
+                {currentBookings.map((booking) => (
                   <FarmerBookingCard key={booking.id} booking={booking} />
                 ))}
               </div>
             </section>
           )}
 
-          <section>
-            <div className="flex items-center gap-2 mb-6">
-              <h2 className="text-xl font-bold text-slate-900">All Bookings</h2>
-            </div>
+          {upcomingBookings.length > 0 && (
+            <section>
+              <div className="flex items-center gap-2 mb-6">
+                <h2 className="text-xl font-bold text-slate-900">Upcoming Bookings</h2>
+              </div>
 
-            <div className="grid gap-6">
-              {otherBookings.map((booking) => (
-                <FarmerBookingCard key={booking.id} booking={booking} />
-              ))}
-            </div>
-          </section>
+              <div className="grid gap-6">
+                {upcomingBookings.map((booking) => (
+                  <FarmerBookingCard key={booking.id} booking={booking} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {previousBookings.length > 0 && (
+            <section>
+              <div className="flex items-center gap-2 mb-6">
+                <h2 className="text-xl font-bold text-slate-900">Previous Bookings</h2>
+              </div>
+
+              <div className="grid gap-6">
+                {previousBookings.map((booking) => (
+                  <FarmerBookingCard key={booking.id} booking={booking} />
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       )}
     </div>

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { revalidatePath } from "next/cache";
+import { notifyBookingUpdate } from "@/src/lib/pusherServer";
 
 export async function rejectBooking(bookingId: string) {
   try {
@@ -45,8 +46,9 @@ export async function rejectBooking(bookingId: string) {
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/chc/bookings");
-    
+
     return { success: true };
   } catch (error: any) {
     console.error("Error rejecting booking:", error);

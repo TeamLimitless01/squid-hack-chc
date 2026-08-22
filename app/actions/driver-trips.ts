@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { revalidatePath } from "next/cache";
+import { notifyBookingUpdate } from "@/src/lib/pusherServer";
 
 async function verifyDriverAuth(bookingId: string) {
   const session = await getServerSession(authOptions);
@@ -47,7 +48,7 @@ export async function startTrip(bookingId: string) {
         tripStartTime: new Date(),
       }
     });
-
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/driver/trips");
     return { success: true };
   } catch (error: any) {
@@ -77,6 +78,7 @@ export async function startWork(bookingId: string) {
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/driver/trips");
     return { success: true };
   } catch (error: any) {
@@ -128,6 +130,7 @@ export async function endWork(bookingId: string) {
       data: updateData
     });
 
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/driver/trips");
     return { success: true };
   } catch (error: any) {
@@ -160,6 +163,7 @@ export async function closeJob(bookingId: string) {
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/driver/trips");
     return { success: true };
   } catch (error: any) {
@@ -202,6 +206,7 @@ export async function confirmCashAndCloseJob(bookingId: string) {
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/driver/trips");
     return { success: true };
   } catch (error: any) {

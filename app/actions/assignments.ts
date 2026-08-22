@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { revalidatePath } from "next/cache";
+import { notifyBookingUpdate } from "@/src/lib/pusherServer";
 
 export async function assignBookingResources(bookingId: string, driverId: string) {
   try {
@@ -118,6 +119,7 @@ export async function assignBookingResources(bookingId: string, driverId: string
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/chc/bookings");
     return { success: true };
   } catch (error: any) {

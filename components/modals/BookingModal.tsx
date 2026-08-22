@@ -104,8 +104,8 @@ export default function BookingModal({ item, onClose }: { item: any, onClose: ()
                 <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-slate-400" /> Date Needed
                 </label>
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   value={bookingDate}
                   onChange={e => setBookingDate(e.target.value)}
                   min={new Date().toISOString().split('T')[0]} // Can't book in past
@@ -116,11 +116,11 @@ export default function BookingModal({ item, onClose }: { item: any, onClose: ()
 
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-slate-400" /> Quantity ({unit}s)
+                  <Layers className="w-4 h-4 text-slate-400" /> Estimated Quantity ({unit}s)
                 </label>
                 <div className="relative">
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     value={area}
                     onChange={e => setArea(Number(e.target.value))}
                     min={1}
@@ -133,7 +133,7 @@ export default function BookingModal({ item, onClose }: { item: any, onClose: ()
                   </div>
                 </div>
               </div>
-              
+
               {/* Estimated Total */}
               {area && area > 0 && (
                 <div className="flex justify-between items-center py-2 px-1 border-t border-slate-100 mt-4">
@@ -143,8 +143,8 @@ export default function BookingModal({ item, onClose }: { item: any, onClose: ()
               )}
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={isSubmitting}
               className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:pointer-events-none"
             >

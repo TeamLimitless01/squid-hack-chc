@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { revalidatePath } from "next/cache";
+import { notifyBookingUpdate } from "@/src/lib/pusherServer";
 
 export async function createBookingRequest(data: {
   chcServiceId: string;
@@ -37,6 +38,7 @@ export async function createBookingRequest(data: {
       },
     });
 
+    await notifyBookingUpdate(booking.id);
     revalidatePath("/dashboard/farmer");
     revalidatePath("/chc/services");
     

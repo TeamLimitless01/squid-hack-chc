@@ -4,11 +4,12 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { revalidatePath } from "next/cache";
+import { notifyBookingUpdate } from "@/src/lib/pusherServer";
 
 export async function sendBookingProposal(
-  bookingId: string, 
-  basePrice: number, 
-  finalAmount: number, 
+  bookingId: string,
+  basePrice: number,
+  finalAmount: number,
   additionalCharges: { reason: string, amount: number }[]
 ) {
   try {
@@ -65,6 +66,7 @@ export async function sendBookingProposal(
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/chc/bookings");
     return { success: true };
   } catch (error: any) {
@@ -110,6 +112,7 @@ export async function approveProposal(bookingId: string) {
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/farmer/bookings");
     return { success: true };
   } catch (error: any) {
@@ -149,6 +152,7 @@ export async function rejectProposalByFarmer(bookingId: string) {
       }
     });
 
+    await notifyBookingUpdate(bookingId);
     revalidatePath("/dashboard/farmer/bookings");
     return { success: true };
   } catch (error: any) {

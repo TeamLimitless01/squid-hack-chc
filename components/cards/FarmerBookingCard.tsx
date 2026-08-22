@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Calendar, Layers, Clock, CheckCircle2, XCircle, AlertCircle, FileText, CreditCard, Loader2, Banknote } from "lucide-react";
+import { MapPin, Calendar, Layers, Clock, CheckCircle2, XCircle, AlertCircle, FileText, CreditCard, Loader2, Banknote, Receipt, Printer, ChevronDown, ChevronUp } from "lucide-react";
 import ReviewProposalModal from "@/components/modals/ReviewProposalModal";
 import { createPaymentOrder, verifyPayment, payInCash } from "@/app/actions/payments";
 
@@ -9,6 +9,11 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isProcessingCash, setIsProcessingCash] = useState(false);
+  const [showInvoice, setShowInvoice] = useState(false);
+
+  const printInvoice = () => {
+    window.print();
+  };
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -193,7 +198,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Date Needed</p>
             <p className="font-semibold text-slate-900 flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-emerald-600" />
-              {new Date(booking.bookingDate).toLocaleDateString()}
+              {new Date(booking.bookingDate).toLocaleDateString('en-GB')}
             </p>
           </div>
           <div>
@@ -279,6 +284,101 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
                 </button>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Invoice Toggle Button */}
+        {booking.payment?.status === "PAID" && (
+          <button
+            onClick={() => setShowInvoice(!showInvoice)}
+            className="w-full mt-4 bg-white hover:bg-slate-50 text-slate-700 font-bold py-3 rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2 shadow-sm"
+          >
+            <Receipt className="w-5 h-5 text-emerald-600" />
+            {showInvoice ? "Hide Invoice Details" : "See Invoice Details"}
+            {showInvoice ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+        )}
+
+        {/* Detailed Invoice View (Expandable) */}
+        {showInvoice && booking.payment?.status === "PAID" && (
+          <div className="mt-6 border-t border-dashed border-slate-300 pt-6 animate-in slide-in-from-top-4 duration-300">
+            {/* The class 'print:block' and specific print styles would typically be added to a global css or a wrapping div that hides everything else during print. For simplicity, we assume this card is the main focus or users can just print the page. */}
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200" id={`invoice-${booking.id}`}>
+              <div className="flex justify-between items-start mb-8">
+                <div>
+                  <h4 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Invoice</h4>
+                  <p className="text-slate-500 font-medium mt-1">Receipt for #{booking.id.substring(0, 8).toUpperCase()}</p>
+                </div>
+                <button
+                  onClick={printInvoice}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors print:hidden shadow-sm"
+                >
+                  <Printer className="w-4 h-4" /> Download PDF
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Billed To (Farmer)</p>
+                  <p className="font-bold text-slate-800">{booking.farmer?.name}</p>
+                  <p className="text-slate-600 text-sm mt-1">{booking.farmer?.address || "Address not provided"}</p>
+                  {booking.farmer?.city && <p className="text-slate-600 text-sm">{booking.farmer.city}, {booking.farmer.state}</p>}
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Service Provider</p>
+                  <p className="font-bold text-slate-800">{booking.chc.centerName}</p>
+                  {booking.assignedDriver && (
+                    <p className="text-slate-600 text-sm mt-1">Driver: {booking.assignedDriver.user.name}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 border-b border-slate-200">
+                      <th className="py-3 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Description</th>
+                      <th className="py-3 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-slate-100">
+                      <td className="py-4 px-4">
+                        <p className="font-bold text-slate-800">{booking.chcService.service.name}</p>
+                        <p className="text-sm text-slate-500 mt-1">Base Rate: ₹{booking.chcService.price} x {booking.area} {booking.chcService.pricingUnit.toLowerCase()}s</p>
+                      </td>
+                      <td className="py-4 px-4 text-right font-medium text-slate-900">
+                        ₹{(booking.chcService.price * booking.area).toLocaleString('en-IN')}
+                      </td>
+                    </tr>
+                    {booking.additionalCharges?.map((charge: any) => (
+                      <tr key={charge.id} className="border-b border-slate-100">
+                        <td className="py-4 px-4">
+                          <p className="font-medium text-slate-700">{charge.reason}</p>
+                        </td>
+                        <td className="py-4 px-4 text-right font-medium text-slate-900">
+                          ₹{charge.amount.toLocaleString('en-IN')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr className="bg-emerald-50">
+                      <td className="py-4 px-4 font-black text-emerald-900 text-right uppercase text-sm tracking-wider">
+                        Total Paid
+                      </td>
+                      <td className="py-4 px-4 text-right font-black text-emerald-700 text-xl">
+                        ₹{(booking.payment?.amount || booking.vpFinalAmount || (booking.chcService.price * booking.area)).toLocaleString('en-IN')}
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              
+              <div className="mt-6 text-center text-slate-400 text-xs font-medium">
+                <p>Payment Method: {booking.payment?.method || 'Online'} • Paid on {new Date(booking.payment?.paidAt || booking.updatedAt).toLocaleDateString('en-GB')}</p>
+              </div>
+            </div>
           </div>
         )}
       </div>

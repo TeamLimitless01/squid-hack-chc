@@ -147,7 +147,7 @@ export default function TripCard({ booking, type }: { booking: any, type: "today
           <p className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-1">
             <CalendarIcon className="w-3.5 h-3.5" /> Date & Time
           </p>
-          <p className="font-bold text-slate-800">{new Date(booking.bookingDate).toLocaleDateString()}</p>
+          <p className="font-bold text-slate-800">{new Date(booking.bookingDate).toLocaleDateString('en-GB')}</p>
         </div>
         <div>
           <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">Workload</p>

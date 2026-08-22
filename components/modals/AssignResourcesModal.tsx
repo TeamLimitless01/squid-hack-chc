@@ -105,7 +105,7 @@ export default function AssignResourcesModal({ booking, onClose }: { booking: an
                 </label>
                 <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
                   <p className="text-sm font-semibold text-emerald-800 leading-relaxed">
-                    The system will automatically find available equipment for this service and lock it for the booking date ({new Date(booking.bookingDate).toLocaleDateString()}).
+                    The system will automatically find available equipment for this service and lock it for the booking date ({new Date(booking.bookingDate).toLocaleDateString('en-GB')}).
                   </p>
                 </div>
               </div>

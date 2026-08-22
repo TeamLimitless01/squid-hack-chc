@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CalendarDays, CarFront, Cog, LayoutDashboard, UserRound, Wrench } from "lucide-react";
 import SignOutButton from "./sign-out-button";
 import { usePathname } from "next/navigation";
+import { PusherListener } from "@/components/PusherListener";
 
 export default function CHCDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -13,6 +14,7 @@ export default function CHCDashboardLayout({ children }: { children: React.React
 
   return (
     <div className="min-h-screen bg-[#f7f8f3] text-slate-900">
+      <PusherListener />
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-72 border-r border-slate-200 bg-white px-5 py-7 lg:flex lg:flex-col">
         <div className="mb-10 px-3">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">AgriConnect</p>
