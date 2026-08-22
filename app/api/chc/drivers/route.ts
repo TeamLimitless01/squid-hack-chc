@@ -59,7 +59,6 @@ export async function POST(request: Request) {
       .trim()
       .toLowerCase();
     const phone = String(body.phone || "").trim();
-    const password = String(body.password || "");
     const licenseNumber = String(body.licenseNumber || "")
       .trim()
       .toUpperCase();
@@ -72,20 +71,14 @@ export async function POST(request: Request) {
         ? 0
         : Number(body.experienceYears);
 
-    if (!name || !email || !phone || !password || !licenseNumber) {
+    if (!name || !email || !phone || !licenseNumber) {
       return NextResponse.json(
         {
-          error:
-            "Name, email, phone, password, and license number are required",
+          error: "Name, email, phone, and license number are required",
         },
         { status: 400 },
       );
     }
-    if (password.length < 6)
-      return NextResponse.json(
-        { error: "Password must be at least 6 characters" },
-        { status: 400 },
-      );
     if (licenseExpiry && Number.isNaN(licenseExpiry.getTime()))
       return NextResponse.json(
         { error: "Enter a valid license expiry date" },
@@ -97,7 +90,7 @@ export async function POST(request: Request) {
         { status: 400 },
       );
 
-    const passwordHash = await hashPassword(password);
+    const passwordHash = await hashPassword(phone);
     const driver = await prisma.$transaction(async (transaction) => {
       const createdUser = await transaction.user.create({
         data: {
