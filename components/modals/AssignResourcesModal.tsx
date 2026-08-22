@@ -9,7 +9,7 @@ export default function AssignResourcesModal({ booking, onClose }: { booking: an
   const [drivers, setDrivers] = useState<any[]>([]);
   const [selectedDriverId, setSelectedDriverId] = useState<string>("");
   const [isLoadingDrivers, setIsLoadingDrivers] = useState(true);
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -35,7 +35,7 @@ export default function AssignResourcesModal({ booking, onClose }: { booking: an
     setError("");
 
     const res = await assignBookingResources(booking.id, selectedDriverId);
-    
+
     if (res.success) {
       setSuccess(true);
       setTimeout(() => {
@@ -52,7 +52,7 @@ export default function AssignResourcesModal({ booking, onClose }: { booking: an
       <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
         <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-slate-50">
           <div>
-            <h3 className="font-extrabold text-2xl text-slate-900">Assign Resources</h3>
+            <h3 className="font-extrabold text-2xl text-slate-900">{booking.assignedDriver ? "Change Resources" : "Assign Resources"}</h3>
             <p className="text-sm font-medium text-slate-500 mt-1">For {booking.farmer.name}'s Request</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors active:scale-95 bg-white border border-slate-200 shadow-sm">
@@ -62,7 +62,7 @@ export default function AssignResourcesModal({ booking, onClose }: { booking: an
 
         <form onSubmit={handleSubmit} className="p-6">
           {error && <div className="mb-6 p-4 bg-rose-50 text-rose-700 text-sm font-bold rounded-xl border border-rose-100">{error}</div>}
-          
+
           {success ? (
             <div className="py-12 flex flex-col items-center justify-center text-center">
               <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
@@ -110,12 +110,12 @@ export default function AssignResourcesModal({ booking, onClose }: { booking: an
                 </div>
               </div>
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={isSubmitting || drivers.length === 0}
                 className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:pointer-events-none"
               >
-                {isSubmitting ? <><Loader2 className="w-5 h-5 animate-spin" /> Assigning...</> : <><CheckCircle2 className="w-5 h-5" /> Confirm Assignment</>}
+                {isSubmitting ? <><Loader2 className="w-5 h-5 animate-spin" /> Saving...</> : <><CheckCircle2 className="w-5 h-5" /> {booking.assignedDriver ? "Confirm New Assignment" : "Confirm Assignment"}</>}
               </button>
             </>
           )}

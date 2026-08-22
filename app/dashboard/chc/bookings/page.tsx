@@ -7,7 +7,7 @@ import { rejectBooking } from "@/app/actions/chc-booking-actions";
 import ProposalModal from "@/components/modals/ProposalModal";
 import AssignResourcesModal from "@/components/modals/AssignResourcesModal";
 import MapModal from "@/components/map/MapModal";
-import { Navigation, Map } from "lucide-react";
+import { Navigation, Map, Receipt, ChevronDown, ChevronUp, Printer } from "lucide-react";
 
 type Booking = {
     id: string;
@@ -17,12 +17,13 @@ type Booking = {
     vpFinalAmount: number | null;
     vpProposedAt: string | null;
     additionalCharges: { id: string; reason: string; amount: number }[];
-    farmer: { name: string; phone: string; location?: { lat: number; lng?: number; lon?: number } };
+    farmer: { name: string; phone: string; address?: string; city?: string; state?: string; location?: { lat: number; lng?: number; lon?: number } };
     chcService: { service: { name: string }; pricingUnit: string; price: number };
-    assignedDriver: { user: { name: string } } | null;
+    assignedDriver: { user: { name: string; phone?: string } } | null;
     tripStatus?: string;
     workStatus?: string;
-    payment?: { status: string };
+    updatedAt: string;
+    payment?: { status: string; amount: number; method: string; paidAt: string };
     chc?: { location?: { lat?: number; lng?: number; lon?: number } };
 };
 
@@ -65,6 +66,15 @@ export default function CHCBookingsPage() {
     const [proposalBooking, setProposalBooking] = useState<Booking | null>(null);
     const [assignBooking, setAssignBooking] = useState<Booking | null>(null);
     const [mapBooking, setMapBooking] = useState<Booking | null>(null);
+    const [expandedInvoiceId, setExpandedInvoiceId] = useState<string | null>(null);
+
+    const toggleInvoice = (id: string) => {
+        setExpandedInvoiceId(prev => prev === id ? null : id);
+    };
+
+    const printInvoice = () => {
+        window.print();
+    };
 
     const handleReject = async (bookingId: string) => {
         setProcessingId(bookingId);
@@ -143,7 +153,7 @@ export default function CHCBookingsPage() {
                                         <p className="text-slate-500 font-medium flex items-center gap-1.5 mt-1">
                                             <span className="text-emerald-600 font-bold">{booking.farmer.name}</span> • {booking.farmer.phone}
                                             {booking.farmer.location && (
-                                                <button 
+                                                <button
                                                     onClick={() => setMapBooking(booking)}
                                                     className="ml-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition flex items-center gap-1 border border-emerald-100"
                                                 >
@@ -212,10 +222,22 @@ export default function CHCBookingsPage() {
                                     <span className="text-lg font-black text-emerald-700">₹{getTotalAmount(booking).toLocaleString("en-IN")}</span>
                                 </div>
 
+                                {/* Assigned Driver Info */}
                                 {booking.assignedDriver && (
-                                    <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-2 text-sm">
-                                        <span className="font-bold text-slate-500">Assigned Driver:</span>
-                                        <span className="font-semibold text-slate-900">{booking.assignedDriver.user.name}</span>
+                                    <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between gap-2 text-sm">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-bold text-slate-500">Assigned Driver:</span>
+                                            <span className="font-semibold text-slate-900">{booking.assignedDriver.user.name}</span>
+                                        </div>
+                                        {/* Only allow changing driver if the trip hasn't started */}
+                                        {booking.tripStatus !== "STARTED" && booking.workStatus !== "IN_PROGRESS" && booking.workStatus !== "COMPLETED" && (
+                                            <button
+                                                onClick={() => setAssignBooking(booking)}
+                                                className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 hover:bg-emerald-100 transition"
+                                            >
+                                                Change Driver
+                                            </button>
+                                        )}
                                     </div>
                                 )}
 
@@ -253,6 +275,100 @@ export default function CHCBookingsPage() {
                                         >
                                             <Tractor className="w-4 h-4" /> Assign Resources
                                         </button>
+                                    </div>
+                                )}
+
+                                {/* Invoice Toggle Button */}
+                                {booking.payment?.status === "PAID" && (
+                                    <button
+                                        onClick={() => toggleInvoice(booking.id)}
+                                        className="w-full mt-4 bg-white hover:bg-slate-50 text-slate-700 font-bold py-3 rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2 shadow-sm"
+                                    >
+                                        <Receipt className="w-5 h-5 text-emerald-600" />
+                                        {expandedInvoiceId === booking.id ? "Hide Invoice Details" : "See Invoice Details"}
+                                        {expandedInvoiceId === booking.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                    </button>
+                                )}
+
+                                {/* Detailed Invoice View (Expandable) */}
+                                {expandedInvoiceId === booking.id && booking.payment?.status === "PAID" && (
+                                    <div className="mt-6 border-t border-dashed border-slate-300 pt-6 animate-in slide-in-from-top-4 duration-300">
+                                        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200" id={`invoice-${booking.id}`}>
+                                            <div className="flex justify-between items-start mb-8">
+                                                <div>
+                                                    <h4 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Invoice</h4>
+                                                    <p className="text-slate-500 font-medium mt-1">Receipt for #{booking.id.substring(0, 8).toUpperCase()}</p>
+                                                </div>
+                                                <button
+                                                    onClick={printInvoice}
+                                                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors print:hidden shadow-sm"
+                                                >
+                                                    <Printer className="w-4 h-4" /> Download PDF
+                                                </button>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                                <div>
+                                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Billed To (Farmer)</p>
+                                                    <p className="font-bold text-slate-800">{booking.farmer?.name}</p>
+                                                    <p className="text-slate-600 text-sm mt-1">{booking.farmer?.address || "Address not provided"}</p>
+                                                    {booking.farmer?.city && <p className="text-slate-600 text-sm">{booking.farmer.city}, {booking.farmer.state}</p>}
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Service Provider (You)</p>
+                                                    <p className="font-bold text-slate-800">Your CHC Center</p>
+                                                    {booking.assignedDriver && (
+                                                        <p className="text-slate-600 text-sm mt-1">Driver: {booking.assignedDriver.user.name} {booking.assignedDriver.user.phone ? `(${booking.assignedDriver.user.phone})` : ''}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                                                <table className="w-full text-left border-collapse">
+                                                    <thead>
+                                                        <tr className="bg-slate-100 border-b border-slate-200">
+                                                            <th className="py-3 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Description</th>
+                                                            <th className="py-3 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr className="border-b border-slate-100">
+                                                            <td className="py-4 px-4">
+                                                                <p className="font-bold text-slate-800">{booking.chcService.service.name}</p>
+                                                                <p className="text-sm text-slate-500 mt-1">Base Rate: ₹{booking.chcService.price} x {booking.area} {booking.chcService.pricingUnit.toLowerCase()}s</p>
+                                                            </td>
+                                                            <td className="py-4 px-4 text-right font-medium text-slate-900">
+                                                                ₹{(booking.chcService.price * booking.area).toLocaleString('en-IN')}
+                                                            </td>
+                                                        </tr>
+                                                        {booking.additionalCharges?.map((charge: any) => (
+                                                            <tr key={charge.id} className="border-b border-slate-100">
+                                                                <td className="py-4 px-4">
+                                                                    <p className="font-medium text-slate-700">{charge.reason}</p>
+                                                                </td>
+                                                                <td className="py-4 px-4 text-right font-medium text-slate-900">
+                                                                    ₹{charge.amount.toLocaleString('en-IN')}
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr className="bg-emerald-50">
+                                                            <td className="py-4 px-4 font-black text-emerald-900 text-right uppercase text-sm tracking-wider">
+                                                                Total Received
+                                                            </td>
+                                                            <td className="py-4 px-4 text-right font-black text-emerald-700 text-xl">
+                                                                ₹{(booking.payment?.amount || booking.vpFinalAmount || (booking.chcService.price * booking.area)).toLocaleString('en-IN')}
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+
+                                            <div className="mt-6 text-center text-slate-400 text-xs font-medium">
+                                                <p>Payment Method: {booking.payment?.method || 'Online'} • Paid on {new Date(booking.payment?.paidAt || booking.updatedAt).toLocaleDateString('en-GB')}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                             </article>
