@@ -96,11 +96,25 @@ export namespace $Enums {
 
 export type EquipmentType = (typeof EquipmentType)[keyof typeof EquipmentType]
 
+
+export const PricingUnit: {
+  ACRE: 'ACRE',
+  BIGHA: 'BIGHA',
+  HOUR: 'HOUR',
+  DAY: 'DAY'
+};
+
+export type PricingUnit = (typeof PricingUnit)[keyof typeof PricingUnit]
+
 }
 
 export type EquipmentType = $Enums.EquipmentType
 
 export const EquipmentType: typeof $Enums.EquipmentType
+
+export type PricingUnit = $Enums.PricingUnit
+
+export const PricingUnit: typeof $Enums.PricingUnit
 
 /**
  * ##  Prisma Client ʲˢ
@@ -8491,6 +8505,7 @@ export namespace Prisma {
     chcId: string | null
     serviceId: string | null
     price: number | null
+    pricingUnit: $Enums.PricingUnit | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8501,6 +8516,7 @@ export namespace Prisma {
     chcId: string | null
     serviceId: string | null
     price: number | null
+    pricingUnit: $Enums.PricingUnit | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8511,6 +8527,7 @@ export namespace Prisma {
     chcId: number
     serviceId: number
     price: number
+    pricingUnit: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -8531,6 +8548,7 @@ export namespace Prisma {
     chcId?: true
     serviceId?: true
     price?: true
+    pricingUnit?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -8541,6 +8559,7 @@ export namespace Prisma {
     chcId?: true
     serviceId?: true
     price?: true
+    pricingUnit?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -8551,6 +8570,7 @@ export namespace Prisma {
     chcId?: true
     serviceId?: true
     price?: true
+    pricingUnit?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -8648,6 +8668,7 @@ export namespace Prisma {
     chcId: string
     serviceId: string
     price: number
+    pricingUnit: $Enums.PricingUnit
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -8677,6 +8698,7 @@ export namespace Prisma {
     chcId?: boolean
     serviceId?: boolean
     price?: boolean
+    pricingUnit?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8691,6 +8713,7 @@ export namespace Prisma {
     chcId?: boolean
     serviceId?: boolean
     price?: boolean
+    pricingUnit?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8703,6 +8726,7 @@ export namespace Prisma {
     chcId?: boolean
     serviceId?: boolean
     price?: boolean
+    pricingUnit?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8715,12 +8739,13 @@ export namespace Prisma {
     chcId?: boolean
     serviceId?: boolean
     price?: boolean
+    pricingUnit?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CHCServiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chcId" | "serviceId" | "price" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["cHCService"]>
+  export type CHCServiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chcId" | "serviceId" | "price" | "pricingUnit" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["cHCService"]>
   export type CHCServiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chc?: boolean | CHCProfileDefaultArgs<ExtArgs>
     service?: boolean | PlatformServiceDefaultArgs<ExtArgs>
@@ -8748,6 +8773,7 @@ export namespace Prisma {
       chcId: string
       serviceId: string
       price: number
+      pricingUnit: $Enums.PricingUnit
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -9181,6 +9207,7 @@ export namespace Prisma {
     readonly chcId: FieldRef<"CHCService", 'String'>
     readonly serviceId: FieldRef<"CHCService", 'String'>
     readonly price: FieldRef<"CHCService", 'Float'>
+    readonly pricingUnit: FieldRef<"CHCService", 'PricingUnit'>
     readonly isActive: FieldRef<"CHCService", 'Boolean'>
     readonly createdAt: FieldRef<"CHCService", 'DateTime'>
     readonly updatedAt: FieldRef<"CHCService", 'DateTime'>
@@ -18432,6 +18459,7 @@ export namespace Prisma {
     chcId: 'chcId',
     serviceId: 'serviceId',
     price: 'price',
+    pricingUnit: 'pricingUnit',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -18707,6 +18735,20 @@ export namespace Prisma {
    * Reference to a field of type 'EquipmentType'
    */
   export type EnumEquipmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EquipmentType'>
+    
+
+
+  /**
+   * Reference to a field of type 'PricingUnit'
+   */
+  export type EnumPricingUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PricingUnit'>
+    
+
+
+  /**
+   * Reference to a field of type 'PricingUnit[]'
+   */
+  export type ListEnumPricingUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PricingUnit[]'>
     
   /**
    * Deep Input Types
@@ -19159,6 +19201,7 @@ export namespace Prisma {
     chcId?: StringFilter<"CHCService"> | string
     serviceId?: StringFilter<"CHCService"> | string
     price?: FloatFilter<"CHCService"> | number
+    pricingUnit?: EnumPricingUnitFilter<"CHCService"> | $Enums.PricingUnit
     isActive?: BoolFilter<"CHCService"> | boolean
     createdAt?: DateTimeFilter<"CHCService"> | Date | string
     updatedAt?: DateTimeFilter<"CHCService"> | Date | string
@@ -19172,6 +19215,7 @@ export namespace Prisma {
     chcId?: SortOrder
     serviceId?: SortOrder
     price?: SortOrder
+    pricingUnit?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19189,6 +19233,7 @@ export namespace Prisma {
     chcId?: StringFilter<"CHCService"> | string
     serviceId?: StringFilter<"CHCService"> | string
     price?: FloatFilter<"CHCService"> | number
+    pricingUnit?: EnumPricingUnitFilter<"CHCService"> | $Enums.PricingUnit
     isActive?: BoolFilter<"CHCService"> | boolean
     createdAt?: DateTimeFilter<"CHCService"> | Date | string
     updatedAt?: DateTimeFilter<"CHCService"> | Date | string
@@ -19202,6 +19247,7 @@ export namespace Prisma {
     chcId?: SortOrder
     serviceId?: SortOrder
     price?: SortOrder
+    pricingUnit?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19220,6 +19266,7 @@ export namespace Prisma {
     chcId?: StringWithAggregatesFilter<"CHCService"> | string
     serviceId?: StringWithAggregatesFilter<"CHCService"> | string
     price?: FloatWithAggregatesFilter<"CHCService"> | number
+    pricingUnit?: EnumPricingUnitWithAggregatesFilter<"CHCService"> | $Enums.PricingUnit
     isActive?: BoolWithAggregatesFilter<"CHCService"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"CHCService"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CHCService"> | Date | string
@@ -20451,6 +20498,7 @@ export namespace Prisma {
   export type CHCServiceCreateInput = {
     id?: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20464,6 +20512,7 @@ export namespace Prisma {
     chcId: string
     serviceId: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20473,6 +20522,7 @@ export namespace Prisma {
   export type CHCServiceUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20486,6 +20536,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     serviceId?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20497,6 +20548,7 @@ export namespace Prisma {
     chcId: string
     serviceId: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20505,6 +20557,7 @@ export namespace Prisma {
   export type CHCServiceUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20515,6 +20568,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     serviceId?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21863,6 +21917,13 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type EnumPricingUnitFilter<$PrismaModel = never> = {
+    equals?: $Enums.PricingUnit | EnumPricingUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.PricingUnit[] | ListEnumPricingUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PricingUnit[] | ListEnumPricingUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumPricingUnitFilter<$PrismaModel> | $Enums.PricingUnit
+  }
+
   export type CHCProfileScalarRelationFilter = {
     is?: CHCProfileWhereInput
     isNot?: CHCProfileWhereInput
@@ -21883,6 +21944,7 @@ export namespace Prisma {
     chcId?: SortOrder
     serviceId?: SortOrder
     price?: SortOrder
+    pricingUnit?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21897,6 +21959,7 @@ export namespace Prisma {
     chcId?: SortOrder
     serviceId?: SortOrder
     price?: SortOrder
+    pricingUnit?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21907,6 +21970,7 @@ export namespace Prisma {
     chcId?: SortOrder
     serviceId?: SortOrder
     price?: SortOrder
+    pricingUnit?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21914,6 +21978,16 @@ export namespace Prisma {
 
   export type CHCServiceSumOrderByAggregateInput = {
     price?: SortOrder
+  }
+
+  export type EnumPricingUnitWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PricingUnit | EnumPricingUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.PricingUnit[] | ListEnumPricingUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PricingUnit[] | ListEnumPricingUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumPricingUnitWithAggregatesFilter<$PrismaModel> | $Enums.PricingUnit
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPricingUnitFilter<$PrismaModel>
+    _max?: NestedEnumPricingUnitFilter<$PrismaModel>
   }
 
   export type EnumEquipmentTypeFilter<$PrismaModel = never> = {
@@ -23170,6 +23244,10 @@ export namespace Prisma {
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
   }
 
+  export type EnumPricingUnitFieldUpdateOperationsInput = {
+    set?: $Enums.PricingUnit
+  }
+
   export type CHCProfileUpdateOneRequiredWithoutServicesNestedInput = {
     create?: XOR<CHCProfileCreateWithoutServicesInput, CHCProfileUncheckedCreateWithoutServicesInput>
     connectOrCreate?: CHCProfileCreateOrConnectWithoutServicesInput
@@ -23972,6 +24050,23 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPricingUnitFilter<$PrismaModel = never> = {
+    equals?: $Enums.PricingUnit | EnumPricingUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.PricingUnit[] | ListEnumPricingUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PricingUnit[] | ListEnumPricingUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumPricingUnitFilter<$PrismaModel> | $Enums.PricingUnit
+  }
+
+  export type NestedEnumPricingUnitWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PricingUnit | EnumPricingUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.PricingUnit[] | ListEnumPricingUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PricingUnit[] | ListEnumPricingUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumPricingUnitWithAggregatesFilter<$PrismaModel> | $Enums.PricingUnit
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPricingUnitFilter<$PrismaModel>
+    _max?: NestedEnumPricingUnitFilter<$PrismaModel>
   }
 
   export type NestedEnumEquipmentTypeFilter<$PrismaModel = never> = {
@@ -24848,6 +24943,7 @@ export namespace Prisma {
   export type CHCServiceCreateWithoutChcInput = {
     id?: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24859,6 +24955,7 @@ export namespace Prisma {
     id?: string
     serviceId: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25198,6 +25295,7 @@ export namespace Prisma {
     chcId?: StringFilter<"CHCService"> | string
     serviceId?: StringFilter<"CHCService"> | string
     price?: FloatFilter<"CHCService"> | number
+    pricingUnit?: EnumPricingUnitFilter<"CHCService"> | $Enums.PricingUnit
     isActive?: BoolFilter<"CHCService"> | boolean
     createdAt?: DateTimeFilter<"CHCService"> | Date | string
     updatedAt?: DateTimeFilter<"CHCService"> | Date | string
@@ -25542,6 +25640,7 @@ export namespace Prisma {
   export type CHCServiceCreateWithoutServiceInput = {
     id?: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25553,6 +25652,7 @@ export namespace Prisma {
     id?: string
     chcId: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25999,6 +26099,7 @@ export namespace Prisma {
   export type CHCServiceCreateWithoutBookingsInput = {
     id?: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26011,6 +26112,7 @@ export namespace Prisma {
     chcId: string
     serviceId: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26322,6 +26424,7 @@ export namespace Prisma {
   export type CHCServiceUpdateWithoutBookingsInput = {
     id?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26334,6 +26437,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     serviceId?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28445,6 +28549,7 @@ export namespace Prisma {
     id?: string
     serviceId: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28610,6 +28715,7 @@ export namespace Prisma {
   export type CHCServiceUpdateWithoutChcInput = {
     id?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28621,6 +28727,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serviceId?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28631,6 +28738,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serviceId?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28971,6 +29079,7 @@ export namespace Prisma {
     id?: string
     chcId: string
     price: number
+    pricingUnit?: $Enums.PricingUnit
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28979,6 +29088,7 @@ export namespace Prisma {
   export type CHCServiceUpdateWithoutServiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28990,6 +29100,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     chcId?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29000,6 +29111,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     chcId?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    pricingUnit?: EnumPricingUnitFieldUpdateOperationsInput | $Enums.PricingUnit
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
