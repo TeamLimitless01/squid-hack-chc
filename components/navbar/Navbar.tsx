@@ -25,9 +25,9 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "Services", href: "/services" },
     { name: "How It Works", href: "#how-it-works" },
+    { name: "AI Assistant", href: "/agriconnectAI" },
     // Only show For CHCs if user is not authenticated
     ...(!session ? [{ name: "For CHCs", href: "/register/chc" }] : []),
-    // { name: "About", href: "/about" },
   ];
 
   return (

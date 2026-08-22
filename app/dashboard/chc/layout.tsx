@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarDays, CarFront, Cog, LayoutDashboard, UserRound, Wrench } from "lucide-react";
+import { CalendarDays, CarFront, Cog, LayoutDashboard, UserRound, Wrench, Home } from "lucide-react";
 import SignOutButton from "./sign-out-button";
 import { usePathname } from "next/navigation";
 import { PusherListener } from "@/components/PusherListener";
@@ -27,6 +27,7 @@ export default function CHCDashboardLayout({ children }: { children: React.React
           <Link href="/dashboard/chc/bookings" className={desktopLinkClass("bookings")}><CalendarDays className="h-4 w-4" /> Bookings</Link>
           <Link href="/dashboard/chc/drivers" className={desktopLinkClass("drivers")}><CarFront className="h-4 w-4" /> Drivers</Link>
           <Link href="/dashboard/chc/profile" className={desktopLinkClass("profile")}><UserRound className="h-4 w-4" /> Profile</Link>
+          <Link href="/" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition"><Home className="h-4 w-4" /> Back to Home</Link>
         </nav>
         <div className="mt-auto border-t border-slate-100 pt-5"><SignOutButton /></div>
       </aside>
@@ -38,6 +39,7 @@ export default function CHCDashboardLayout({ children }: { children: React.React
           <Link href="/dashboard/chc/bookings" className={mobileLinkClass("bookings")}>Bookings</Link>
           <Link href="/dashboard/chc/drivers" className={mobileLinkClass("drivers")}>Drivers</Link>
           <Link href="/dashboard/chc/profile" className={mobileLinkClass("profile")}>Profile</Link>
+          <Link href="/" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600">Back to Home</Link>
         </nav>
         {children}
       </main>
