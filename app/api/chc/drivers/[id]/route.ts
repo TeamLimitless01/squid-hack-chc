@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { LicenseType } from "@/generated/prisma/client";
+import { hashPassword } from "@/src/lib/auth";
 
 function parseLicenseType(value: unknown): LicenseType | null {
   const normalized = String(value || "")
@@ -87,7 +88,7 @@ export async function PATCH(
         { error: "Enter valid experience years" },
         { status: 400 },
       );
-
+    const passwordHash = await hashPassword(phone);
     const driver = await prisma.driverProfile.findFirst({
       where: { id, assignedCHCId: user.profileId },
       select: { userId: true },
@@ -98,7 +99,7 @@ export async function PATCH(
     const updatedDriver = await prisma.$transaction(async (transaction) => {
       await transaction.user.update({
         where: { id: driver.userId },
-        data: { name, email, phone },
+        data: { name, email, phone, password: passwordHash },
       });
       return transaction.driverProfile.update({
         where: { id },
