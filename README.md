@@ -16,6 +16,16 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Test user API
+
+Set `MONGODB_URI` in `.env` to a MongoDB connection string, then start the development server. Create a temporary user with:
+
+```bash
+curl -X POST http://localhost:3000/api/test-users
+```
+
+Optional JSON fields are `name`, `email`, and `phone`. The endpoint returns the created user without its temporary password.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
