@@ -44,7 +44,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
       key: orderData.key,
       amount: orderData.amount,
       currency: "INR",
-      name: "AgriConnect-Verified Merchent",
+      name: "AgriConnect-Verified Merchant",
       description: `Payment for ${booking.chcService.service.name}`,
       order_id: orderData.orderId,
       handler: async function (response: any) {
