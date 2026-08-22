@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 
 export async function updateDriverProfile(formData: FormData) {
   try {
-    const session = await getServerSession(authOptions);
+    const session: any = await getServerSession(authOptions);
 
     if (!session || !session.user?.email) {
       return { success: false, error: "Unauthorized. Please log in." };
@@ -18,7 +18,7 @@ export async function updateDriverProfile(formData: FormData) {
     const address = formData.get("address") as string;
     const city = formData.get("city") as string;
     const state = formData.get("state") as string;
-    
+
     const licenseNumber = formData.get("licenseNumber") as string;
     const licenseType = formData.get("licenseType") as string;
     const experienceYears = formData.get("experienceYears") as string;
