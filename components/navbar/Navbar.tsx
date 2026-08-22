@@ -25,16 +25,15 @@ export default function Navbar() {
     { name: "How It Works", href: "#how-it-works" },
     // Only show For CHCs if user is not authenticated
     ...(!session ? [{ name: "For CHCs", href: "/register/chc" }] : []),
-    { name: "About", href: "/about" },
+    // { name: "About", href: "/about" },
   ];
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 py-3"
-          : "bg-transparent py-5"
-      }`}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${isScrolled
+        ? "bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 py-3"
+        : "bg-transparent py-5"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
@@ -93,7 +92,7 @@ export default function Navbar() {
                   Log in
                 </Link>
                 <Link
-                  href="/register/farmer"
+                  href="/register"
                   className="bg-brand-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-700 hover:shadow-md transition-all active:scale-95"
                 >
                   Get Started
