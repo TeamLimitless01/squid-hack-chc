@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Boxes, Cog, Wrench } from "lucide-react";
+import { ArrowRight, Boxes, CalendarDays, Cog, Wrench } from "lucide-react";
 
 export default function CHCDashboard() {
   return (
@@ -12,7 +12,11 @@ export default function CHCDashboard() {
         </div>
         <Link href="/dashboard/chc/equipment/add" className="hidden items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-700 sm:flex"><Wrench className="h-4 w-4" /> Add equipment</Link>
       </div>
-      <div className="mt-12 grid gap-5 md:grid-cols-2">
+      <div className="mt-12 grid gap-5 md:grid-cols-3">
+        <Link href="/dashboard/chc/bookings" className="group rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-sky-300 hover:shadow-xl">
+          <div className="flex items-center justify-between"><div className="rounded-xl bg-sky-100 p-3 text-sky-700"><CalendarDays className="h-6 w-6" /></div><ArrowRight className="h-5 w-5 text-slate-300 transition group-hover:translate-x-1 group-hover:text-sky-600" /></div>
+          <h3 className="mt-7 text-xl font-bold">Bookings</h3><p className="mt-2 text-sm leading-6 text-slate-500">Review farmer requests and follow every booking by its current status.</p>
+        </Link>
         <Link href="/dashboard/chc/equipment" className="group rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-xl">
           <div className="flex items-center justify-between"><div className="rounded-xl bg-emerald-100 p-3 text-emerald-700"><Boxes className="h-6 w-6" /></div><ArrowRight className="h-5 w-5 text-slate-300 transition group-hover:translate-x-1 group-hover:text-emerald-600" /></div>
           <h3 className="mt-7 text-xl font-bold">Equipment inventory</h3><p className="mt-2 text-sm leading-6 text-slate-500">Add machines, review availability, and grow the resources your center can offer.</p>
