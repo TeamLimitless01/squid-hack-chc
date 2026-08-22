@@ -53,3 +53,27 @@ export async function rejectBooking(bookingId: string) {
     return { success: false, error: "Failed to reject booking." };
   }
 }
+
+export async function getCHCDrivers() {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.email) return [];
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      include: { chcProfile: true }
+    });
+
+    if (!user || !user.chcProfile) return [];
+
+    const drivers = await prisma.driverProfile.findMany({
+      where: { assignedCHCId: user.chcProfile.id },
+      include: { user: true }
+    });
+
+    return drivers;
+  } catch (error) {
+    console.error("Error fetching drivers:", error);
+    return [];
+  }
+}
