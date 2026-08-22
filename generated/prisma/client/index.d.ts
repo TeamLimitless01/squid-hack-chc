@@ -97,6 +97,24 @@ export namespace $Enums {
 export type EquipmentType = (typeof EquipmentType)[keyof typeof EquipmentType]
 
 
+export const TripStatus: {
+  NOT_STARTED: 'NOT_STARTED',
+  STARTED: 'STARTED',
+  ARRIVED: 'ARRIVED'
+};
+
+export type TripStatus = (typeof TripStatus)[keyof typeof TripStatus]
+
+
+export const WorkStatus: {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+};
+
+export type WorkStatus = (typeof WorkStatus)[keyof typeof WorkStatus]
+
+
 export const PricingUnit: {
   ACRE: 'ACRE',
   BIGHA: 'BIGHA',
@@ -132,6 +150,14 @@ export type LicenseType = (typeof LicenseType)[keyof typeof LicenseType]
 export type EquipmentType = $Enums.EquipmentType
 
 export const EquipmentType: typeof $Enums.EquipmentType
+
+export type TripStatus = $Enums.TripStatus
+
+export const TripStatus: typeof $Enums.TripStatus
+
+export type WorkStatus = $Enums.WorkStatus
+
+export const WorkStatus: typeof $Enums.WorkStatus
 
 export type PricingUnit = $Enums.PricingUnit
 
@@ -11001,14 +11027,14 @@ export namespace Prisma {
     vpProposedAt: Date | null
     vpFarmerApproved: boolean | null
     vpFarmerApprovedAt: Date | null
-    tripStatus: string | null
+    tripStatus: $Enums.TripStatus | null
     tripStarted: boolean | null
     tripStartTime: Date | null
     tripStartLat: number | null
     tripStartLng: number | null
     tripDestLat: number | null
     tripDestLng: number | null
-    workStatus: string | null
+    workStatus: $Enums.WorkStatus | null
     workStarted: boolean | null
     workStartTime: Date | null
     workEndTime: Date | null
@@ -11031,14 +11057,14 @@ export namespace Prisma {
     vpProposedAt: Date | null
     vpFarmerApproved: boolean | null
     vpFarmerApprovedAt: Date | null
-    tripStatus: string | null
+    tripStatus: $Enums.TripStatus | null
     tripStarted: boolean | null
     tripStartTime: Date | null
     tripStartLat: number | null
     tripStartLng: number | null
     tripDestLat: number | null
     tripDestLng: number | null
-    workStatus: string | null
+    workStatus: $Enums.WorkStatus | null
     workStarted: boolean | null
     workStartTime: Date | null
     workEndTime: Date | null
@@ -11292,14 +11318,14 @@ export namespace Prisma {
     vpProposedAt: Date | null
     vpFarmerApproved: boolean
     vpFarmerApprovedAt: Date | null
-    tripStatus: string
+    tripStatus: $Enums.TripStatus
     tripStarted: boolean
     tripStartTime: Date | null
     tripStartLat: number | null
     tripStartLng: number | null
     tripDestLat: number | null
     tripDestLng: number | null
-    workStatus: string
+    workStatus: $Enums.WorkStatus
     workStarted: boolean
     workStartTime: Date | null
     workEndTime: Date | null
@@ -11523,14 +11549,14 @@ export namespace Prisma {
       vpProposedAt: Date | null
       vpFarmerApproved: boolean
       vpFarmerApprovedAt: Date | null
-      tripStatus: string
+      tripStatus: $Enums.TripStatus
       tripStarted: boolean
       tripStartTime: Date | null
       tripStartLat: number | null
       tripStartLng: number | null
       tripDestLat: number | null
       tripDestLng: number | null
-      workStatus: string
+      workStatus: $Enums.WorkStatus
       workStarted: boolean
       workStartTime: Date | null
       workEndTime: Date | null
@@ -11983,14 +12009,14 @@ export namespace Prisma {
     readonly vpProposedAt: FieldRef<"Booking", 'DateTime'>
     readonly vpFarmerApproved: FieldRef<"Booking", 'Boolean'>
     readonly vpFarmerApprovedAt: FieldRef<"Booking", 'DateTime'>
-    readonly tripStatus: FieldRef<"Booking", 'String'>
+    readonly tripStatus: FieldRef<"Booking", 'TripStatus'>
     readonly tripStarted: FieldRef<"Booking", 'Boolean'>
     readonly tripStartTime: FieldRef<"Booking", 'DateTime'>
     readonly tripStartLat: FieldRef<"Booking", 'Float'>
     readonly tripStartLng: FieldRef<"Booking", 'Float'>
     readonly tripDestLat: FieldRef<"Booking", 'Float'>
     readonly tripDestLng: FieldRef<"Booking", 'Float'>
-    readonly workStatus: FieldRef<"Booking", 'String'>
+    readonly workStatus: FieldRef<"Booking", 'WorkStatus'>
     readonly workStarted: FieldRef<"Booking", 'Boolean'>
     readonly workStartTime: FieldRef<"Booking", 'DateTime'>
     readonly workEndTime: FieldRef<"Booking", 'DateTime'>
@@ -18807,6 +18833,34 @@ export namespace Prisma {
    */
   export type ListEnumBookingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingStatus[]'>
     
+
+
+  /**
+   * Reference to a field of type 'TripStatus'
+   */
+  export type EnumTripStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TripStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'TripStatus[]'
+   */
+  export type ListEnumTripStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TripStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkStatus'
+   */
+  export type EnumWorkStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkStatus[]'
+   */
+  export type ListEnumWorkStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -19455,14 +19509,14 @@ export namespace Prisma {
     vpProposedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     vpFarmerApproved?: BoolFilter<"Booking"> | boolean
     vpFarmerApprovedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
-    tripStatus?: StringFilter<"Booking"> | string
+    tripStatus?: EnumTripStatusFilter<"Booking"> | $Enums.TripStatus
     tripStarted?: BoolFilter<"Booking"> | boolean
     tripStartTime?: DateTimeNullableFilter<"Booking"> | Date | string | null
     tripStartLat?: FloatNullableFilter<"Booking"> | number | null
     tripStartLng?: FloatNullableFilter<"Booking"> | number | null
     tripDestLat?: FloatNullableFilter<"Booking"> | number | null
     tripDestLng?: FloatNullableFilter<"Booking"> | number | null
-    workStatus?: StringFilter<"Booking"> | string
+    workStatus?: EnumWorkStatusFilter<"Booking"> | $Enums.WorkStatus
     workStarted?: BoolFilter<"Booking"> | boolean
     workStartTime?: DateTimeNullableFilter<"Booking"> | Date | string | null
     workEndTime?: DateTimeNullableFilter<"Booking"> | Date | string | null
@@ -19538,14 +19592,14 @@ export namespace Prisma {
     vpProposedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     vpFarmerApproved?: BoolFilter<"Booking"> | boolean
     vpFarmerApprovedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
-    tripStatus?: StringFilter<"Booking"> | string
+    tripStatus?: EnumTripStatusFilter<"Booking"> | $Enums.TripStatus
     tripStarted?: BoolFilter<"Booking"> | boolean
     tripStartTime?: DateTimeNullableFilter<"Booking"> | Date | string | null
     tripStartLat?: FloatNullableFilter<"Booking"> | number | null
     tripStartLng?: FloatNullableFilter<"Booking"> | number | null
     tripDestLat?: FloatNullableFilter<"Booking"> | number | null
     tripDestLng?: FloatNullableFilter<"Booking"> | number | null
-    workStatus?: StringFilter<"Booking"> | string
+    workStatus?: EnumWorkStatusFilter<"Booking"> | $Enums.WorkStatus
     workStarted?: BoolFilter<"Booking"> | boolean
     workStartTime?: DateTimeNullableFilter<"Booking"> | Date | string | null
     workEndTime?: DateTimeNullableFilter<"Booking"> | Date | string | null
@@ -19617,14 +19671,14 @@ export namespace Prisma {
     vpProposedAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
     vpFarmerApproved?: BoolWithAggregatesFilter<"Booking"> | boolean
     vpFarmerApprovedAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
-    tripStatus?: StringWithAggregatesFilter<"Booking"> | string
+    tripStatus?: EnumTripStatusWithAggregatesFilter<"Booking"> | $Enums.TripStatus
     tripStarted?: BoolWithAggregatesFilter<"Booking"> | boolean
     tripStartTime?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
     tripStartLat?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
     tripStartLng?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
     tripDestLat?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
     tripDestLng?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
-    workStatus?: StringWithAggregatesFilter<"Booking"> | string
+    workStatus?: EnumWorkStatusWithAggregatesFilter<"Booking"> | $Enums.WorkStatus
     workStarted?: BoolWithAggregatesFilter<"Booking"> | boolean
     workStartTime?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
     workEndTime?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
@@ -20770,14 +20824,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -20809,14 +20863,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -20842,14 +20896,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20881,14 +20935,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20917,14 +20971,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -20945,14 +20999,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20975,14 +21029,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22222,6 +22276,20 @@ export namespace Prisma {
     not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
   }
 
+  export type EnumTripStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TripStatus | EnumTripStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TripStatus[] | ListEnumTripStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TripStatus[] | ListEnumTripStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTripStatusFilter<$PrismaModel> | $Enums.TripStatus
+  }
+
+  export type EnumWorkStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkStatus | EnumWorkStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkStatus[] | ListEnumWorkStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkStatus[] | ListEnumWorkStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkStatusFilter<$PrismaModel> | $Enums.WorkStatus
+  }
+
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
@@ -22374,6 +22442,26 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumBookingStatusFilter<$PrismaModel>
     _max?: NestedEnumBookingStatusFilter<$PrismaModel>
+  }
+
+  export type EnumTripStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TripStatus | EnumTripStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TripStatus[] | ListEnumTripStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TripStatus[] | ListEnumTripStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTripStatusWithAggregatesFilter<$PrismaModel> | $Enums.TripStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTripStatusFilter<$PrismaModel>
+    _max?: NestedEnumTripStatusFilter<$PrismaModel>
+  }
+
+  export type EnumWorkStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkStatus | EnumWorkStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkStatus[] | ListEnumWorkStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkStatus[] | ListEnumWorkStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkStatusFilter<$PrismaModel>
+    _max?: NestedEnumWorkStatusFilter<$PrismaModel>
   }
 
   export type BookingScalarRelationFilter = {
@@ -23561,6 +23649,14 @@ export namespace Prisma {
     set?: $Enums.BookingStatus
   }
 
+  export type EnumTripStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TripStatus
+  }
+
+  export type EnumWorkStatusFieldUpdateOperationsInput = {
+    set?: $Enums.WorkStatus
+  }
+
   export type BookingUpdateworkImagesInput = {
     set?: string[]
     push?: string | string[]
@@ -24252,6 +24348,20 @@ export namespace Prisma {
     not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
   }
 
+  export type NestedEnumTripStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TripStatus | EnumTripStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TripStatus[] | ListEnumTripStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TripStatus[] | ListEnumTripStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTripStatusFilter<$PrismaModel> | $Enums.TripStatus
+  }
+
+  export type NestedEnumWorkStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkStatus | EnumWorkStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkStatus[] | ListEnumWorkStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkStatus[] | ListEnumWorkStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkStatusFilter<$PrismaModel> | $Enums.WorkStatus
+  }
+
   export type NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
     in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
@@ -24260,6 +24370,26 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumBookingStatusFilter<$PrismaModel>
     _max?: NestedEnumBookingStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTripStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TripStatus | EnumTripStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TripStatus[] | ListEnumTripStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TripStatus[] | ListEnumTripStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTripStatusWithAggregatesFilter<$PrismaModel> | $Enums.TripStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTripStatusFilter<$PrismaModel>
+    _max?: NestedEnumTripStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWorkStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkStatus | EnumWorkStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkStatus[] | ListEnumWorkStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkStatus[] | ListEnumWorkStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkStatusFilter<$PrismaModel>
+    _max?: NestedEnumWorkStatusFilter<$PrismaModel>
   }
 
   export type FarmerProfileCreateWithoutUserInput = {
@@ -24361,14 +24491,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -24398,14 +24528,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -24694,14 +24824,14 @@ export namespace Prisma {
     vpProposedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     vpFarmerApproved?: BoolFilter<"Booking"> | boolean
     vpFarmerApprovedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
-    tripStatus?: StringFilter<"Booking"> | string
+    tripStatus?: EnumTripStatusFilter<"Booking"> | $Enums.TripStatus
     tripStarted?: BoolFilter<"Booking"> | boolean
     tripStartTime?: DateTimeNullableFilter<"Booking"> | Date | string | null
     tripStartLat?: FloatNullableFilter<"Booking"> | number | null
     tripStartLng?: FloatNullableFilter<"Booking"> | number | null
     tripDestLat?: FloatNullableFilter<"Booking"> | number | null
     tripDestLng?: FloatNullableFilter<"Booking"> | number | null
-    workStatus?: StringFilter<"Booking"> | string
+    workStatus?: EnumWorkStatusFilter<"Booking"> | $Enums.WorkStatus
     workStarted?: BoolFilter<"Booking"> | boolean
     workStartTime?: DateTimeNullableFilter<"Booking"> | Date | string | null
     workEndTime?: DateTimeNullableFilter<"Booking"> | Date | string | null
@@ -25115,14 +25245,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -25152,14 +25282,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -25582,14 +25712,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -25620,14 +25750,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -25890,14 +26020,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -25927,14 +26057,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -26814,14 +26944,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -26852,14 +26982,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -26941,14 +27071,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -26979,14 +27109,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27058,14 +27188,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -27096,14 +27226,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -27144,14 +27274,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27182,14 +27312,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27214,14 +27344,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -27252,14 +27382,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -27426,14 +27556,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27464,14 +27594,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27704,14 +27834,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -27742,14 +27872,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -27892,14 +28022,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27930,14 +28060,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28017,14 +28147,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -28055,14 +28185,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -28215,14 +28345,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28253,14 +28383,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28344,14 +28474,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -28418,14 +28548,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28455,14 +28585,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28490,14 +28620,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28700,14 +28830,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -28887,14 +29017,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28924,14 +29054,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28959,14 +29089,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29091,14 +29221,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -29118,14 +29248,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29156,14 +29286,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29191,14 +29321,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29262,14 +29392,14 @@ export namespace Prisma {
     vpProposedAt?: Date | string | null
     vpFarmerApproved?: boolean
     vpFarmerApprovedAt?: Date | string | null
-    tripStatus?: string
+    tripStatus?: $Enums.TripStatus
     tripStarted?: boolean
     tripStartTime?: Date | string | null
     tripStartLat?: number | null
     tripStartLng?: number | null
     tripDestLat?: number | null
     tripDestLng?: number | null
-    workStatus?: string
+    workStatus?: $Enums.WorkStatus
     workStarted?: boolean
     workStartTime?: Date | string | null
     workEndTime?: Date | string | null
@@ -29290,14 +29420,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29327,14 +29457,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29362,14 +29492,14 @@ export namespace Prisma {
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     vpFarmerApproved?: BoolFieldUpdateOperationsInput | boolean
     vpFarmerApprovedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    tripStatus?: StringFieldUpdateOperationsInput | string
+    tripStatus?: EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
     tripStarted?: BoolFieldUpdateOperationsInput | boolean
     tripStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tripStartLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripStartLng?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLat?: NullableFloatFieldUpdateOperationsInput | number | null
     tripDestLng?: NullableFloatFieldUpdateOperationsInput | number | null
-    workStatus?: StringFieldUpdateOperationsInput | string
+    workStatus?: EnumWorkStatusFieldUpdateOperationsInput | $Enums.WorkStatus
     workStarted?: BoolFieldUpdateOperationsInput | boolean
     workStartTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workEndTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

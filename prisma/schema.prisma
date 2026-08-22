@@ -19,6 +19,18 @@ enum EquipmentType {
   TRAILER
 }
 
+enum TripStatus {
+  NOT_STARTED
+  STARTED
+  ARRIVED
+}
+
+enum WorkStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
 enum PricingUnit {
   ACRE
   BIGHA
@@ -188,7 +200,7 @@ model Booking {
   vpFarmerApprovedAt DateTime?
 
   // Trip
-  tripStatus         String             @default("not_started")
+  tripStatus         TripStatus             @default(NOT_STARTED)
   tripStarted        Boolean            @default(false)
   tripStartTime      DateTime?
   tripStartLat       Float?
@@ -197,7 +209,7 @@ model Booking {
   tripDestLng        Float?
 
   // Work
-  workStatus         String             @default("not_started")
+  workStatus         WorkStatus              @default(NOT_STARTED)
   workStarted        Boolean            @default(false)
   workStartTime      DateTime?
   workEndTime        DateTime?

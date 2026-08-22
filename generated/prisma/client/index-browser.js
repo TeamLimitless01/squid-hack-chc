@@ -364,6 +364,18 @@ exports.BookingStatus = exports.$Enums.BookingStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.TripStatus = exports.$Enums.TripStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  STARTED: 'STARTED',
+  ARRIVED: 'ARRIVED'
+};
+
+exports.WorkStatus = exports.$Enums.WorkStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   FarmerProfile: 'FarmerProfile',
