@@ -15,17 +15,24 @@ type Booking = {
     area: number;
     bookingStatus: string;
     vpFinalAmount: number | null;
-    farmer: { name: string; phone: string; location?: any };
+    vpProposedAt: string | null;
+    additionalCharges: { id: string; reason: string; amount: number }[];
+    farmer: { name: string; phone: string; location?: { lat: number; lng?: number; lon?: number } };
     chcService: { service: { name: string }; pricingUnit: string; price: number };
     assignedDriver: { user: { name: string } } | null;
     tripStatus?: string;
     workStatus?: string;
     payment?: { status: string };
-    chc?: { location?: any };
+    chc?: { location?: { lat?: number; lng?: number; lon?: number } };
 };
 
 const statuses = ["ALL", "REQUESTED", "ACCEPTED", "REJECTED", "CANCELLED"];
 const statusLabel = (status: string) => status.toLowerCase().replaceAll("_", " ");
+const getBaseAmount = (booking: Booking) => booking.chcService.price * booking.area;
+const getAdditionalChargesTotal = (booking: Booking) =>
+    booking.additionalCharges.reduce((total, charge) => total + charge.amount, 0);
+const getTotalAmount = (booking: Booking) =>
+    booking.vpFinalAmount ?? getBaseAmount(booking) + getAdditionalChargesTotal(booking);
 
 const getStatusBadge = (booking: Booking) => {
     if (booking.payment?.status === "PAID") {
@@ -128,7 +135,7 @@ export default function CHCBookingsPage() {
                     </div>
 
                     <div className="mt-4 space-y-4">
-                        {filteredBookings.map((booking:any) => (
+                        {filteredBookings.map((booking) => (
                             <article key={booking.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start mb-6">
                                     <div>
@@ -177,6 +184,32 @@ export default function CHCBookingsPage() {
                                             ₹{(booking.vpFinalAmount !== null ? booking.vpFinalAmount : (booking.chcService.price * booking.area)).toLocaleString('en-IN')}
                                         </p>
                                     </div>
+                                </div>
+
+                                {booking.additionalCharges.length > 0 && (
+                                    <div className="mt-4 rounded-xl border border-amber-100 bg-amber-50/60 p-4">
+                                        <div className="flex items-center justify-between gap-4 border-b border-amber-100 pb-3">
+                                            <p className="text-sm font-bold text-slate-700">Work charges</p>
+                                            <p className="text-sm font-bold text-slate-900">₹{getBaseAmount(booking).toLocaleString("en-IN")}</p>
+                                        </div>
+                                        <div className="flex items-center justify-between gap-4">
+                                            <p className="mt-3 text-sm font-bold text-amber-900">Additional charges</p>
+                                            <p className="text-sm font-bold text-amber-800">+ ₹{getAdditionalChargesTotal(booking).toLocaleString("en-IN")}</p>
+                                        </div>
+                                        <div className="mt-3 space-y-2 border-t border-amber-100 pt-3">
+                                            {booking.additionalCharges.map((charge) => (
+                                                <div key={charge.id} className="flex items-center justify-between gap-4 text-sm">
+                                                    <span className="font-medium text-slate-600">{charge.reason}</span>
+                                                    <span className="font-bold text-slate-900">₹{charge.amount.toLocaleString("en-IN")}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="mt-4 flex items-center justify-between rounded-xl bg-emerald-50 px-4 py-3">
+                                    <span className="text-sm font-bold text-emerald-900">Total amount</span>
+                                    <span className="text-lg font-black text-emerald-700">₹{getTotalAmount(booking).toLocaleString("en-IN")}</span>
                                 </div>
 
                                 {booking.assignedDriver && (
@@ -251,7 +284,7 @@ export default function CHCBookingsPage() {
                     {mapBooking && mapBooking.farmer.location && (
                         <MapModal
                             lat={mapBooking.farmer.location.lat}
-                            lon={mapBooking.farmer.location.lng || mapBooking.farmer.location.lon}
+                            lon={mapBooking.farmer.location.lng ?? mapBooking.farmer.location.lon ?? 0}
                             name={mapBooking.farmer.name}
                             farmerLat={mapBooking.chc?.location?.lat} // Optional: we don't fetch CHC location here as it's the CHC itself, we can skip or pass undefined
                             farmerLon={mapBooking.chc?.location?.lng || mapBooking.chc?.location?.lon}
