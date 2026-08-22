@@ -7,6 +7,17 @@ datasource db {
   provider = "postgresql"
 }
 
+enum EquipmentType {
+  TRACTOR
+  CULTIVATOR
+  SEED_DRILL
+  ROTAVATOR
+  PLOUGH
+  SPRAYER
+  HARVESTER
+  TRAILER
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -82,14 +93,14 @@ model DriverProfile {
 }
 
 model PlatformService {
-  id                String   @id @default(cuid())
-  name              String   @unique
+  id                String          @id @default(cuid())
+  name              String          @unique
   description       String?
-  resourcesRequired String[]
+  resourcesRequired EquipmentType[]
   pricingUnit       String
-  isActive          Boolean  @default(true)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   chcServices CHCService[]
 }
@@ -111,22 +122,22 @@ model CHCService {
 }
 
 model Equipment {
-  id                 String     @id @default(cuid())
+  id                 String        @id @default(cuid())
   chcId              String
-  chc                CHCProfile @relation(fields: [chcId], references: [id], onDelete: Cascade)
+  chc                CHCProfile    @relation(fields: [chcId], references: [id], onDelete: Cascade)
   name               String
-  type               String
+  type               EquipmentType
   brand              String?
   model              String?
-  registrationNumber String?    @unique
+  registrationNumber String?       @unique
   purchaseYear       Int?
-  status             String     @default("available")
-  lat                Float      @default(0)
-  lng                Float      @default(0)
-  usageHours         Float      @default(0)
+  status             String        @default("available")
+  lat                Float         @default(0)
+  lng                Float         @default(0)
+  usageHours         Float         @default(0)
   fuelLevel          Float?
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 
   assignedResources AssignedResource[]
 }

@@ -36,10 +36,6 @@ export default withAuth(
       );
     }
 
-    if (isAuth && req.nextUrl.pathname === "/") {
-      return NextResponse.redirect(new URL(`/dashboard/${token?.role}`, req.url));
-    }
-
     // Role-based access control (RBAC) for dashboard routes
     if (req.nextUrl.pathname.startsWith("/dashboard")) {
       const role = token?.role as string;
@@ -80,6 +76,5 @@ export const config = {
     "/dashboard/:path*",
     "/login",
     "/register/:path*",
-    '/'
   ],
 };

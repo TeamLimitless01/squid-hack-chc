@@ -330,7 +330,16 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.EquipmentType = exports.$Enums.EquipmentType = {
+  TRACTOR: 'TRACTOR',
+  CULTIVATOR: 'CULTIVATOR',
+  SEED_DRILL: 'SEED_DRILL',
+  ROTAVATOR: 'ROTAVATOR',
+  PLOUGH: 'PLOUGH',
+  SPRAYER: 'SPRAYER',
+  HARVESTER: 'HARVESTER',
+  TRAILER: 'TRAILER'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
