@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CarFront, Cog, LayoutDashboard, UserRound, Wrench } from "lucide-react";
+import { CalendarDays, CarFront, Cog, LayoutDashboard, UserRound, Wrench } from "lucide-react";
 import SignOutButton from "./sign-out-button";
 import { usePathname } from "next/navigation";
 
@@ -22,6 +22,7 @@ export default function CHCDashboardLayout({ children }: { children: React.React
           <Link href="/dashboard/chc" className={desktopLinkClass("overview")}><LayoutDashboard className="h-4 w-4" /> Overview</Link>
           <Link href="/dashboard/chc/equipment" className={desktopLinkClass("equipment")}><Wrench className="h-4 w-4" /> Equipment</Link>
           <Link href="/dashboard/chc/add-services" className={desktopLinkClass("add-services")}><Cog className="h-4 w-4" /> Add services</Link>
+          <Link href="/dashboard/chc/bookings" className={desktopLinkClass("bookings")}><CalendarDays className="h-4 w-4" /> Bookings</Link>
           <Link href="/dashboard/chc/drivers" className={desktopLinkClass("drivers")}><CarFront className="h-4 w-4" /> Drivers</Link>
           <Link href="/dashboard/chc/profile" className={desktopLinkClass("profile")}><UserRound className="h-4 w-4" /> Profile</Link>
         </nav>
@@ -32,6 +33,7 @@ export default function CHCDashboardLayout({ children }: { children: React.React
           <Link href="/dashboard/chc" className={mobileLinkClass("overview")}>Overview</Link>
           <Link href="/dashboard/chc/equipment" className={mobileLinkClass("equipment")}>Equipment</Link>
           <Link href="/dashboard/chc/add-services" className={mobileLinkClass("add-services")}>Add services</Link>
+          <Link href="/dashboard/chc/bookings" className={mobileLinkClass("bookings")}>Bookings</Link>
           <Link href="/dashboard/chc/drivers" className={mobileLinkClass("drivers")}>Drivers</Link>
           <Link href="/dashboard/chc/profile" className={mobileLinkClass("profile")}>Profile</Link>
         </nav>
