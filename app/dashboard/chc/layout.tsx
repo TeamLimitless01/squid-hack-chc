@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Cog, LayoutDashboard, UserRound, Wrench } from "lucide-react";
+import { CarFront, Cog, LayoutDashboard, UserRound, Wrench } from "lucide-react";
 import SignOutButton from "./sign-out-button";
 
 export default function CHCDashboardLayout({ children }: { children: React.ReactNode }) {
@@ -14,6 +14,7 @@ export default function CHCDashboardLayout({ children }: { children: React.React
           <Link href="/dashboard/chc" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700"><LayoutDashboard className="h-4 w-4" /> Overview</Link>
           <Link href="/dashboard/chc/equipment" className="flex items-center gap-3 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700"><Wrench className="h-4 w-4" /> Equipment</Link>
           <Link href="/dashboard/chc/add-services" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700"><Cog className="h-4 w-4" /> Add services</Link>
+          <Link href="/dashboard/chc/drivers" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700"><CarFront className="h-4 w-4" /> Drivers</Link>
           <Link href="/dashboard/chc/profile" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700"><UserRound className="h-4 w-4" /> Profile</Link>
         </nav>
         <div className="mt-auto border-t border-slate-100 pt-5"><SignOutButton /></div>
@@ -23,6 +24,7 @@ export default function CHCDashboardLayout({ children }: { children: React.React
           <Link href="/dashboard/chc" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600">Overview</Link>
           <Link href="/dashboard/chc/equipment" className="whitespace-nowrap rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white">Equipment</Link>
           <Link href="/dashboard/chc/add-services" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600">Add services</Link>
+          <Link href="/dashboard/chc/drivers" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600">Drivers</Link>
           <Link href="/dashboard/chc/profile" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600">Profile</Link>
         </nav>
         {children}
