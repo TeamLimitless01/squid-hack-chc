@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle, Clock3, CalendarDays, Layers } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, XCircle, Clock3, CalendarDays, Layers, Send, UserRound, Tractor } from "lucide-react";
 import { rejectBooking } from "@/app/actions/chc-booking-actions";
+import ProposalModal from "@/components/modals/ProposalModal";
+import AssignResourcesModal from "@/components/modals/AssignResourcesModal";
 
 type Booking = {
     id: string;
@@ -25,6 +27,8 @@ export default function CHCBookingsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [processingId, setProcessingId] = useState<string | null>(null);
+    const [proposalBooking, setProposalBooking] = useState<Booking | null>(null);
+    const [assignBooking, setAssignBooking] = useState<Booking | null>(null);
 
     const handleReject = async (bookingId: string) => {
         setProcessingId(bookingId);
@@ -150,7 +154,18 @@ export default function CHCBookingsPage() {
 
                                 {booking.bookingStatus === "REQUESTED" && (
                                     <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-3">
-                                        <button className="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-emerald-700 transition">Accept Request</button>
+                                        {booking.vpProposedAt ? (
+                                            <div className="flex-1 flex items-center gap-2 text-amber-600 bg-amber-50 px-4 py-2.5 rounded-xl text-sm font-bold border border-amber-200">
+                                                <Send className="w-4 h-4" /> Proposal Sent to Farmer
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => setProposalBooking(booking)}
+                                                className="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-emerald-700 transition"
+                                            >
+                                                Send Proposal
+                                            </button>
+                                        )}
                                         <button
                                             onClick={() => handleReject(booking.id)}
                                             disabled={processingId === booking.id}
@@ -159,6 +174,17 @@ export default function CHCBookingsPage() {
                                             {processingId === booking.id ? (
                                                 <><Loader2 className="w-4 h-4 animate-spin" /> Rejecting...</>
                                             ) : "Reject"}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {booking.bookingStatus === "ACCEPTED" && !booking.assignedDriver && (
+                                    <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-end">
+                                        <button
+                                            onClick={() => setAssignBooking(booking)}
+                                            className="bg-slate-900 text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-slate-800 transition flex items-center gap-2"
+                                        >
+                                            <Tractor className="w-4 h-4" /> Assign Resources
                                         </button>
                                     </div>
                                 )}
@@ -172,6 +198,20 @@ export default function CHCBookingsPage() {
                             <h3 className="mt-4 text-lg font-bold">No {selectedStatus === "ALL" ? "bookings" : statusLabel(selectedStatus) + " bookings"}</h3>
                             <p className="mt-2 text-sm text-slate-500">Bookings matching this status will appear here.</p>
                         </div>
+                    )}
+
+                    {proposalBooking && (
+                        <ProposalModal booking={proposalBooking} onClose={() => {
+                            setProposalBooking(null);
+                            window.location.reload();
+                        }} />
+                    )}
+
+                    {assignBooking && (
+                        <AssignResourcesModal booking={assignBooking} onClose={() => {
+                            setAssignBooking(null);
+                            window.location.reload();
+                        }} />
                     )}
                 </>
             )}
