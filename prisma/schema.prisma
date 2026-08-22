@@ -26,6 +26,14 @@ enum PricingUnit {
   DAY
 }
 
+enum LicenseType {
+  LMV
+  HMV
+  MCWG
+  COMMERCIAL
+  OTHER
+}
+
 model User {
   id             String         @id @default(cuid())
   name           String
@@ -87,7 +95,7 @@ model DriverProfile {
   userId             String      @unique
   user               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   licenseNumber      String      @unique
-  licenseType        String?
+  licenseType        LicenseType?
   licenseExpiry      DateTime?
   experienceYears    Int         @default(0)
   assignedCHCId      String?

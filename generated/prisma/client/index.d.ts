@@ -106,6 +106,17 @@ export const PricingUnit: {
 
 export type PricingUnit = (typeof PricingUnit)[keyof typeof PricingUnit]
 
+
+export const LicenseType: {
+  LMV: 'LMV',
+  HMV: 'HMV',
+  MCWG: 'MCWG',
+  COMMERCIAL: 'COMMERCIAL',
+  OTHER: 'OTHER'
+};
+
+export type LicenseType = (typeof LicenseType)[keyof typeof LicenseType]
+
 }
 
 export type EquipmentType = $Enums.EquipmentType
@@ -115,6 +126,10 @@ export const EquipmentType: typeof $Enums.EquipmentType
 export type PricingUnit = $Enums.PricingUnit
 
 export const PricingUnit: typeof $Enums.PricingUnit
+
+export type LicenseType = $Enums.LicenseType
+
+export const LicenseType: typeof $Enums.LicenseType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -6160,7 +6175,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     licenseNumber: string | null
-    licenseType: string | null
+    licenseType: $Enums.LicenseType | null
     licenseExpiry: Date | null
     experienceYears: number | null
     assignedCHCId: string | null
@@ -6174,7 +6189,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     licenseNumber: string | null
-    licenseType: string | null
+    licenseType: $Enums.LicenseType | null
     licenseExpiry: Date | null
     experienceYears: number | null
     assignedCHCId: string | null
@@ -6343,7 +6358,7 @@ export namespace Prisma {
     id: string
     userId: string
     licenseNumber: string
-    licenseType: string | null
+    licenseType: $Enums.LicenseType | null
     licenseExpiry: Date | null
     experienceYears: number
     assignedCHCId: string | null
@@ -6463,7 +6478,7 @@ export namespace Prisma {
       id: string
       userId: string
       licenseNumber: string
-      licenseType: string | null
+      licenseType: $Enums.LicenseType | null
       licenseExpiry: Date | null
       experienceYears: number
       assignedCHCId: string | null
@@ -6900,7 +6915,7 @@ export namespace Prisma {
     readonly id: FieldRef<"DriverProfile", 'String'>
     readonly userId: FieldRef<"DriverProfile", 'String'>
     readonly licenseNumber: FieldRef<"DriverProfile", 'String'>
-    readonly licenseType: FieldRef<"DriverProfile", 'String'>
+    readonly licenseType: FieldRef<"DriverProfile", 'LicenseType'>
     readonly licenseExpiry: FieldRef<"DriverProfile", 'DateTime'>
     readonly experienceYears: FieldRef<"DriverProfile", 'Int'>
     readonly assignedCHCId: FieldRef<"DriverProfile", 'String'>
@@ -18725,6 +18740,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'LicenseType'
+   */
+  export type EnumLicenseTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LicenseType'>
+    
+
+
+  /**
+   * Reference to a field of type 'LicenseType[]'
+   */
+  export type ListEnumLicenseTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LicenseType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'EquipmentType[]'
    */
   export type ListEnumEquipmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EquipmentType[]'>
@@ -19037,7 +19066,7 @@ export namespace Prisma {
     id?: StringFilter<"DriverProfile"> | string
     userId?: StringFilter<"DriverProfile"> | string
     licenseNumber?: StringFilter<"DriverProfile"> | string
-    licenseType?: StringNullableFilter<"DriverProfile"> | string | null
+    licenseType?: EnumLicenseTypeNullableFilter<"DriverProfile"> | $Enums.LicenseType | null
     licenseExpiry?: DateTimeNullableFilter<"DriverProfile"> | Date | string | null
     experienceYears?: IntFilter<"DriverProfile"> | number
     assignedCHCId?: StringNullableFilter<"DriverProfile"> | string | null
@@ -19074,7 +19103,7 @@ export namespace Prisma {
     AND?: DriverProfileWhereInput | DriverProfileWhereInput[]
     OR?: DriverProfileWhereInput[]
     NOT?: DriverProfileWhereInput | DriverProfileWhereInput[]
-    licenseType?: StringNullableFilter<"DriverProfile"> | string | null
+    licenseType?: EnumLicenseTypeNullableFilter<"DriverProfile"> | $Enums.LicenseType | null
     licenseExpiry?: DateTimeNullableFilter<"DriverProfile"> | Date | string | null
     experienceYears?: IntFilter<"DriverProfile"> | number
     assignedCHCId?: StringNullableFilter<"DriverProfile"> | string | null
@@ -19113,7 +19142,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DriverProfile"> | string
     userId?: StringWithAggregatesFilter<"DriverProfile"> | string
     licenseNumber?: StringWithAggregatesFilter<"DriverProfile"> | string
-    licenseType?: StringNullableWithAggregatesFilter<"DriverProfile"> | string | null
+    licenseType?: EnumLicenseTypeNullableWithAggregatesFilter<"DriverProfile"> | $Enums.LicenseType | null
     licenseExpiry?: DateTimeNullableWithAggregatesFilter<"DriverProfile"> | Date | string | null
     experienceYears?: IntWithAggregatesFilter<"DriverProfile"> | number
     assignedCHCId?: StringNullableWithAggregatesFilter<"DriverProfile"> | string | null
@@ -20317,7 +20346,7 @@ export namespace Prisma {
   export type DriverProfileCreateInput = {
     id?: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     availabilityStatus?: string
@@ -20333,7 +20362,7 @@ export namespace Prisma {
     id?: string
     userId: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     assignedCHCId?: string | null
@@ -20347,7 +20376,7 @@ export namespace Prisma {
   export type DriverProfileUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     availabilityStatus?: StringFieldUpdateOperationsInput | string
@@ -20363,7 +20392,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     assignedCHCId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20378,7 +20407,7 @@ export namespace Prisma {
     id?: string
     userId: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     assignedCHCId?: string | null
@@ -20391,7 +20420,7 @@ export namespace Prisma {
   export type DriverProfileUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     availabilityStatus?: StringFieldUpdateOperationsInput | string
@@ -20404,7 +20433,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     assignedCHCId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21801,6 +21830,13 @@ export namespace Prisma {
     rating?: SortOrder
   }
 
+  export type EnumLicenseTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LicenseType | EnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LicenseType[] | ListEnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LicenseType[] | ListEnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLicenseTypeNullableFilter<$PrismaModel> | $Enums.LicenseType | null
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -21862,6 +21898,16 @@ export namespace Prisma {
   export type DriverProfileSumOrderByAggregateInput = {
     experienceYears?: SortOrder
     rating?: SortOrder
+  }
+
+  export type EnumLicenseTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LicenseType | EnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LicenseType[] | ListEnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LicenseType[] | ListEnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLicenseTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.LicenseType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLicenseTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumLicenseTypeNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -23117,6 +23163,10 @@ export namespace Prisma {
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
   }
 
+  export type NullableEnumLicenseTypeFieldUpdateOperationsInput = {
+    set?: $Enums.LicenseType | null
+  }
+
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
   }
@@ -24027,6 +24077,13 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
+  export type NestedEnumLicenseTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LicenseType | EnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LicenseType[] | ListEnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LicenseType[] | ListEnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLicenseTypeNullableFilter<$PrismaModel> | $Enums.LicenseType | null
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -24036,6 +24093,16 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedEnumLicenseTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LicenseType | EnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LicenseType[] | ListEnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LicenseType[] | ListEnumLicenseTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLicenseTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.LicenseType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLicenseTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumLicenseTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -24188,7 +24255,7 @@ export namespace Prisma {
   export type DriverProfileCreateWithoutUserInput = {
     id?: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     availabilityStatus?: string
@@ -24202,7 +24269,7 @@ export namespace Prisma {
   export type DriverProfileUncheckedCreateWithoutUserInput = {
     id?: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     assignedCHCId?: string | null
@@ -24504,7 +24571,7 @@ export namespace Prisma {
   export type DriverProfileUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     availabilityStatus?: StringFieldUpdateOperationsInput | string
@@ -24518,7 +24585,7 @@ export namespace Prisma {
   export type DriverProfileUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     assignedCHCId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24859,7 +24926,7 @@ export namespace Prisma {
   export type DriverProfileCreateWithoutAssignedCHCInput = {
     id?: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     availabilityStatus?: string
@@ -24874,7 +24941,7 @@ export namespace Prisma {
     id?: string
     userId: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     availabilityStatus?: string
@@ -25224,7 +25291,7 @@ export namespace Prisma {
     id?: StringFilter<"DriverProfile"> | string
     userId?: StringFilter<"DriverProfile"> | string
     licenseNumber?: StringFilter<"DriverProfile"> | string
-    licenseType?: StringNullableFilter<"DriverProfile"> | string | null
+    licenseType?: EnumLicenseTypeNullableFilter<"DriverProfile"> | $Enums.LicenseType | null
     licenseExpiry?: DateTimeNullableFilter<"DriverProfile"> | Date | string | null
     experienceYears?: IntFilter<"DriverProfile"> | number
     assignedCHCId?: StringNullableFilter<"DriverProfile"> | string | null
@@ -26161,7 +26228,7 @@ export namespace Prisma {
   export type DriverProfileCreateWithoutBookingsInput = {
     id?: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     availabilityStatus?: string
@@ -26176,7 +26243,7 @@ export namespace Prisma {
     id?: string
     userId: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     assignedCHCId?: string | null
@@ -26498,7 +26565,7 @@ export namespace Prisma {
   export type DriverProfileUpdateWithoutBookingsInput = {
     id?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     availabilityStatus?: StringFieldUpdateOperationsInput | string
@@ -26513,7 +26580,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     assignedCHCId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28519,7 +28586,7 @@ export namespace Prisma {
     id?: string
     userId: string
     licenseNumber: string
-    licenseType?: string | null
+    licenseType?: $Enums.LicenseType | null
     licenseExpiry?: Date | string | null
     experienceYears?: number
     availabilityStatus?: string
@@ -28621,7 +28688,7 @@ export namespace Prisma {
   export type DriverProfileUpdateWithoutAssignedCHCInput = {
     id?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     availabilityStatus?: StringFieldUpdateOperationsInput | string
@@ -28636,7 +28703,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     availabilityStatus?: StringFieldUpdateOperationsInput | string
@@ -28650,7 +28717,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     licenseNumber?: StringFieldUpdateOperationsInput | string
-    licenseType?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseType?: NullableEnumLicenseTypeFieldUpdateOperationsInput | $Enums.LicenseType | null
     licenseExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     experienceYears?: IntFieldUpdateOperationsInput | number
     availabilityStatus?: StringFieldUpdateOperationsInput | string

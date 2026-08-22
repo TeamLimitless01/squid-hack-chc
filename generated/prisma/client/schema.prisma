@@ -25,6 +25,14 @@ enum PricingUnit {
   DAY
 }
 
+enum LicenseType {
+  LMV
+  HMV
+  MCWG
+  COMMERCIAL
+  OTHER
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -82,19 +90,19 @@ model CHCProfile {
 }
 
 model DriverProfile {
-  id                 String      @id @default(cuid())
-  userId             String      @unique
-  user               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  licenseNumber      String      @unique
-  licenseType        String?
+  id                 String       @id @default(cuid())
+  userId             String       @unique
+  user               User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  licenseNumber      String       @unique
+  licenseType        LicenseType?
   licenseExpiry      DateTime?
-  experienceYears    Int         @default(0)
+  experienceYears    Int          @default(0)
   assignedCHCId      String?
-  assignedCHC        CHCProfile? @relation(fields: [assignedCHCId], references: [id])
-  availabilityStatus String      @default("available")
-  rating             Float       @default(0)
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
+  assignedCHC        CHCProfile?  @relation(fields: [assignedCHCId], references: [id])
+  availabilityStatus String       @default("available")
+  rating             Float        @default(0)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 
   bookings Booking[]
 }

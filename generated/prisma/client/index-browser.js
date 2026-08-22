@@ -331,6 +331,14 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.LicenseType = exports.$Enums.LicenseType = {
+  LMV: 'LMV',
+  HMV: 'HMV',
+  MCWG: 'MCWG',
+  COMMERCIAL: 'COMMERCIAL',
+  OTHER: 'OTHER'
+};
+
 exports.EquipmentType = exports.$Enums.EquipmentType = {
   TRACTOR: 'TRACTOR',
   CULTIVATOR: 'CULTIVATOR',

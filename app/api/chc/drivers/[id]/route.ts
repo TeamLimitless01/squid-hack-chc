@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { hashPassword } from "@/src/lib/auth";
 import prisma from "@/src/lib/db";
 import { LicenseType } from "@/generated/prisma/client";
 
@@ -23,34 +22,36 @@ async function getCHCSession() {
   return user as { role: string; profileId: string };
 }
 
-export async function GET() {
+const driverInclude = {
+  user: { select: { name: true, email: true, phone: true } },
+} as const;
+
+export async function GET(
+  _request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
   const user = await getCHCSession();
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { id } = await context.params;
 
-  const drivers = await prisma.driverProfile.findMany({
-    where: { assignedCHCId: user.profileId },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          phone: true,
-          isActive: true,
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
+  const driver = await prisma.driverProfile.findFirst({
+    where: { id, assignedCHCId: user.profileId },
+    include: driverInclude,
   });
-
-  return NextResponse.json({ drivers });
+  if (!driver)
+    return NextResponse.json({ error: "Driver not found" }, { status: 404 });
+  return NextResponse.json({ driver });
 }
 
-export async function POST(request: Request) {
+export async function PATCH(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
   const user = await getCHCSession();
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { id } = await context.params;
 
   try {
     const body = await request.json();
@@ -59,7 +60,6 @@ export async function POST(request: Request) {
       .trim()
       .toLowerCase();
     const phone = String(body.phone || "").trim();
-    const password = String(body.password || "");
     const licenseNumber = String(body.licenseNumber || "")
       .trim()
       .toUpperCase();
@@ -72,18 +72,9 @@ export async function POST(request: Request) {
         ? 0
         : Number(body.experienceYears);
 
-    if (!name || !email || !phone || !password || !licenseNumber) {
+    if (!name || !email || !phone || !licenseNumber)
       return NextResponse.json(
-        {
-          error:
-            "Name, email, phone, password, and license number are required",
-        },
-        { status: 400 },
-      );
-    }
-    if (password.length < 6)
-      return NextResponse.json(
-        { error: "Password must be at least 6 characters" },
+        { error: "Name, email, phone, and license number are required" },
         { status: 400 },
       );
     if (licenseExpiry && Number.isNaN(licenseExpiry.getTime()))
@@ -97,52 +88,26 @@ export async function POST(request: Request) {
         { status: 400 },
       );
 
-    const passwordHash = await hashPassword(password);
-    const driver = await prisma.$transaction(async (transaction) => {
-      const createdUser = await transaction.user.create({
-        data: {
-          name,
-          email,
-          phone,
-          password: passwordHash,
-          role: "driver",
-          profileModel: "DriverProfile",
-          profileId: "",
-          driverProfile: {
-            create: {
-              licenseNumber,
-              licenseType,
-              licenseExpiry,
-              experienceYears,
-              assignedCHCId: user.profileId,
-            },
-          },
-        },
-        include: { driverProfile: true },
-      });
-      if (!createdUser.driverProfile)
-        throw new Error("Driver profile was not created");
+    const driver = await prisma.driverProfile.findFirst({
+      where: { id, assignedCHCId: user.profileId },
+      select: { userId: true },
+    });
+    if (!driver)
+      return NextResponse.json({ error: "Driver not found" }, { status: 404 });
+
+    const updatedDriver = await prisma.$transaction(async (transaction) => {
       await transaction.user.update({
-        where: { id: createdUser.id },
-        data: { profileId: createdUser.driverProfile.id },
+        where: { id: driver.userId },
+        data: { name, email, phone },
       });
-      return transaction.driverProfile.findUnique({
-        where: { id: createdUser.driverProfile.id },
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              phone: true,
-              isActive: true,
-            },
-          },
-        },
+      return transaction.driverProfile.update({
+        where: { id },
+        data: { licenseNumber, licenseType, licenseExpiry, experienceYears },
+        include: driverInclude,
       });
     });
 
-    return NextResponse.json({ driver }, { status: 201 });
+    return NextResponse.json({ driver: updatedDriver });
   } catch (error: unknown) {
     const errorCode =
       error && typeof error === "object" && "code" in error
@@ -153,9 +118,9 @@ export async function POST(request: Request) {
         { error: "That email, phone, or license number is already in use" },
         { status: 409 },
       );
-    console.error("Driver creation error:", error);
+    console.error("Driver update error:", error);
     return NextResponse.json(
-      { error: "Unable to add driver" },
+      { error: "Unable to update driver" },
       { status: 500 },
     );
   }
