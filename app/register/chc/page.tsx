@@ -1,15 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { MapPin, Loader2, ArrowRight, User as UserIcon, Phone, Mail, Lock, Home, FileText } from "lucide-react";
+import { MapPin, Loader2, ArrowRight, User as UserIcon, Phone, Mail, Lock, Home } from "lucide-react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 export default function CHCRegistration() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [locationLoading, setLocationLoading] = useState(false);
   const [error, setError] = useState("");
+  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -20,9 +24,7 @@ export default function CHCRegistration() {
     city: "",
     state: "",
     centerName: "",
-    registrationNumber: "",
-    description: "",
-    location: { type: "Point", coordinates: [0, 0] }
+    location: { name: "", lat: 0, lon: 0 }
   });
 
   const handleChange = (e: any) => {
@@ -30,41 +32,68 @@ export default function CHCRegistration() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleLocationDetect = async () => {
-    if (!formData.address && !formData.city) {
-      setError("Please enter at least an address or city to detect location.");
+  const handleLocationSearch = (query: string) => {
+    setSearchQuery(query);
+    
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    
+    if (query.length < 3) {
+      setSuggestions([]);
       return;
     }
     
-    setLocationLoading(true);
-    setError("");
-    
-    try {
-      const query = `${formData.address} ${formData.city} ${formData.state}`.trim();
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`);
-      const data = await res.json();
-      
-      if (data && data.length > 0) {
-        const { lat, lon } = data[0];
-        setFormData(prev => ({
-          ...prev,
-          location: { type: "Point", coordinates: [parseFloat(lon), parseFloat(lat)] }
-        }));
-        alert(`Location detected! (Lat: ${lat}, Lng: ${lon})`);
-      } else {
-        setError("Could not find coordinates for this address.");
+    setIsSearching(true);
+    searchTimeout.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?${new URLSearchParams({
+          q: query,
+          format: "json",
+          addressdetails: "1",
+          limit: "5",
+          countrycodes: "in",
+        })}`);
+        const data = await res.json();
+        setSuggestions(data);
+      } catch (err) {
+        console.error("Location search failed", err);
+      } finally {
+        setIsSearching(false);
       }
-    } catch (err) {
-      setError("Failed to fetch location from Nominatim.");
-    } finally {
-      setLocationLoading(false);
-    }
+    }, 500);
+  };
+
+  const handleSelectLocation = (place: any) => {
+    const addr = place.address || {};
+    const city = addr.city || addr.town || addr.village || addr.county || "";
+    const state = addr.state || "";
+    
+    const fullAddress = place.display_name.split(',').slice(0, 2).join(',');
+
+    setFormData(prev => ({
+      ...prev,
+      address: fullAddress,
+      city,
+      state,
+      location: {
+        name: place.display_name,
+        lat: parseFloat(place.lat),
+        lon: parseFloat(place.lon)
+      }
+    }));
+    setSearchQuery(place.display_name);
+    setSuggestions([]);
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    if (!formData.address) {
+      setError("Please select a location from the suggestions.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/auth/register/chc", {
@@ -98,139 +127,162 @@ export default function CHCRegistration() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 flex justify-center">
-      <div className="max-w-2xl w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-gray-100">
-        <div>
-          <h2 className="text-3xl font-extrabold text-gray-900 text-center flex items-center justify-center gap-3">
-            <Home className="text-blue-500 w-8 h-8" />
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50 py-12 px-4 sm:px-6 lg:px-8 flex justify-center items-center font-sans">
+      <div className="max-w-xl w-full space-y-8 bg-white/70 backdrop-blur-xl p-10 rounded-[2rem] shadow-2xl border border-white/50">
+        <div className="text-center">
+          <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+            <Home className="text-emerald-600 w-8 h-8" />
+          </div>
+          <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
             CHC Registration
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or <Link href="/register/farmer" className="font-medium text-blue-600 hover:text-blue-500">register as a Farmer</Link>
+          <p className="mt-3 text-sm text-gray-500">
+            Or <Link href="/register/farmer" className="font-semibold text-emerald-600 hover:text-emerald-500 transition-colors">register as a Farmer</Link>
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm border border-red-100">
+          <div className="bg-red-50/80 backdrop-blur-sm text-red-600 p-4 rounded-xl text-sm border border-red-100 font-medium">
             {error}
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900 border-b pb-2">Personal Details</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <UserIcon className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <input type="text" name="name" required value={formData.name} onChange={handleChange} className="pl-10 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm h-11 border" placeholder="John Doe" />
+        <form className="mt-8 space-y-8" onSubmit={handleSubmit}>
+          {/* Section: Business Details */}
+          <div className="space-y-5">
+            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Business Details</h3>
+            
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Center Name</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
+                  <Home className="h-5 w-5" />
                 </div>
+                <input type="text" name="centerName" required value={formData.centerName} onChange={handleChange} className="text-gray-900 pl-11 block w-full bg-gray-50/50 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white sm:text-sm h-12 transition-all duration-200" placeholder="e.g. Green Valley CHC" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Phone className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="pl-10 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm h-11 border" placeholder="+91 9876543210" />
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Email Address</label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <input type="email" name="email" required value={formData.email} onChange={handleChange} className="pl-10 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm h-11 border" placeholder="you@example.com" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Password</label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <input type="password" name="password" required minLength={6} value={formData.password} onChange={handleChange} className="pl-10 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm h-11 border" placeholder="••••••••" />
-                </div>
-              </div>
-            </div>
-
-            <h3 className="text-lg font-medium text-gray-900 border-b pb-2 pt-4">CHC Details</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">Center Name</label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Home className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <input type="text" name="centerName" required value={formData.centerName} onChange={handleChange} className="pl-10 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm border h-11" placeholder="Green Valley CHC" />
-                </div>
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">Registration Number (Optional)</label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FileText className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <input type="text" name="registrationNumber" value={formData.registrationNumber} onChange={handleChange} className="pl-10 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm border h-11" placeholder="REG-12345" />
-                </div>
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">Description (Optional)</label>
-                <textarea name="description" rows={3} value={formData.description} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" placeholder="Tell us about the equipment and services you offer..." />
-              </div>
-            </div>
-
-            <h3 className="text-lg font-medium text-gray-900 border-b pb-2 pt-4">Location</h3>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">Street Address</label>
-                  <input type="text" name="address" value={formData.address} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border h-11" placeholder="123 CHC Road" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">City</label>
-                  <input type="text" name="city" value={formData.city} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border h-11" placeholder="Springfield" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">State</label>
-                  <input type="text" name="state" value={formData.state} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border h-11" placeholder="IL" />
-                </div>
-              </div>
-              
-              <button
-                type="button"
-                onClick={handleLocationDetect}
-                disabled={locationLoading}
-                className="w-full inline-flex justify-center items-center px-4 py-2 border border-blue-500 text-sm font-medium rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors h-11"
-              >
-                {locationLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <MapPin className="w-5 h-5 mr-2" />}
-                {locationLoading ? "Detecting Coordinates..." : "Detect Precise Coordinates"}
-              </button>
-              {formData.location.coordinates[0] !== 0 && (
-                 <p className="text-xs text-blue-600 text-center font-medium">Coordinates saved: {formData.location.coordinates[1].toFixed(4)}, {formData.location.coordinates[0].toFixed(4)}</p>
-              )}
             </div>
           </div>
 
-          <div>
+          {/* Section: Personal Details */}
+          <div className="space-y-5">
+            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Account Details</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Owner Name</label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
+                    <UserIcon className="h-5 w-5" />
+                  </div>
+                  <input type="text" name="name" required value={formData.name} onChange={handleChange} className="text-gray-900 pl-11 block w-full bg-gray-50/50 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white sm:text-sm h-12 transition-all duration-200" placeholder="John Doe" />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
+                    <Phone className="h-5 w-5" />
+                  </div>
+                  <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="text-gray-900 pl-11 block w-full bg-gray-50/50 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white sm:text-sm h-12 transition-all duration-200" placeholder="+91 9876543210" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <input type="email" name="email" required value={formData.email} onChange={handleChange} className="text-gray-900 pl-11 block w-full bg-gray-50/50 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white sm:text-sm h-12 transition-all duration-200" placeholder="you@example.com" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
+                    <Lock className="h-5 w-5" />
+                  </div>
+                  <input type="password" name="password" required minLength={6} value={formData.password} onChange={handleChange} className="text-gray-900 pl-11 block w-full bg-gray-50/50 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white sm:text-sm h-12 transition-all duration-200" placeholder="••••••••" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Location */}
+          <div className="space-y-5 relative">
+            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Location</h3>
+            
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Search Area / Village</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
+                  <MapPin className="h-5 w-5" />
+                </div>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => handleLocationSearch(e.target.value)}
+                  className="text-gray-900 pl-11 block w-full bg-gray-50/50 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white sm:text-sm h-12 transition-all duration-200"
+                  placeholder="Type your area, village or city..."
+                />
+                {isSearching && (
+                  <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+                    <Loader2 className="h-4 w-4 text-emerald-500 animate-spin" />
+                  </div>
+                )}
+              </div>
+              
+              {suggestions.length > 0 && (
+                <ul className="absolute z-20 mt-2 w-full bg-white/90 backdrop-blur-xl shadow-2xl rounded-xl py-2 text-base ring-1 ring-black/5 overflow-auto max-h-60 focus:outline-none sm:text-sm transform opacity-100 scale-100 transition-all origin-top">
+                  {suggestions.map((place, idx) => (
+                    <li
+                      key={idx}
+                      className="text-gray-800 cursor-default select-none relative py-2.5 px-4 hover:bg-emerald-50 hover:text-emerald-900 cursor-pointer transition-colors"
+                      onClick={() => handleSelectLocation(place)}
+                    >
+                      <span className="block truncate font-semibold">
+                        {place.display_name.split(',')[0]}
+                      </span>
+                      <span className="block truncate text-xs text-gray-500 mt-0.5">
+                        {place.display_name}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            
+            {formData.address && (
+              <div className="mt-3 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100/50 text-sm shadow-sm backdrop-blur-sm transition-all">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5"><MapPin className="w-4 h-4 text-emerald-500" /></div>
+                  <div>
+                    <p className="text-emerald-900 font-semibold mb-0.5">Selected Location</p>
+                    <p className="text-emerald-700/90 leading-tight">{formData.address}</p>
+                    <p className="text-emerald-700/90 leading-tight">{formData.city && formData.city + ", "}{formData.state}</p>
+                    <p className="text-emerald-500 text-[11px] font-medium tracking-wide mt-2">
+                      {formData.location.lat.toFixed(5)}, {formData.location.lon.toFixed(5)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="pt-2">
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all h-12 items-center shadow-md hover:shadow-lg"
+              className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 transition-all items-center shadow-lg hover:shadow-emerald-500/25"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  Register Profile
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  Complete Registration
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
                 </>
               )}
             </button>

@@ -15,8 +15,6 @@ export async function POST(req: Request) {
       state,
       location,
       centerName,
-      registrationNumber,
-      description,
     } = body;
 
     // Basic validation
@@ -42,12 +40,7 @@ export async function POST(req: Request) {
 
     const hashedPassword = await hashPassword(password);
     
-    let lat = 0;
-    let lng = 0;
-    if (location && location.coordinates && location.coordinates.length === 2) {
-       lng = location.coordinates[0];
-       lat = location.coordinates[1];
-    }
+    // Location will be passed directly as JSON
 
     // Create User and CHCProfile
     const user = await prisma.user.create({
@@ -62,13 +55,10 @@ export async function POST(req: Request) {
         address,
         city,
         state,
-        lat,
-        lng,
+        location,
         chcProfile: {
           create: {
             centerName,
-            registrationNumber: registrationNumber || null,
-            description: description || null,
           }
         }
       },

@@ -14,14 +14,10 @@ export async function POST(req: Request) {
       city,
       state,
       location,
-      farmSizeValue,
-      farmSizeUnit,
-      crops,
-      farmingType,
     } = body;
 
     // Basic validation
-    if (!name || !email || !phone || !password || !farmSizeValue) {
+    if (!name || !email || !phone || !password) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -44,13 +40,7 @@ export async function POST(req: Request) {
 
     const hashedPassword = await hashPassword(password);
     
-    let lat = 0;
-    let lng = 0;
-    if (location && location.coordinates && location.coordinates.length === 2) {
-       // MongoDB was [lng, lat]
-       lng = location.coordinates[0];
-       lat = location.coordinates[1];
-    }
+    // Location will be passed directly as JSON
 
     // Create User and FarmerProfile in a transaction
     const user = await prisma.user.create({
@@ -65,15 +55,9 @@ export async function POST(req: Request) {
         address,
         city,
         state,
-        lat,
-        lng,
+        location,
         farmerProfile: {
-          create: {
-            farmSizeValue: Number(farmSizeValue),
-            farmSizeUnit: farmSizeUnit || "acre",
-            crops: crops || [],
-            farmingType: farmingType || null,
-          }
+          create: {}
         }
       },
       include: {

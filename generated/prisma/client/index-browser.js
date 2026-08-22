@@ -133,8 +133,7 @@ exports.Prisma.UserScalarFieldEnum = {
   address: 'address',
   city: 'city',
   state: 'state',
-  lat: 'lat',
-  lng: 'lng',
+  location: 'location',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -143,10 +142,6 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.FarmerProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  farmSizeValue: 'farmSizeValue',
-  farmSizeUnit: 'farmSizeUnit',
-  crops: 'crops',
-  farmingType: 'farmingType',
   creditScore: 'creditScore',
   creditLimit: 'creditLimit',
   createdAt: 'createdAt',
@@ -157,8 +152,6 @@ exports.Prisma.CHCProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   centerName: 'centerName',
-  registrationNumber: 'registrationNumber',
-  description: 'description',
   verificationStatus: 'verificationStatus',
   rating: 'rating',
   createdAt: 'createdAt',
@@ -317,9 +310,20 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 
 exports.Prisma.NullsOrder = {

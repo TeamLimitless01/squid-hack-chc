@@ -20,8 +20,7 @@ model User {
   address        String?
   city           String?
   state          String?
-  lat            Float          @default(0)
-  lng            Float          @default(0)
+  location       Json?
   isActive       Boolean        @default(true)
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -40,10 +39,6 @@ model FarmerProfile {
   id            String   @id @default(cuid())
   userId        String   @unique
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  farmSizeValue Float
-  farmSizeUnit  String   @default("acre")
-  crops         String[]
-  farmingType   String?
   creditScore   Int      @default(0)
   creditLimit   Float    @default(0)
   createdAt     DateTime @default(now())
@@ -55,8 +50,6 @@ model CHCProfile {
   userId             String   @unique
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   centerName         String
-  registrationNumber String?  @unique
-  description        String?
   verificationStatus String   @default("pending")
   rating             Float    @default(0)
   createdAt          DateTime @default(now())
