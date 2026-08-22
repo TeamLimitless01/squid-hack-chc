@@ -85,14 +85,14 @@ export default async function ServicesPage() {
                       </p>
 
                       <div className="pt-6 border-t border-gray-100 mt-auto">
-                        <div className="flex justify-between items-center mb-6">
+                        {/* <div className="flex justify-between items-center mb-6">
                           <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
                             Pricing Unit
                           </span>
                           <span className="bg-brand-50 text-brand-700 text-xs font-bold px-3 py-1 rounded-full">
                             Per {service.pricingUnit}
                           </span>
-                        </div>
+                        </div> */}
 
                         <Link
                           href={`/chc/services?category=${service.id}`}
