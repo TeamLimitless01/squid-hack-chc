@@ -4,9 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { MapPin, Sprout, Tractor, User, Phone, Map } from "lucide-react";
 import MapModal from "@/components/map/MapModal";
+import BookingModal from "@/components/modals/BookingModal";
 
 export default function NearbyServiceCard({ item }: { item: any }) {
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   return (
     <>
@@ -61,14 +63,18 @@ export default function NearbyServiceCard({ item }: { item: any }) {
         </div>
         
         <div className="p-6 pt-0 mt-auto">
-          <Link 
-            href={`/dashboard/farmer/book/${item.id}`} 
+          <button 
+            onClick={() => setIsBookingOpen(true)}
             className="w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20 transition-all active:scale-95"
           >
             <Sprout className="w-5 h-5" /> Book Now
-          </Link>
+          </button>
         </div>
       </div>
+
+      {isBookingOpen && (
+        <BookingModal item={item} onClose={() => setIsBookingOpen(false)} />
+      )}
 
       {isMapOpen && (
         <MapModal 

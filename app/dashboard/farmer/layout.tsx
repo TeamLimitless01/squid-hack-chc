@@ -19,9 +19,9 @@ export default function FarmerDashboardLayout({ children }: { children: React.Re
             <User className="h-4 w-4" />
             My Profile
           </Link>
-          <Link href="#" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-400 cursor-not-allowed">
+          <Link href="/dashboard/farmer/bookings" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700">
             <Calendar className="h-4 w-4" />
-            My Bookings (Coming Soon)
+            My Bookings
           </Link>
           
           <div className="my-2 border-t border-slate-100"></div>
@@ -40,6 +40,7 @@ export default function FarmerDashboardLayout({ children }: { children: React.Re
         <nav className="flex items-center gap-2 overflow-x-auto border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
           <Link href="/dashboard/farmer" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-emerald-50">Overview</Link>
           <Link href="/dashboard/farmer/profile" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-emerald-50">Profile</Link>
+          <Link href="/dashboard/farmer/bookings" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-emerald-50">My Bookings</Link>
         </nav>
         {children}
       </main>
