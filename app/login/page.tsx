@@ -59,7 +59,7 @@ export default function Login() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          
+
           {error && (
             <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm border border-red-100 mb-6">
               {error}
