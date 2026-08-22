@@ -95,7 +95,7 @@ export default async function ServicesPage() {
                         </div>
 
                         <Link
-                          href="/chc/services-near-me"
+                          href={`/chc/services?category=${service.id}`}
                           className="block w-full text-center bg-gray-900 text-white py-3 rounded-xl font-bold hover:bg-brand-600 transition-colors active:scale-95"
                         >
                           Get Services
