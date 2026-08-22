@@ -132,8 +132,13 @@ body {
   cursor: pointer;
 }
 
-.test-form button:hover { background: #a95736; }
-.test-form button:disabled { cursor: wait; opacity: 0.65; }
+.test-form button:hover {
+  background: #a95736;
+}
+.test-form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
 
 .feedback {
   margin: 0;
@@ -143,18 +148,51 @@ body {
   line-height: 1.5;
 }
 
-.feedback.error { color: #8a342d; background: #fbe9e4; }
-.feedback.success { color: #245b43; background: #e6f2e8; }
-.feedback strong { display: block; margin-bottom: 8px; }
-.feedback dl { margin: 0; }
-.feedback dl > div { display: flex; gap: 12px; margin-top: 4px; }
-.feedback dt { min-width: 48px; font-weight: 700; }
-.feedback dd { margin: 0; overflow-wrap: anywhere; }
+.feedback.error {
+  color: #8a342d;
+  background: #fbe9e4;
+}
+.feedback.success {
+  color: #245b43;
+  background: #e6f2e8;
+}
+.feedback strong {
+  display: block;
+  margin-bottom: 8px;
+}
+.feedback dl {
+  margin: 0;
+}
+.feedback dl > div {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+.feedback dt {
+  min-width: 48px;
+  font-weight: 700;
+}
+.feedback dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
 
 @media (max-width: 700px) {
-  .test-page { padding: 24px 16px; }
-  .test-shell { grid-template-columns: 1fr; box-shadow: 6px 6px 0 #d6e3da; }
-  .test-intro, .test-form { padding: 32px 24px; }
-  .eyebrow { margin-bottom: 36px; }
-  .status-line { margin-top: 32px; }
+  .test-page {
+    padding: 24px 16px;
+  }
+  .test-shell {
+    grid-template-columns: 1fr;
+    box-shadow: 6px 6px 0 #d6e3da;
+  }
+  .test-intro,
+  .test-form {
+    padding: 32px 24px;
+  }
+  .eyebrow {
+    margin-bottom: 36px;
+  }
+  .status-line {
+    margin-top: 32px;
+  }
 }

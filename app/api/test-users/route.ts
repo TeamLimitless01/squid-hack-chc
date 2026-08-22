@@ -21,7 +21,8 @@ export async function POST(request: Request) {
 
     const user = await User.create({
       name: input.name?.trim() || "Temporary Test User",
-      email: input.email?.trim().toLowerCase() || `test-${uniqueId}@example.com`,
+      email:
+        input.email?.trim().toLowerCase() || `test-${uniqueId}@example.com`,
       phone: input.phone?.trim() || `900${Date.now().toString().slice(-7)}`,
       password: `temporary-${uniqueId}`,
       role: "farmer",
