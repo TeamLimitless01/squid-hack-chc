@@ -8,9 +8,9 @@ import { usePathname } from "next/navigation";
 export default function FarmerDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isActive = (section: string) => section === "overview" ? pathname === "/dashboard/farmer" : pathname.startsWith(`/dashboard/farmer/${section}`);
-  
+
   const desktopLinkClass = (section: string) => `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition ${isActive(section) ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700" : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"}`;
-  
+
   const mobileLinkClass = (section: string) => `whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold ${isActive(section) ? "bg-emerald-600 text-white" : "text-slate-600 hover:bg-emerald-50"}`;
 
   return (
@@ -30,9 +30,9 @@ export default function FarmerDashboardLayout({ children }: { children: React.Re
           <Link href="/dashboard/farmer/bookings" className={desktopLinkClass("bookings")}>
             <Calendar className="h-4 w-4" /> My Bookings
           </Link>
-          
+
           <div className="my-2 border-t border-slate-100"></div>
-          
+
           <Link href="/" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-500 transition hover:bg-slate-50 hover:text-slate-700">
             <Home className="h-4 w-4" /> Back to Home
           </Link>
