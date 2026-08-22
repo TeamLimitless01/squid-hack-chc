@@ -13,6 +13,7 @@ type Booking = {
     area: number;
     bookingStatus: string;
     vpFinalAmount: number | null;
+    vpProposedAt: string | null;
     farmer: { name: string; phone: string };
     chcService: { service: { name: string }; pricingUnit: string; price: number };
     assignedDriver: { user: { name: string } } | null
