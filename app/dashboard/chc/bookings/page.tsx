@@ -128,7 +128,7 @@ export default function CHCBookingsPage() {
                     </div>
 
                     <div className="mt-4 space-y-4">
-                        {filteredBookings.map((booking) => (
+                        {filteredBookings.map((booking:any) => (
                             <article key={booking.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start mb-6">
                                     <div>

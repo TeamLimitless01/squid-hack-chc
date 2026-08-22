@@ -25,7 +25,8 @@ export async function createPaymentOrder(bookingId: string) {
       where: { id: bookingId },
       include: {
         chcService: true,
-        chc: true
+        chc: true,
+        additionalCharges: true,
       }
     });
 
@@ -35,9 +36,10 @@ export async function createPaymentOrder(bookingId: string) {
 
     // Calculate total
     let totalAmount = booking.chcService.price * booking.area;
-    if (booking.additionalCharges) {
-      totalAmount += booking.additionalCharges;
-    }
+    totalAmount += booking.additionalCharges.reduce(
+      (sum, charge) => sum + charge.amount,
+      0,
+    );
 
     // Amount should be in paisa for Razorpay (multiply by 100)
     const amountInPaisa = Math.round(totalAmount * 100);

@@ -3,7 +3,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { redirect } from "next/navigation";
 import FarmerBookingCard from "@/components/cards/FarmerBookingCard";
-import { Route } from "lucide-react";
+import { Calendar, Route } from "lucide-react";
 
 export const metadata = {
   title: "My Bookings | Farmer Dashboard",
