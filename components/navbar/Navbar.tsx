@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Tractor } from "lucide-react";
+import { Menu, X, Tractor, User, LayoutDashboard, Loader2, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
+  const { data: session, status } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -21,7 +23,8 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "Services", href: "/services" },
     { name: "How It Works", href: "#how-it-works" },
-    { name: "For CHCs", href: "/register/chc" },
+    // Only show For CHCs if user is not authenticated
+    ...(!session ? [{ name: "For CHCs", href: "/register/chc" }] : []),
     { name: "About", href: "/about" },
   ];
 
@@ -60,18 +63,43 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/register/farmer"
-              className="bg-brand-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-700 hover:shadow-md transition-all active:scale-95"
-            >
-              Get Started
-            </Link>
+            {status === "loading" ? (
+              <div className="flex items-center justify-center w-24 h-10">
+                <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
+              </div>
+            ) : session ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="bg-brand-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-700 hover:shadow-md transition-all active:scale-95 flex items-center gap-2"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  Go to Dashboard
+                </Link>
+                <button
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="text-sm font-medium text-gray-500 hover:text-red-600 transition-colors flex items-center gap-1.5"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/register/farmer"
+                  className="bg-brand-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-700 hover:shadow-md transition-all active:scale-95"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -106,20 +134,49 @@ export default function Navbar() {
                 </Link>
               ))}
               <div className="pt-4 mt-2 border-t border-gray-100 flex flex-col gap-3 px-3">
-                <Link
-                  href="/login"
-                  className="block w-full text-center px-4 py-3 text-base font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/register/farmer"
-                  className="block w-full text-center px-4 py-3 text-base font-medium text-white bg-brand-600 rounded-xl hover:bg-brand-700"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Get Started
-                </Link>
+                {status === "loading" ? (
+                  <div className="flex justify-center py-2">
+                    <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
+                  </div>
+                ) : session ? (
+                  <>
+                    <Link
+                      href="/dashboard"
+                      className="block w-full flex items-center justify-center gap-2 px-4 py-3 text-base font-medium text-white bg-brand-600 rounded-xl hover:bg-brand-700"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <LayoutDashboard className="w-5 h-5" />
+                      Go to Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        signOut({ callbackUrl: "/login" });
+                      }}
+                      className="block w-full flex items-center justify-center gap-2 px-4 py-3 text-base font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-red-50 hover:text-red-600"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      className="block w-full text-center px-4 py-3 text-base font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Log in
+                    </Link>
+                    <Link
+                      href="/register/farmer"
+                      className="block w-full text-center px-4 py-3 text-base font-medium text-white bg-brand-600 rounded-xl hover:bg-brand-700"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
