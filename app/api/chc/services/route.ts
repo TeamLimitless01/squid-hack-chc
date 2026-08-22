@@ -77,7 +77,7 @@ export async function GET() {
     }),
     prisma.cHCService.findMany({
       where: { chcId: user.profileId },
-      select: { serviceId: true, price: true, pricingUnit: true },
+      select: { id: true, serviceId: true, price: true, pricingUnit: true },
     }),
   ]);
 
