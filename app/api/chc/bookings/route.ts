@@ -23,6 +23,7 @@ export async function GET() {
       farmer: true,
       chcService: { include: { service: true } },
       assignedDriver: { include: { user: true } },
+      additionalCharges: true,
       payment: true,
     },
     orderBy: [{ bookingDate: "desc" }, { createdAt: "desc" }],
