@@ -357,6 +357,13 @@ exports.PricingUnit = exports.$Enums.PricingUnit = {
   DAY: 'DAY'
 };
 
+exports.BookingStatus = exports.$Enums.BookingStatus = {
+  REQUESTED: 'REQUESTED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   FarmerProfile: 'FarmerProfile',

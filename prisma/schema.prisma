@@ -26,6 +26,13 @@ enum PricingUnit {
   DAY
 }
 
+enum BookingStatus {
+  REQUESTED
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
 enum LicenseType {
   LMV
   HMV
@@ -171,7 +178,7 @@ model Booking {
   chc                CHCProfile         @relation(fields: [chcId], references: [id])
   bookingDate        DateTime
   area               Float
-  bookingStatus      String             @default("requested")
+ bookingStatus       BookingStatus      @default(REQUESTED)
   
   // Vendor Proposal
   vpBasePrice        Float?

@@ -25,6 +25,13 @@ enum PricingUnit {
   DAY
 }
 
+enum BookingStatus {
+  REQUESTED
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
 enum LicenseType {
   LMV
   HMV
@@ -159,16 +166,16 @@ model Equipment {
 }
 
 model Booking {
-  id            String     @id @default(cuid())
+  id            String        @id @default(cuid())
   farmerId      String
-  farmer        User       @relation("FarmerBookings", fields: [farmerId], references: [id])
+  farmer        User          @relation("FarmerBookings", fields: [farmerId], references: [id])
   chcServiceId  String
-  chcService    CHCService @relation(fields: [chcServiceId], references: [id])
+  chcService    CHCService    @relation(fields: [chcServiceId], references: [id])
   chcId         String
-  chc           CHCProfile @relation(fields: [chcId], references: [id])
+  chc           CHCProfile    @relation(fields: [chcId], references: [id])
   bookingDate   DateTime
   area          Float
-  bookingStatus String     @default("requested")
+  bookingStatus BookingStatus @default(REQUESTED)
 
   // Vendor Proposal
   vpBasePrice        Float?

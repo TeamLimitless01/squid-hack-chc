@@ -107,6 +107,16 @@ export const PricingUnit: {
 export type PricingUnit = (typeof PricingUnit)[keyof typeof PricingUnit]
 
 
+export const BookingStatus: {
+  REQUESTED: 'REQUESTED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
+
+
 export const LicenseType: {
   LMV: 'LMV',
   HMV: 'HMV',
@@ -126,6 +136,10 @@ export const EquipmentType: typeof $Enums.EquipmentType
 export type PricingUnit = $Enums.PricingUnit
 
 export const PricingUnit: typeof $Enums.PricingUnit
+
+export type BookingStatus = $Enums.BookingStatus
+
+export const BookingStatus: typeof $Enums.BookingStatus
 
 export type LicenseType = $Enums.LicenseType
 
@@ -10981,7 +10995,7 @@ export namespace Prisma {
     chcId: string | null
     bookingDate: Date | null
     area: number | null
-    bookingStatus: string | null
+    bookingStatus: $Enums.BookingStatus | null
     vpBasePrice: number | null
     vpFinalAmount: number | null
     vpProposedAt: Date | null
@@ -11011,7 +11025,7 @@ export namespace Prisma {
     chcId: string | null
     bookingDate: Date | null
     area: number | null
-    bookingStatus: string | null
+    bookingStatus: $Enums.BookingStatus | null
     vpBasePrice: number | null
     vpFinalAmount: number | null
     vpProposedAt: Date | null
@@ -11272,7 +11286,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date
     area: number
-    bookingStatus: string
+    bookingStatus: $Enums.BookingStatus
     vpBasePrice: number | null
     vpFinalAmount: number | null
     vpProposedAt: Date | null
@@ -11503,7 +11517,7 @@ export namespace Prisma {
       chcId: string
       bookingDate: Date
       area: number
-      bookingStatus: string
+      bookingStatus: $Enums.BookingStatus
       vpBasePrice: number | null
       vpFinalAmount: number | null
       vpProposedAt: Date | null
@@ -11963,7 +11977,7 @@ export namespace Prisma {
     readonly chcId: FieldRef<"Booking", 'String'>
     readonly bookingDate: FieldRef<"Booking", 'DateTime'>
     readonly area: FieldRef<"Booking", 'Float'>
-    readonly bookingStatus: FieldRef<"Booking", 'String'>
+    readonly bookingStatus: FieldRef<"Booking", 'BookingStatus'>
     readonly vpBasePrice: FieldRef<"Booking", 'Float'>
     readonly vpFinalAmount: FieldRef<"Booking", 'Float'>
     readonly vpProposedAt: FieldRef<"Booking", 'DateTime'>
@@ -18779,6 +18793,20 @@ export namespace Prisma {
    */
   export type ListEnumPricingUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PricingUnit[]'>
     
+
+
+  /**
+   * Reference to a field of type 'BookingStatus'
+   */
+  export type EnumBookingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'BookingStatus[]'
+   */
+  export type ListEnumBookingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -19421,7 +19449,7 @@ export namespace Prisma {
     chcId?: StringFilter<"Booking"> | string
     bookingDate?: DateTimeFilter<"Booking"> | Date | string
     area?: FloatFilter<"Booking"> | number
-    bookingStatus?: StringFilter<"Booking"> | string
+    bookingStatus?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     vpBasePrice?: FloatNullableFilter<"Booking"> | number | null
     vpFinalAmount?: FloatNullableFilter<"Booking"> | number | null
     vpProposedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
@@ -19504,7 +19532,7 @@ export namespace Prisma {
     chcId?: StringFilter<"Booking"> | string
     bookingDate?: DateTimeFilter<"Booking"> | Date | string
     area?: FloatFilter<"Booking"> | number
-    bookingStatus?: StringFilter<"Booking"> | string
+    bookingStatus?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     vpBasePrice?: FloatNullableFilter<"Booking"> | number | null
     vpFinalAmount?: FloatNullableFilter<"Booking"> | number | null
     vpProposedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
@@ -19583,7 +19611,7 @@ export namespace Prisma {
     chcId?: StringWithAggregatesFilter<"Booking"> | string
     bookingDate?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     area?: FloatWithAggregatesFilter<"Booking"> | number
-    bookingStatus?: StringWithAggregatesFilter<"Booking"> | string
+    bookingStatus?: EnumBookingStatusWithAggregatesFilter<"Booking"> | $Enums.BookingStatus
     vpBasePrice?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
     vpFinalAmount?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
     vpProposedAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
@@ -20736,7 +20764,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -20775,7 +20803,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -20808,7 +20836,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20847,7 +20875,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20883,7 +20911,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -20911,7 +20939,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20941,7 +20969,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22187,6 +22215,13 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type EnumBookingStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
+  }
+
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
@@ -22329,6 +22364,16 @@ export namespace Prisma {
     tripStartLng?: SortOrder
     tripDestLat?: SortOrder
     tripDestLng?: SortOrder
+  }
+
+  export type EnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel> | $Enums.BookingStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBookingStatusFilter<$PrismaModel>
+    _max?: NestedEnumBookingStatusFilter<$PrismaModel>
   }
 
   export type BookingScalarRelationFilter = {
@@ -23512,6 +23557,10 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
+  export type EnumBookingStatusFieldUpdateOperationsInput = {
+    set?: $Enums.BookingStatus
+  }
+
   export type BookingUpdateworkImagesInput = {
     set?: string[]
     push?: string | string[]
@@ -24196,6 +24245,23 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumBookingStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
+  }
+
+  export type NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel> | $Enums.BookingStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBookingStatusFilter<$PrismaModel>
+    _max?: NestedEnumBookingStatusFilter<$PrismaModel>
+  }
+
   export type FarmerProfileCreateWithoutUserInput = {
     id?: string
     creditScore?: number
@@ -24289,7 +24355,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -24326,7 +24392,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -24622,7 +24688,7 @@ export namespace Prisma {
     chcId?: StringFilter<"Booking"> | string
     bookingDate?: DateTimeFilter<"Booking"> | Date | string
     area?: FloatFilter<"Booking"> | number
-    bookingStatus?: StringFilter<"Booking"> | string
+    bookingStatus?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
     vpBasePrice?: FloatNullableFilter<"Booking"> | number | null
     vpFinalAmount?: FloatNullableFilter<"Booking"> | number | null
     vpProposedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
@@ -25043,7 +25109,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -25080,7 +25146,7 @@ export namespace Prisma {
     chcServiceId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -25510,7 +25576,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -25548,7 +25614,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -25818,7 +25884,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -25855,7 +25921,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -26742,7 +26808,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -26780,7 +26846,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -26869,7 +26935,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -26907,7 +26973,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -26986,7 +27052,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -27024,7 +27090,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -27072,7 +27138,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27110,7 +27176,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27142,7 +27208,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -27180,7 +27246,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -27354,7 +27420,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27392,7 +27458,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27632,7 +27698,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -27670,7 +27736,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -27820,7 +27886,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27858,7 +27924,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27945,7 +28011,7 @@ export namespace Prisma {
     id?: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -27983,7 +28049,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -28143,7 +28209,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28181,7 +28247,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28272,7 +28338,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -28346,7 +28412,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28383,7 +28449,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28418,7 +28484,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28628,7 +28694,7 @@ export namespace Prisma {
     chcServiceId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -28815,7 +28881,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28852,7 +28918,7 @@ export namespace Prisma {
     chcServiceId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28887,7 +28953,7 @@ export namespace Prisma {
     chcServiceId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29019,7 +29085,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -29046,7 +29112,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29084,7 +29150,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29119,7 +29185,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29190,7 +29256,7 @@ export namespace Prisma {
     chcId: string
     bookingDate: Date | string
     area: number
-    bookingStatus?: string
+    bookingStatus?: $Enums.BookingStatus
     vpBasePrice?: number | null
     vpFinalAmount?: number | null
     vpProposedAt?: Date | string | null
@@ -29218,7 +29284,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29255,7 +29321,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29290,7 +29356,7 @@ export namespace Prisma {
     chcId?: StringFieldUpdateOperationsInput | string
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     area?: FloatFieldUpdateOperationsInput | number
-    bookingStatus?: StringFieldUpdateOperationsInput | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     vpBasePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     vpFinalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     vpProposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
