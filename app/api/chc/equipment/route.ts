@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
+import { EquipmentType } from "@/generated/prisma/client";
 
 async function getCHCSession() {
   const session = await getServerSession(authOptions);
@@ -42,6 +43,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Equipment name and type are required" }, { status: 400 });
     }
 
+    if (!Object.values(EquipmentType).includes(type as EquipmentType)) {
+      return NextResponse.json({ error: "Select a valid equipment type" }, { status: 400 });
+    }
+
     if (purchaseYear !== null && (!Number.isInteger(purchaseYear) || purchaseYear < 1900 || purchaseYear > new Date().getFullYear())) {
       return NextResponse.json({ error: "Enter a valid purchase year" }, { status: 400 });
     }
@@ -50,7 +55,7 @@ export async function POST(request: Request) {
       data: {
         chcId: user.profileId,
         name,
-        type,
+        type: type as EquipmentType,
         brand,
         model,
         registrationNumber,
