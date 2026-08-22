@@ -18,6 +18,13 @@ enum EquipmentType {
   TRAILER
 }
 
+enum PricingUnit {
+  ACRE
+  BIGHA
+  HOUR
+  DAY
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -106,15 +113,16 @@ model PlatformService {
 }
 
 model CHCService {
-  id        String          @id @default(cuid())
-  chcId     String
-  chc       CHCProfile      @relation(fields: [chcId], references: [id], onDelete: Cascade)
-  serviceId String
-  service   PlatformService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  price     Float
-  isActive  Boolean         @default(true)
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  id          String          @id @default(cuid())
+  chcId       String
+  chc         CHCProfile      @relation(fields: [chcId], references: [id], onDelete: Cascade)
+  serviceId   String
+  service     PlatformService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  price       Float
+  pricingUnit PricingUnit     @default(ACRE)
+  isActive    Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   bookings Booking[]
 

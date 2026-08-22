@@ -188,6 +188,7 @@ exports.Prisma.CHCServiceScalarFieldEnum = {
   chcId: 'chcId',
   serviceId: 'serviceId',
   price: 'price',
+  pricingUnit: 'pricingUnit',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -339,6 +340,13 @@ exports.EquipmentType = exports.$Enums.EquipmentType = {
   SPRAYER: 'SPRAYER',
   HARVESTER: 'HARVESTER',
   TRAILER: 'TRAILER'
+};
+
+exports.PricingUnit = exports.$Enums.PricingUnit = {
+  ACRE: 'ACRE',
+  BIGHA: 'BIGHA',
+  HOUR: 'HOUR',
+  DAY: 'DAY'
 };
 
 exports.Prisma.ModelName = {
