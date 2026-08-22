@@ -1,12 +1,13 @@
 "use client";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, ArrowRight, Mail, Lock } from "lucide-react";
 import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -34,9 +35,9 @@ export default function Login() {
         throw new Error(res.error);
       }
 
-      router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Login failed");
+      router.push(searchParams.get("from") || "/dashboard");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }
@@ -58,7 +59,7 @@ export default function Login() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          
+
           {error && (
             <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm border border-red-100 mb-6">
               {error}

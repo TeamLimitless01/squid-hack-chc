@@ -1,4 +1,6 @@
 import prisma from "@/src/lib/db";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Tractor, Sprout, Leaf, Wind, Map, ShieldCheck, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/navbar/Navbar";
@@ -28,6 +30,7 @@ const getServiceImage = (name: string) => {
 };
 
 export default async function ServicesPage() {
+  const session = await getServerSession(authOptions);
   const services = await prisma.platformService.findMany({
     where: { isActive: true },
     orderBy: { createdAt: "asc" }
@@ -95,7 +98,7 @@ export default async function ServicesPage() {
                         </div> */}
 
                         <Link
-                          href={`/chc/services?category=${service.id}`}
+                          href={session?.user ? `/chc/services?category=${service.id}` : `/login?from=${encodeURIComponent(`/chc/services?category=${service.id}`)}`}
                           className="block w-full text-center bg-gray-900 text-white py-3 rounded-xl font-bold hover:bg-brand-600 transition-colors active:scale-95"
                         >
                           Get Services
