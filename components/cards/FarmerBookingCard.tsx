@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Calendar, Layers, Clock, CheckCircle2, XCircle, AlertCircle, FileText, CreditCard, Loader2 } from "lucide-react";
+import { MapPin, Calendar, Layers, Clock, CheckCircle2, XCircle, AlertCircle, FileText, CreditCard, Loader2, Banknote } from "lucide-react";
 import ReviewProposalModal from "@/components/modals/ReviewProposalModal";
-import { createPaymentOrder, verifyPayment } from "@/app/actions/payments";
+import { createPaymentOrder, verifyPayment, payInCash } from "@/app/actions/payments";
 
 export default function FarmerBookingCard({ booking }: { booking: any }) {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isProcessingCash, setIsProcessingCash] = useState(false);
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -82,6 +83,20 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
     paymentObject.open();
   };
 
+  const handleCashPayment = async () => {
+    if (!confirm("Are you sure you want to pay in cash? The driver will need to verify this.")) return;
+    
+    setIsProcessingCash(true);
+    const res = await payInCash(booking.id);
+    if (res.success) {
+      alert("Cash payment requested. Please hand the cash to the driver.");
+      window.location.reload();
+    } else {
+      alert(res.error || "Failed to request cash payment");
+      setIsProcessingCash(false);
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     if (booking.payment?.status === "PAID") {
       return (
@@ -92,6 +107,14 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
     }
     
     if (booking.workStatus === "COMPLETED") {
+      if (booking.payment?.status === "CASH_PENDING") {
+        return (
+          <span className="flex items-center gap-1.5 bg-amber-100 text-amber-800 text-sm font-bold px-3 py-1 rounded-full border border-amber-200">
+            <Banknote className="w-4 h-4" /> Cash Pending
+          </span>
+        );
+      }
+      
       return (
         <span className="flex items-center gap-1.5 bg-blue-100 text-blue-800 text-sm font-bold px-3 py-1 rounded-full border border-blue-200">
           <CheckCircle2 className="w-4 h-4" /> Work Done - Payment Pending
@@ -224,19 +247,38 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 flex flex-col md:flex-row items-center justify-between mt-4">
             <div>
               <p className="text-blue-900 font-black text-lg">Work Completed</p>
-              <p className="text-blue-700 text-sm mt-1">The driver has marked this service as finished. Please settle your due amount of ₹{(booking.vpFinalAmount || (booking.chcService.price * booking.area)).toLocaleString('en-IN')} to clear the booking.</p>
-            </div>
-            <button 
-              onClick={handlePayment}
-              disabled={isProcessingPayment}
-              className="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold px-6 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-lg shadow-blue-600/20 disabled:opacity-70 active:scale-95 whitespace-nowrap"
-            >
-              {isProcessingPayment ? (
-                <><Loader2 className="w-5 h-5 animate-spin" /> Connecting...</>
+              {booking.payment?.status === "CASH_PENDING" ? (
+                <p className="text-blue-700 text-sm mt-1">You chose to pay ₹{(booking.vpFinalAmount || (booking.chcService.price * booking.area)).toLocaleString('en-IN')} in cash. Waiting for driver to confirm receipt.</p>
               ) : (
-                <><CreditCard className="w-5 h-5" /> Pay Now</>
+                <p className="text-blue-700 text-sm mt-1">Please settle your due amount of ₹{(booking.vpFinalAmount || (booking.chcService.price * booking.area)).toLocaleString('en-IN')} to clear the booking.</p>
               )}
-            </button>
+            </div>
+            {booking.payment?.status !== "CASH_PENDING" && (
+              <div className="mt-4 md:mt-0 flex items-center gap-3">
+                <button 
+                  onClick={handleCashPayment}
+                  disabled={isProcessingPayment || isProcessingCash}
+                  className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-base font-bold px-6 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-sm disabled:opacity-70 active:scale-95 whitespace-nowrap"
+                >
+                  {isProcessingCash ? (
+                    <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</>
+                  ) : (
+                    <><Banknote className="w-5 h-5" /> Pay in Cash</>
+                  )}
+                </button>
+                <button 
+                  onClick={handlePayment}
+                  disabled={isProcessingPayment || isProcessingCash}
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-base font-bold px-6 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-lg shadow-blue-600/20 disabled:opacity-70 active:scale-95 whitespace-nowrap"
+                >
+                  {isProcessingPayment ? (
+                    <><Loader2 className="w-5 h-5 animate-spin" /> Connecting...</>
+                  ) : (
+                    <><CreditCard className="w-5 h-5" /> Pay Online</>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

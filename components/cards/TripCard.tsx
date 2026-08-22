@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Navigation, Tractor, CheckCircle2, MapPin, Calendar as CalendarIcon, ArrowRight, Map, Clock } from "lucide-react";
-import { startTrip, startWork, endWork, closeJob } from "@/app/actions/driver-trips";
+import { Loader2, Navigation, Tractor, CheckCircle2, MapPin, Calendar as CalendarIcon, ArrowRight, Map, Clock, Banknote } from "lucide-react";
+import { startTrip, startWork, endWork, closeJob, confirmCashAndCloseJob } from "@/app/actions/driver-trips";
 import MapModal from "@/components/map/MapModal";
 
 export default function TripCard({ booking, type }: { booking: any, type: "today" | "upcoming" | "completed" | "working" }) {
@@ -49,7 +49,17 @@ export default function TripCard({ booking, type }: { booking: any, type: "today
     if (type !== "today" && type !== "working") return null;
 
     if (booking.workStatus === "COMPLETED") {
-      if (booking.payment?.status !== "PAID") {
+      if (booking.payment?.status === "CASH_PENDING") {
+        return (
+          <button 
+            onClick={() => handleAction(confirmCashAndCloseJob)}
+            disabled={isProcessing}
+            className="w-full mt-4 bg-emerald-600 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-700 transition-colors disabled:opacity-70 active:scale-95 shadow-lg shadow-emerald-600/20"
+          >
+            {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Banknote className="w-5 h-5" /> Confirm Cash & Close Job</>}
+          </button>
+        );
+      } else if (booking.payment?.status !== "PAID") {
         return (
           <button 
             disabled

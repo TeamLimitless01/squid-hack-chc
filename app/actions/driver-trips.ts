@@ -114,10 +114,10 @@ export async function endWork(bookingId: string) {
       const rawHours = diffMs / (1000 * 60 * 60);
       const hours = Math.max(rawHours, 0.02);
       const billedHours = Number(hours.toFixed(2));
-      
+
       const newBasePrice = billedHours * fullBooking.chcService.price;
       const addCharges = fullBooking.additionalCharges.reduce((sum, c) => sum + c.amount, 0);
-      
+
       updateData.vpBasePrice = newBasePrice;
       updateData.vpFinalAmount = newBasePrice + addCharges;
       updateData.area = billedHours; // Update area (quantity) to reflect actual hours billed
@@ -165,5 +165,47 @@ export async function closeJob(bookingId: string) {
   } catch (error: any) {
     console.error("Error closing job:", error);
     return { success: false, error: error.message || "Failed to close job." };
+  }
+}
+
+export async function confirmCashAndCloseJob(bookingId: string) {
+  try {
+    const booking = await verifyDriverAuth(bookingId);
+
+    if (booking.workStatus !== "COMPLETED") {
+      return { success: false, error: "Work must be completed first." };
+    }
+
+    const fullBooking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { payment: true }
+    });
+
+    if (fullBooking?.payment?.method !== "CASH" || fullBooking.payment.status !== "CASH_PENDING") {
+      return { success: false, error: "No pending cash payment found." };
+    }
+
+    // 1. Mark payment as PAID
+    await prisma.payment.update({
+      where: { id: fullBooking.payment.id },
+      data: {
+        status: "PAID",
+        paidAt: new Date()
+      }
+    });
+
+    // 2. Close Job
+    await prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        workCompleteTime: new Date(),
+      }
+    });
+
+    revalidatePath("/dashboard/driver/trips");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error confirming cash payment:", error);
+    return { success: false, error: error.message || "Failed to confirm payment." };
   }
 }
