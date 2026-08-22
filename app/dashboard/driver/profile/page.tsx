@@ -11,14 +11,14 @@ export const metadata = {
 
 export default async function DriverProfilePage() {
   const session = await getServerSession(authOptions);
-  
+
   if (!session || !session.user?.email) {
     redirect("/login");
   }
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    include: { 
+    include: {
       driverProfile: {
         include: { assignedCHC: true }
       }
@@ -54,14 +54,14 @@ export default async function DriverProfilePage() {
                   {user.driverProfile.assignedCHC ? user.driverProfile.assignedCHC.centerName : "Independent / Unassigned"}
                 </p>
               </div>
-              
-              <div className="pt-4 border-t border-slate-100">
+
+              {/* <div className="pt-4 border-t border-slate-100">
                 <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Driver Rating</p>
                 <div className="flex items-center gap-2 mt-1">
                   <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
                   <p className="text-xl font-bold text-slate-900">{user.driverProfile.rating.toFixed(1)} / 5</p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="pt-4 border-t border-slate-100">
                 <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Availability</p>
@@ -76,7 +76,7 @@ export default async function DriverProfilePage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-800 text-white relative overflow-hidden">
             <Truck className="absolute -right-6 -bottom-6 w-32 h-32 text-slate-800 opacity-50" />
             <div className="relative z-10">

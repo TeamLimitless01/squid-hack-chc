@@ -5,9 +5,11 @@ import Link from "next/link";
 import { Menu, X, Tractor, User, LayoutDashboard, Loader2, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -30,10 +32,9 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${isScrolled
-        ? "bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 py-3"
-        : "bg-transparent py-5"
-        }`}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 ${
+        isScrolled ? "py-3" : "py-5"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
@@ -49,15 +50,20 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-sm font-medium text-gray-600 hover:text-brand-600 transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`text-sm font-medium transition-colors ${
+                    isActive ? "text-brand-600" : "text-gray-600 hover:text-brand-600"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Desktop Actions */}
@@ -122,16 +128,23 @@ export default function Navbar() {
             className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg"
           >
             <div className="px-4 pt-2 pb-6 space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="block px-3 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-600 rounded-lg"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className={`block px-3 py-3 text-base font-medium rounded-lg ${
+                      isActive 
+                        ? "text-brand-600 bg-brand-50" 
+                        : "text-gray-700 hover:bg-gray-50 hover:text-brand-600"
+                    }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
               <div className="pt-4 mt-2 border-t border-gray-100 flex flex-col gap-3 px-3">
                 {status === "loading" ? (
                   <div className="flex justify-center py-2">
