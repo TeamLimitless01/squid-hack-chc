@@ -80,6 +80,29 @@ export type Review = $Result.DefaultSelection<Prisma.$ReviewPayload>
 export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
 
 /**
+ * Enums
+ */
+export namespace $Enums {
+  export const EquipmentType: {
+  TRACTOR: 'TRACTOR',
+  CULTIVATOR: 'CULTIVATOR',
+  SEED_DRILL: 'SEED_DRILL',
+  ROTAVATOR: 'ROTAVATOR',
+  PLOUGH: 'PLOUGH',
+  SPRAYER: 'SPRAYER',
+  HARVESTER: 'HARVESTER',
+  TRAILER: 'TRAILER'
+};
+
+export type EquipmentType = (typeof EquipmentType)[keyof typeof EquipmentType]
+
+}
+
+export type EquipmentType = $Enums.EquipmentType
+
+export const EquipmentType: typeof $Enums.EquipmentType
+
+/**
  * ##  Prisma Client ʲˢ
  *
  * Type-safe database client for TypeScript & Node.js
@@ -7484,7 +7507,7 @@ export namespace Prisma {
     id: string
     name: string
     description: string | null
-    resourcesRequired: string[]
+    resourcesRequired: $Enums.EquipmentType[]
     pricingUnit: string
     isActive: boolean
     createdAt: Date
@@ -7571,7 +7594,7 @@ export namespace Prisma {
       id: string
       name: string
       description: string | null
-      resourcesRequired: string[]
+      resourcesRequired: $Enums.EquipmentType[]
       pricingUnit: string
       isActive: boolean
       createdAt: Date
@@ -8003,7 +8026,7 @@ export namespace Prisma {
     readonly id: FieldRef<"PlatformService", 'String'>
     readonly name: FieldRef<"PlatformService", 'String'>
     readonly description: FieldRef<"PlatformService", 'String'>
-    readonly resourcesRequired: FieldRef<"PlatformService", 'String[]'>
+    readonly resourcesRequired: FieldRef<"PlatformService", 'EquipmentType[]'>
     readonly pricingUnit: FieldRef<"PlatformService", 'String'>
     readonly isActive: FieldRef<"PlatformService", 'Boolean'>
     readonly createdAt: FieldRef<"PlatformService", 'DateTime'>
@@ -9636,7 +9659,7 @@ export namespace Prisma {
     id: string | null
     chcId: string | null
     name: string | null
-    type: string | null
+    type: $Enums.EquipmentType | null
     brand: string | null
     model: string | null
     registrationNumber: string | null
@@ -9654,7 +9677,7 @@ export namespace Prisma {
     id: string | null
     chcId: string | null
     name: string | null
-    type: string | null
+    type: $Enums.EquipmentType | null
     brand: string | null
     model: string | null
     registrationNumber: string | null
@@ -9849,7 +9872,7 @@ export namespace Prisma {
     id: string
     chcId: string
     name: string
-    type: string
+    type: $Enums.EquipmentType
     brand: string | null
     model: string | null
     registrationNumber: string | null
@@ -9982,7 +10005,7 @@ export namespace Prisma {
       id: string
       chcId: string
       name: string
-      type: string
+      type: $Enums.EquipmentType
       brand: string | null
       model: string | null
       registrationNumber: string | null
@@ -10422,7 +10445,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Equipment", 'String'>
     readonly chcId: FieldRef<"Equipment", 'String'>
     readonly name: FieldRef<"Equipment", 'String'>
-    readonly type: FieldRef<"Equipment", 'String'>
+    readonly type: FieldRef<"Equipment", 'EquipmentType'>
     readonly brand: FieldRef<"Equipment", 'String'>
     readonly model: FieldRef<"Equipment", 'String'>
     readonly registrationNumber: FieldRef<"Equipment", 'String'>
@@ -18671,6 +18694,20 @@ export namespace Prisma {
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
+
+
+  /**
+   * Reference to a field of type 'EquipmentType[]'
+   */
+  export type ListEnumEquipmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EquipmentType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'EquipmentType'
+   */
+  export type EnumEquipmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EquipmentType'>
+    
   /**
    * Deep Input Types
    */
@@ -19051,7 +19088,7 @@ export namespace Prisma {
     id?: StringFilter<"PlatformService"> | string
     name?: StringFilter<"PlatformService"> | string
     description?: StringNullableFilter<"PlatformService"> | string | null
-    resourcesRequired?: StringNullableListFilter<"PlatformService">
+    resourcesRequired?: EnumEquipmentTypeNullableListFilter<"PlatformService">
     pricingUnit?: StringFilter<"PlatformService"> | string
     isActive?: BoolFilter<"PlatformService"> | boolean
     createdAt?: DateTimeFilter<"PlatformService"> | Date | string
@@ -19078,7 +19115,7 @@ export namespace Prisma {
     OR?: PlatformServiceWhereInput[]
     NOT?: PlatformServiceWhereInput | PlatformServiceWhereInput[]
     description?: StringNullableFilter<"PlatformService"> | string | null
-    resourcesRequired?: StringNullableListFilter<"PlatformService">
+    resourcesRequired?: EnumEquipmentTypeNullableListFilter<"PlatformService">
     pricingUnit?: StringFilter<"PlatformService"> | string
     isActive?: BoolFilter<"PlatformService"> | boolean
     createdAt?: DateTimeFilter<"PlatformService"> | Date | string
@@ -19107,7 +19144,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"PlatformService"> | string
     name?: StringWithAggregatesFilter<"PlatformService"> | string
     description?: StringNullableWithAggregatesFilter<"PlatformService"> | string | null
-    resourcesRequired?: StringNullableListFilter<"PlatformService">
+    resourcesRequired?: EnumEquipmentTypeNullableListFilter<"PlatformService">
     pricingUnit?: StringWithAggregatesFilter<"PlatformService"> | string
     isActive?: BoolWithAggregatesFilter<"PlatformService"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"PlatformService"> | Date | string
@@ -19195,7 +19232,7 @@ export namespace Prisma {
     id?: StringFilter<"Equipment"> | string
     chcId?: StringFilter<"Equipment"> | string
     name?: StringFilter<"Equipment"> | string
-    type?: StringFilter<"Equipment"> | string
+    type?: EnumEquipmentTypeFilter<"Equipment"> | $Enums.EquipmentType
     brand?: StringNullableFilter<"Equipment"> | string | null
     model?: StringNullableFilter<"Equipment"> | string | null
     registrationNumber?: StringNullableFilter<"Equipment"> | string | null
@@ -19239,7 +19276,7 @@ export namespace Prisma {
     NOT?: EquipmentWhereInput | EquipmentWhereInput[]
     chcId?: StringFilter<"Equipment"> | string
     name?: StringFilter<"Equipment"> | string
-    type?: StringFilter<"Equipment"> | string
+    type?: EnumEquipmentTypeFilter<"Equipment"> | $Enums.EquipmentType
     brand?: StringNullableFilter<"Equipment"> | string | null
     model?: StringNullableFilter<"Equipment"> | string | null
     purchaseYear?: IntNullableFilter<"Equipment"> | number | null
@@ -19284,7 +19321,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Equipment"> | string
     chcId?: StringWithAggregatesFilter<"Equipment"> | string
     name?: StringWithAggregatesFilter<"Equipment"> | string
-    type?: StringWithAggregatesFilter<"Equipment"> | string
+    type?: EnumEquipmentTypeWithAggregatesFilter<"Equipment"> | $Enums.EquipmentType
     brand?: StringNullableWithAggregatesFilter<"Equipment"> | string | null
     model?: StringNullableWithAggregatesFilter<"Equipment"> | string | null
     registrationNumber?: StringNullableWithAggregatesFilter<"Equipment"> | string | null
@@ -20334,7 +20371,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit: string
     isActive?: boolean
     createdAt?: Date | string
@@ -20346,7 +20383,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit: string
     isActive?: boolean
     createdAt?: Date | string
@@ -20358,7 +20395,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20370,7 +20407,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20382,7 +20419,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit: string
     isActive?: boolean
     createdAt?: Date | string
@@ -20393,7 +20430,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20404,7 +20441,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20486,7 +20523,7 @@ export namespace Prisma {
   export type EquipmentCreateInput = {
     id?: string
     name: string
-    type: string
+    type: $Enums.EquipmentType
     brand?: string | null
     model?: string | null
     registrationNumber?: string | null
@@ -20506,7 +20543,7 @@ export namespace Prisma {
     id?: string
     chcId: string
     name: string
-    type: string
+    type: $Enums.EquipmentType
     brand?: string | null
     model?: string | null
     registrationNumber?: string | null
@@ -20524,7 +20561,7 @@ export namespace Prisma {
   export type EquipmentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumEquipmentTypeFieldUpdateOperationsInput | $Enums.EquipmentType
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20544,7 +20581,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     chcId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumEquipmentTypeFieldUpdateOperationsInput | $Enums.EquipmentType
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20563,7 +20600,7 @@ export namespace Prisma {
     id?: string
     chcId: string
     name: string
-    type: string
+    type: $Enums.EquipmentType
     brand?: string | null
     model?: string | null
     registrationNumber?: string | null
@@ -20580,7 +20617,7 @@ export namespace Prisma {
   export type EquipmentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumEquipmentTypeFieldUpdateOperationsInput | $Enums.EquipmentType
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20598,7 +20635,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     chcId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumEquipmentTypeFieldUpdateOperationsInput | $Enums.EquipmentType
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21787,11 +21824,11 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+  export type EnumEquipmentTypeNullableListFilter<$PrismaModel = never> = {
+    equals?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel> | null
+    has?: $Enums.EquipmentType | EnumEquipmentTypeFieldRefInput<$PrismaModel> | null
+    hasEvery?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
+    hasSome?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
     isEmpty?: boolean
   }
 
@@ -21877,6 +21914,13 @@ export namespace Prisma {
 
   export type CHCServiceSumOrderByAggregateInput = {
     price?: SortOrder
+  }
+
+  export type EnumEquipmentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.EquipmentType | EnumEquipmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEquipmentTypeFilter<$PrismaModel> | $Enums.EquipmentType
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -21981,6 +22025,16 @@ export namespace Prisma {
     fuelLevel?: SortOrder
   }
 
+  export type EnumEquipmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EquipmentType | EnumEquipmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEquipmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.EquipmentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEquipmentTypeFilter<$PrismaModel>
+    _max?: NestedEnumEquipmentTypeFilter<$PrismaModel>
+  }
+
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -22011,6 +22065,14 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
   }
 
   export type CHCServiceScalarRelationFilter = {
@@ -23032,7 +23094,7 @@ export namespace Prisma {
   }
 
   export type PlatformServiceCreateresourcesRequiredInput = {
-    set: string[]
+    set: $Enums.EquipmentType[]
   }
 
   export type CHCServiceCreateNestedManyWithoutServiceInput = {
@@ -23050,8 +23112,8 @@ export namespace Prisma {
   }
 
   export type PlatformServiceUpdateresourcesRequiredInput = {
-    set?: string[]
-    push?: string | string[]
+    set?: $Enums.EquipmentType[]
+    push?: $Enums.EquipmentType | $Enums.EquipmentType[]
   }
 
   export type CHCServiceUpdateManyWithoutServiceNestedInput = {
@@ -23170,6 +23232,10 @@ export namespace Prisma {
     connectOrCreate?: AssignedResourceCreateOrConnectWithoutEquipmentInput | AssignedResourceCreateOrConnectWithoutEquipmentInput[]
     createMany?: AssignedResourceCreateManyEquipmentInputEnvelope
     connect?: AssignedResourceWhereUniqueInput | AssignedResourceWhereUniqueInput[]
+  }
+
+  export type EnumEquipmentTypeFieldUpdateOperationsInput = {
+    set?: $Enums.EquipmentType
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -23908,6 +23974,13 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumEquipmentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.EquipmentType | EnumEquipmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEquipmentTypeFilter<$PrismaModel> | $Enums.EquipmentType
+  }
+
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -23917,6 +23990,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumEquipmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EquipmentType | EnumEquipmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EquipmentType[] | ListEnumEquipmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEquipmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.EquipmentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEquipmentTypeFilter<$PrismaModel>
+    _max?: NestedEnumEquipmentTypeFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -24719,7 +24802,7 @@ export namespace Prisma {
   export type EquipmentCreateWithoutChcInput = {
     id?: string
     name: string
-    type: string
+    type: $Enums.EquipmentType
     brand?: string | null
     model?: string | null
     registrationNumber?: string | null
@@ -24737,7 +24820,7 @@ export namespace Prisma {
   export type EquipmentUncheckedCreateWithoutChcInput = {
     id?: string
     name: string
-    type: string
+    type: $Enums.EquipmentType
     brand?: string | null
     model?: string | null
     registrationNumber?: string | null
@@ -25077,7 +25160,7 @@ export namespace Prisma {
     id?: StringFilter<"Equipment"> | string
     chcId?: StringFilter<"Equipment"> | string
     name?: StringFilter<"Equipment"> | string
-    type?: StringFilter<"Equipment"> | string
+    type?: EnumEquipmentTypeFilter<"Equipment"> | $Enums.EquipmentType
     brand?: StringNullableFilter<"Equipment"> | string | null
     model?: StringNullableFilter<"Equipment"> | string | null
     registrationNumber?: StringNullableFilter<"Equipment"> | string | null
@@ -25541,7 +25624,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit: string
     isActive?: boolean
     createdAt?: Date | string
@@ -25552,7 +25635,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceCreateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit: string
     isActive?: boolean
     createdAt?: Date | string
@@ -25700,7 +25783,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25711,7 +25794,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | string[]
+    resourcesRequired?: PlatformServiceUpdateresourcesRequiredInput | $Enums.EquipmentType[]
     pricingUnit?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26562,7 +26645,7 @@ export namespace Prisma {
   export type EquipmentCreateWithoutAssignedResourcesInput = {
     id?: string
     name: string
-    type: string
+    type: $Enums.EquipmentType
     brand?: string | null
     model?: string | null
     registrationNumber?: string | null
@@ -26581,7 +26664,7 @@ export namespace Prisma {
     id?: string
     chcId: string
     name: string
-    type: string
+    type: $Enums.EquipmentType
     brand?: string | null
     model?: string | null
     registrationNumber?: string | null
@@ -26695,7 +26778,7 @@ export namespace Prisma {
   export type EquipmentUpdateWithoutAssignedResourcesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumEquipmentTypeFieldUpdateOperationsInput | $Enums.EquipmentType
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26714,7 +26797,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     chcId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumEquipmentTypeFieldUpdateOperationsInput | $Enums.EquipmentType
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28344,7 +28427,7 @@ export namespace Prisma {
   export type EquipmentCreateManyChcInput = {
     id?: string
     name: string
-    type: string
+    type: $Enums.EquipmentType
     brand?: string | null
     model?: string | null
     registrationNumber?: string | null
@@ -28474,7 +28557,7 @@ export namespace Prisma {
   export type EquipmentUpdateWithoutChcInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumEquipmentTypeFieldUpdateOperationsInput | $Enums.EquipmentType
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28492,7 +28575,7 @@ export namespace Prisma {
   export type EquipmentUncheckedUpdateWithoutChcInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumEquipmentTypeFieldUpdateOperationsInput | $Enums.EquipmentType
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28510,7 +28593,7 @@ export namespace Prisma {
   export type EquipmentUncheckedUpdateManyWithoutChcInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumEquipmentTypeFieldUpdateOperationsInput | $Enums.EquipmentType
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null

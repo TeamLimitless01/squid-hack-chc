@@ -7,6 +7,18 @@ datasource db {
   provider = "postgresql"
 }
 
+
+enum EquipmentType {
+  TRACTOR
+  CULTIVATOR
+  SEED_DRILL
+  ROTAVATOR
+  PLOUGH
+  SPRAYER
+  HARVESTER
+  TRAILER
+}
+
 model User {
   id             String         @id @default(cuid())
   name           String
@@ -85,7 +97,7 @@ model PlatformService {
   id                String       @id @default(cuid())
   name              String       @unique
   description       String?
-  resourcesRequired String[]
+  resourcesRequired EquipmentType[]
   pricingUnit       String
   isActive          Boolean      @default(true)
   createdAt         DateTime     @default(now())
@@ -110,12 +122,14 @@ model CHCService {
   @@unique([chcId, serviceId])
 }
 
+
+
 model Equipment {
   id                 String     @id @default(cuid())
   chcId              String
   chc                CHCProfile @relation(fields: [chcId], references: [id], onDelete: Cascade)
   name               String
-  type               String
+  type               EquipmentType
   brand              String?
   model              String?
   registrationNumber String?    @unique
