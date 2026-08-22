@@ -6,6 +6,8 @@ import { ArrowLeft, Loader2, CheckCircle2, XCircle, Clock3, CalendarDays, Layers
 import { rejectBooking } from "@/app/actions/chc-booking-actions";
 import ProposalModal from "@/components/modals/ProposalModal";
 import AssignResourcesModal from "@/components/modals/AssignResourcesModal";
+import MapModal from "@/components/map/MapModal";
+import { Navigation, Map } from "lucide-react";
 
 type Booking = {
     id: string;
@@ -13,14 +15,39 @@ type Booking = {
     area: number;
     bookingStatus: string;
     vpFinalAmount: number | null;
-    vpProposedAt: string | null;
-    farmer: { name: string; phone: string };
+    farmer: { name: string; phone: string; location?: any };
     chcService: { service: { name: string }; pricingUnit: string; price: number };
-    assignedDriver: { user: { name: string } } | null
+    assignedDriver: { user: { name: string } } | null;
+    tripStatus?: string;
+    workStatus?: string;
+    payment?: { status: string };
+    chc?: { location?: any };
 };
 
 const statuses = ["ALL", "REQUESTED", "ACCEPTED", "REJECTED", "CANCELLED"];
 const statusLabel = (status: string) => status.toLowerCase().replaceAll("_", " ");
+
+const getStatusBadge = (booking: Booking) => {
+    if (booking.payment?.status === "PAID") {
+        return <span className="flex w-fit items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200"><CheckCircle2 className="w-4 h-4" /> Fully Paid & Completed</span>;
+    }
+    if (booking.workStatus === "COMPLETED") {
+        return <span className="flex w-fit items-center gap-1.5 bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full border border-blue-200"><CheckCircle2 className="w-4 h-4" /> Work Done - Payment Pending</span>;
+    }
+    if (booking.workStatus === "IN_PROGRESS") {
+        return <span className="flex w-fit items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200"><Tractor className="w-4 h-4" /> Work in Progress</span>;
+    }
+    if (booking.tripStatus === "STARTED") {
+        return <span className="flex w-fit items-center gap-1.5 bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-200"><Navigation className="w-4 h-4" /> Driver on the Way</span>;
+    }
+    if (booking.bookingStatus === "ACCEPTED") {
+        return <span className="flex w-fit items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200"><CheckCircle2 className="w-4 h-4" /> Accepted</span>;
+    }
+    if (booking.bookingStatus === "REJECTED" || booking.bookingStatus === "CANCELLED") {
+        return <span className="flex w-fit items-center gap-1.5 bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full border border-rose-200"><XCircle className="w-4 h-4" /> {statusLabel(booking.bookingStatus)}</span>;
+    }
+    return <span className="flex w-fit items-center gap-1.5 bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full border border-amber-200"><Clock3 className="w-4 h-4" /> {statusLabel(booking.bookingStatus)}</span>;
+};
 
 export default function CHCBookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -30,6 +57,7 @@ export default function CHCBookingsPage() {
     const [processingId, setProcessingId] = useState<string | null>(null);
     const [proposalBooking, setProposalBooking] = useState<Booking | null>(null);
     const [assignBooking, setAssignBooking] = useState<Booking | null>(null);
+    const [mapBooking, setMapBooking] = useState<Booking | null>(null);
 
     const handleReject = async (bookingId: string) => {
         setProcessingId(bookingId);
@@ -107,13 +135,18 @@ export default function CHCBookingsPage() {
                                         <h3 className="text-xl font-bold text-slate-900">{booking.chcService.service.name}</h3>
                                         <p className="text-slate-500 font-medium flex items-center gap-1.5 mt-1">
                                             <span className="text-emerald-600 font-bold">{booking.farmer.name}</span> • {booking.farmer.phone}
+                                            {booking.farmer.location && (
+                                                <button 
+                                                    onClick={() => setMapBooking(booking)}
+                                                    className="ml-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition flex items-center gap-1 border border-emerald-100"
+                                                >
+                                                    <Map className="w-3 h-3" /> Map
+                                                </button>
+                                            )}
                                         </p>
                                     </div>
 
-                                    <span className={`flex w-fit items-center gap-2 rounded-full px-3 py-1 text-xs font-bold capitalize ${booking.bookingStatus === "ACCEPTED" ? "bg-emerald-100 text-emerald-800 border border-emerald-200" : booking.bookingStatus === "REJECTED" || booking.bookingStatus === "CANCELLED" ? "bg-rose-100 text-rose-800 border border-rose-200" : "bg-amber-100 text-amber-800 border border-amber-200"}`}>
-                                        {booking.bookingStatus === "ACCEPTED" ? <CheckCircle2 className="h-4 w-4" /> : booking.bookingStatus === "REJECTED" || booking.bookingStatus === "CANCELLED" ? <XCircle className="h-4 w-4" /> : <Clock3 className="h-4 w-4" />}
-                                        {statusLabel(booking.bookingStatus)}
-                                    </span>
+                                    {getStatusBadge(booking)}
                                 </div>
 
                                 {/* Pricing and Details Grid matching Farmer Dashboard */}
@@ -213,6 +246,17 @@ export default function CHCBookingsPage() {
                             setAssignBooking(null);
                             window.location.reload();
                         }} />
+                    )}
+
+                    {mapBooking && mapBooking.farmer.location && (
+                        <MapModal
+                            lat={mapBooking.farmer.location.lat}
+                            lon={mapBooking.farmer.location.lng || mapBooking.farmer.location.lon}
+                            name={mapBooking.farmer.name}
+                            farmerLat={mapBooking.chc?.location?.lat} // Optional: we don't fetch CHC location here as it's the CHC itself, we can skip or pass undefined
+                            farmerLon={mapBooking.chc?.location?.lng || mapBooking.chc?.location?.lon}
+                            onClose={() => setMapBooking(null)}
+                        />
                     )}
                 </>
             )}

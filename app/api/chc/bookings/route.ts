@@ -20,9 +20,10 @@ export async function GET() {
   const bookings = await prisma.booking.findMany({
     where: { chcId: user.profileId },
     include: {
-      farmer: { select: { name: true, phone: true } },
-      chcService: { include: { service: { select: { name: true } } } },
-      assignedDriver: { include: { user: { select: { name: true } } } },
+      farmer: true,
+      chcService: { include: { service: true } },
+      assignedDriver: { include: { user: true } },
+      payment: true,
     },
     orderBy: [{ bookingDate: "desc" }, { createdAt: "desc" }],
   });
