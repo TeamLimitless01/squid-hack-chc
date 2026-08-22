@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { Route, Star, Clock } from "lucide-react";
 
 export const metadata = {
-  title: "Driver Dashboard | Squid Hack",
+  title: "Driver Dashboard | AgriConnect",
 };
 
 export default async function DriverDashboardPage() {
@@ -41,7 +41,7 @@ export default async function DriverDashboardPage() {
             <p className="text-2xl font-black text-slate-900">{user.driverProfile.rating.toFixed(1)} / 5</p>
           </div>
         </div>
-        
+
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
             <Clock className="w-6 h-6" />

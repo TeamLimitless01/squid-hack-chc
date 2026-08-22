@@ -22,7 +22,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
 
   const handlePayment = async () => {
     setIsProcessingPayment(true);
-    
+
     // 1. Load Razorpay script
     const res = await loadRazorpayScript();
     if (!res) {
@@ -44,7 +44,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
       key: orderData.key,
       amount: orderData.amount,
       currency: "INR",
-      name: "Squid Hack CHC",
+      name: "AgriConnect-Verified Merchent",
       description: `Payment for ${booking.chcService.service.name}`,
       order_id: orderData.orderId,
       handler: async function (response: any) {
@@ -55,7 +55,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
           response.razorpay_payment_id,
           response.razorpay_signature
         );
-        
+
         if (verifyRes.success) {
           alert("Payment Successful!");
           window.location.reload();
@@ -79,13 +79,13 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
       alert("Payment Failed: " + response.error.description);
       setIsProcessingPayment(false);
     });
-    
+
     paymentObject.open();
   };
 
   const handleCashPayment = async () => {
     if (!confirm("Are you sure you want to pay in cash? The driver will need to verify this.")) return;
-    
+
     setIsProcessingCash(true);
     const res = await payInCash(booking.id);
     if (res.success) {
@@ -105,7 +105,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
         </span>
       );
     }
-    
+
     if (booking.workStatus === "COMPLETED") {
       if (booking.payment?.status === "CASH_PENDING") {
         return (
@@ -114,7 +114,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
           </span>
         );
       }
-      
+
       return (
         <span className="flex items-center gap-1.5 bg-blue-100 text-blue-800 text-sm font-bold px-3 py-1 rounded-full border border-blue-200">
           <CheckCircle2 className="w-4 h-4" /> Work Done - Payment Pending
@@ -215,7 +215,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
               ₹{(booking.vpFinalAmount || (booking.chcService.price * booking.area)).toLocaleString('en-IN')}
             </p>
           </div>
-          
+
           {booking.assignedDriver && (
             <div className="col-span-2 md:col-span-4 pt-3 border-t border-slate-200/60 mt-1">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">Assigned Driver</p>
@@ -233,7 +233,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
               <p className="text-amber-800 font-bold text-sm">Proposal Received</p>
               <p className="text-amber-700 text-xs mt-0.5">The CHC has sent a final quote with possible additional charges.</p>
             </div>
-            <button 
+            <button
               onClick={() => setShowReviewModal(true)}
               className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
             >
@@ -255,7 +255,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
             </div>
             {booking.payment?.status !== "CASH_PENDING" && (
               <div className="mt-4 md:mt-0 flex items-center gap-3">
-                <button 
+                <button
                   onClick={handleCashPayment}
                   disabled={isProcessingPayment || isProcessingCash}
                   className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-base font-bold px-6 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-sm disabled:opacity-70 active:scale-95 whitespace-nowrap"
@@ -266,7 +266,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
                     <><Banknote className="w-5 h-5" /> Pay in Cash</>
                   )}
                 </button>
-                <button 
+                <button
                   onClick={handlePayment}
                   disabled={isProcessingPayment || isProcessingCash}
                   className="bg-blue-600 hover:bg-blue-700 text-white text-base font-bold px-6 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-lg shadow-blue-600/20 disabled:opacity-70 active:scale-95 whitespace-nowrap"
@@ -284,12 +284,12 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
       </div>
 
       {showReviewModal && (
-        <ReviewProposalModal 
-          booking={booking} 
+        <ReviewProposalModal
+          booking={booking}
           onClose={() => {
             setShowReviewModal(false);
             window.location.reload();
-          }} 
+          }}
         />
       )}
     </>

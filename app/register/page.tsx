@@ -6,7 +6,7 @@ export default function RegisterSelection() {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
       <div className="max-w-3xl w-full">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight mb-4">Join Squid Hack</h1>
+          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight mb-4">Join AgriConnect</h1>
           <p className="text-lg text-gray-600">Choose how you want to use the platform.</p>
         </div>
 
