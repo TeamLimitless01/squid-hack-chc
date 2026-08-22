@@ -1,0 +1,57 @@
+"use client";
+
+import Link from "next/link";
+import { User, LayoutDashboard, Route, Home, Tractor } from "lucide-react";
+import SignOutButton from "../chc/sign-out-button";
+import { usePathname } from "next/navigation";
+
+export default function DriverDashboardLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isActive = (section: string) => section === "overview" ? pathname === "/dashboard/driver" : pathname.startsWith(`/dashboard/driver/${section}`);
+
+  const desktopLinkClass = (section: string) => `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition ${isActive(section) ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700" : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"}`;
+
+  const mobileLinkClass = (section: string) => `whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold ${isActive(section) ? "bg-emerald-600 text-white" : "text-slate-600 hover:bg-emerald-50"}`;
+
+  return (
+    <div className="min-h-screen bg-[#f7f8f3] text-slate-900">
+      <aside className="fixed inset-y-0 left-0 z-20 hidden w-72 border-r border-slate-200 bg-white px-5 py-7 lg:flex lg:flex-col">
+        <div className="mb-10 px-3">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600 flex items-center gap-2">
+            <Tractor className="w-4 h-4" /> Squid Hack
+          </p>
+          <h1 className="mt-2 text-2xl font-black tracking-tight">Driver Workspace</h1>
+        </div>
+        <nav className="space-y-2">
+          <Link href="/dashboard/driver" className={desktopLinkClass("overview")}>
+            <LayoutDashboard className="h-4 w-4" /> Overview
+          </Link>
+          <Link href="/dashboard/driver/profile" className={desktopLinkClass("profile")}>
+            <User className="h-4 w-4" /> My Profile
+          </Link>
+          <Link href="/dashboard/driver/trips" className={desktopLinkClass("trips")}>
+            <Route className="h-4 w-4" /> My Trips
+          </Link>
+
+          <div className="my-2 border-t border-slate-100"></div>
+
+          <Link href="/" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-500 transition hover:bg-slate-50 hover:text-slate-700">
+            <Home className="h-4 w-4" /> Back to Home
+          </Link>
+        </nav>
+        <div className="mt-auto border-t border-slate-100 pt-5">
+          <SignOutButton />
+        </div>
+      </aside>
+
+      <main className="min-h-screen lg:pl-72">
+        <nav className="flex items-center gap-2 overflow-x-auto border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
+          <Link href="/dashboard/driver" className={mobileLinkClass("overview")}>Overview</Link>
+          <Link href="/dashboard/driver/profile" className={mobileLinkClass("profile")}>Profile</Link>
+          <Link href="/dashboard/driver/trips" className={mobileLinkClass("trips")}>My Trips</Link>
+        </nav>
+        {children}
+      </main>
+    </div>
+  );
+}

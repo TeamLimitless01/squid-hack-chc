@@ -25,7 +25,7 @@ export default function NearbyServiceCard({ item }: { item: any }) {
             {item.distance.toFixed(1)} km away
           </div>
         </div>
-        
+
         <div className="p-6 flex-1 space-y-5">
           <div className="flex justify-between items-end">
             <div>
@@ -34,9 +34,9 @@ export default function NearbyServiceCard({ item }: { item: any }) {
                 ₹{item.price.toLocaleString('en-IN')} <span className="text-base font-semibold text-slate-500">/ {item.pricingUnit.toLowerCase()}</span>
               </p>
             </div>
-            
+
             {item.chcLat !== 0 && (
-              <button 
+              <button
                 onClick={() => setIsMapOpen(true)}
                 className="flex flex-col items-center justify-center p-2 text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors"
                 title="View on Map"
@@ -61,9 +61,9 @@ export default function NearbyServiceCard({ item }: { item: any }) {
           </div>
 
         </div>
-        
+
         <div className="p-6 pt-0 mt-auto">
-          <button 
+          <button
             onClick={() => setIsBookingOpen(true)}
             className="w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20 transition-all active:scale-95"
           >
@@ -77,13 +77,13 @@ export default function NearbyServiceCard({ item }: { item: any }) {
       )}
 
       {isMapOpen && (
-        <MapModal 
-          lat={item.chcLat} 
-          lon={item.chcLon} 
+        <MapModal
+          lat={item.chcLat}
+          lon={item.chcLon}
           name={item.chc.centerName}
           farmerLat={item.farmerLat}
           farmerLon={item.farmerLon}
-          onClose={() => setIsMapOpen(false)} 
+          onClose={() => setIsMapOpen(false)}
         />
       )}
     </>
