@@ -194,7 +194,7 @@ export async function confirmCashAndCloseJob(bookingId: string) {
     // CHC service bookable again after cash payment is confirmed.
     await prisma.$transaction(async (transaction) => {
       await transaction.payment.update({
-        where: { id: fullBooking.payment.id },
+        where: { id: fullBooking?.payment?.id },
         data: {
           status: "PAID",
           paidAt: new Date(),
