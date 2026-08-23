@@ -116,7 +116,7 @@ export default function ChatAssistant() {
   return (
     <div className="flex-1 w-full bg-slate-50 flex flex-col overflow-hidden min-h-0">
       {/* Header bar */}
-      <div className="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between shadow-xs">
+      {/* <div className="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm">
             <Sparkles className="w-5 h-5" />
@@ -133,7 +133,7 @@ export default function ChatAssistant() {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 md:p-8 w-full">
