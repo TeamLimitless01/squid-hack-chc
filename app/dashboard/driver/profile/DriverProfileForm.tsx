@@ -16,6 +16,24 @@ export default function DriverProfileForm({ user }: { user: any }) {
     setErrorMessage("");
 
     const formData = new FormData(e.currentTarget);
+    
+    const phone = formData.get("phone") as string;
+    if (phone) {
+      const isPhone = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(phone.replace(/\s+/g, ''));
+      if (!isPhone) {
+        setErrorMessage("Please enter a valid 10-digit phone number.");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    const licenseNumber = formData.get("licenseNumber") as string;
+    if (licenseNumber && licenseNumber.length < 5) {
+      setErrorMessage("Please enter a valid license number (min 5 characters).");
+      setIsSubmitting(false);
+      return;
+    }
+
     const result = await updateDriverProfile(formData);
 
     if (result.success) {

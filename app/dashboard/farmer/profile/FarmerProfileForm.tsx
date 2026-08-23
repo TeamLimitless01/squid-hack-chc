@@ -89,6 +89,17 @@ export default function FarmerProfileForm({ user }: { user: UserProps }) {
     setMessage(null);
     
     const formData = new FormData(e.currentTarget);
+
+    const phone = formData.get("phone") as string;
+    if (phone) {
+      const isPhone = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(phone.replace(/\s+/g, ''));
+      if (!isPhone) {
+        setMessage({ type: 'error', text: "Please enter a valid 10-digit phone number." });
+        setLoading(false);
+        return;
+      }
+    }
+
     // Append the complex location object as a string
     if (addressData.location) {
       formData.set("location", JSON.stringify(addressData.location));

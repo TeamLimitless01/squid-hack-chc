@@ -57,7 +57,16 @@ export default function UpdateCHCProfilePage() {
     };
 
     const submit = async (event: React.FormEvent) => {
-        event.preventDefault(); setSaving(true); setError("");
+        event.preventDefault();
+        setSaving(true);
+        setError("");
+
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
+        const isPhone = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(form.phone.replace(/\s+/g, ''));
+        
+        if (!isEmail) { setError("Please enter a valid email address."); setSaving(false); return; }
+        if (!isPhone) { setError("Please enter a valid 10-digit phone number."); setSaving(false); return; }
+
         try {
             const response = await fetch("/api/chc/profile", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
             const data = await response.json();
