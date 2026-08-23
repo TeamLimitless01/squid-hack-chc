@@ -17,7 +17,7 @@ export function PusherListener() {
     // Determine channel name based on user role
     const user = session.user as any;
     let channelName = "";
-    
+
     if (user.role === "farmer") {
       channelName = `farmer-${user.id}`;
     } else if (user.role === "chc" || user.role === "driver") {

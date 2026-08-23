@@ -12,7 +12,7 @@ import NearbyServiceCard from "@/components/cards/NearbyServiceCard";
 export default async function CHCServicesPage(props: { searchParams: Promise<{ category?: string, distance?: string, sort?: string }> }) {
   const searchParams = await props.searchParams;
   const session = await getServerSession(authOptions);
-  
+
   if (!session || !session.user?.email) {
     return (
       <div className="flex flex-col min-h-screen bg-gray-50">
@@ -63,8 +63,8 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
             <p className="text-slate-600 mb-6 leading-relaxed">
               We need to know your farm's location to find Custom Hiring Centres (CHCs) near you. Please update your profile first.
             </p>
-            <Link 
-              href="/dashboard/farmer/profile" 
+            <Link
+              href="/dashboard/farmer/profile"
               className="inline-flex items-center gap-2 bg-amber-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-amber-700 transition-colors shadow-lg shadow-amber-600/20"
             >
               Update Profile <ArrowRight className="w-4 h-4" />
@@ -79,7 +79,7 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
   // Define "today" for equipment locking logic
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
-  
+
   const todayEnd = new Date(todayStart);
   todayEnd.setDate(todayEnd.getDate() + 1);
 
@@ -130,8 +130,8 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
       // Ignore
     }
 
-    return { 
-      ...chcService, 
+    return {
+      ...chcService,
       distance,
       chcLat,
       chcLon,
@@ -141,18 +141,18 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
   }).filter(s => {
     // 1. Category Filter
     if (categoryId && s.serviceId !== categoryId) return false;
-    
+
     // 2. Distance Filter
     if (s.distance > maxDistance) return false;
 
     // 3. Equipment Availability Check
     const requiredEquipments = s.service.resourcesRequired || [];
-    
+
     // Check if the CHC can provide every required equipment type for today
     for (const requiredType of requiredEquipments) {
       // Find all equipments this CHC owns of this specific required type
       const equipmentsOfType = s.chc.equipments.filter(e => e.type === requiredType && e.status === "available");
-      
+
       // If they don't even own this type, they can't do the service
       if (equipmentsOfType.length === 0) return false;
 
@@ -162,11 +162,11 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
         const isLockedToday = equipment.assignedResources.some(ar => {
           const booking = ar.booking;
           const bookingDate = new Date(booking.bookingDate);
-          
+
           const isToday = bookingDate >= todayStart && bookingDate < todayEnd;
           // Consider it locked if it's not cancelled or completed
-          const isActiveBooking = !['cancelled', 'completed', 'rejected'].includes(booking.bookingStatus);
-          
+          const isActiveBooking = !['cancelled', 'completed', 'rejected'].includes(booking.bookingStatus.toLowerCase());
+
           return isToday && isActiveBooking;
         });
 
@@ -202,10 +202,10 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
 
           {/* Filters UI */}
           <div className="mb-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <ServiceFilters 
-              initialDistance={maxDistance} 
-              initialSort={sortOption} 
-              categoryId={categoryId} 
+            <ServiceFilters
+              initialDistance={maxDistance}
+              initialSort={sortOption}
+              categoryId={categoryId}
             />
           </div>
 
@@ -219,8 +219,8 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
                 We couldn't find any available services matching your filters (within {maxDistance}km). Try increasing the distance or check back tomorrow.
               </p>
               <div>
-                <Link 
-                  href="/services" 
+                <Link
+                  href="/services"
                   className="inline-flex items-center text-emerald-600 font-bold hover:text-emerald-700 text-lg group"
                 >
                   Browse all services across the platform <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

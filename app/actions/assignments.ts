@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { revalidatePath } from "next/cache";
 import { notifyBookingUpdate } from "@/src/lib/pusherServer";
+import { createAndSendNotification } from "@/src/lib/notifications";
 
 export async function assignBookingResources(bookingId: string, driverId: string) {
   try {
@@ -49,7 +50,7 @@ export async function assignBookingResources(bookingId: string, driverId: string
 
     // Get the required resource types (e.g. ['TRACTOR', 'CULTIVATOR'])
     const requiredTypes = booking.chcService.service.resourcesRequired;
-    
+
     // We will hold the selected equipment IDs here
     const equipmentToAssign: string[] = [];
 
@@ -64,6 +65,7 @@ export async function assignBookingResources(bookingId: string, driverId: string
           NOT: {
             assignedResources: {
               some: {
+                bookingId: { not: bookingId },
                 booking: {
                   bookingDate: {
                     gte: startOfDay,
@@ -83,9 +85,9 @@ export async function assignBookingResources(bookingId: string, driverId: string
       });
 
       if (!availableEquipment) {
-        return { 
-          success: false, 
-          error: `Insufficient resources. No available equipment of type ${type} found for the scheduled date.` 
+        return {
+          success: false,
+          error: `Insufficient resources. No available equipment of type ${type} found for the scheduled date.`
         };
       }
 
@@ -120,6 +122,20 @@ export async function assignBookingResources(bookingId: string, driverId: string
     });
 
     await notifyBookingUpdate(bookingId);
+
+    // Notify the Driver
+    const driverProf = await prisma.driverProfile.findUnique({ where: { id: driverId } });
+    if (driverProf) {
+      await createAndSendNotification({
+        recipientId: driverProf.userId,
+        type: "DRIVER_ASSIGNED",
+        title: "New Trip Assigned",
+        message: `You have been assigned to a new trip by ${user.chcProfile.centerName}.`,
+        link: "/dashboard/driver/trips",
+        bookingId,
+      });
+    }
+
     revalidatePath("/dashboard/chc/bookings");
     return { success: true };
   } catch (error: any) {

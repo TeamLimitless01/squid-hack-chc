@@ -28,7 +28,7 @@ type Booking = {
     chc?: { location?: { lat?: number; lng?: number; lon?: number } };
 };
 
-const statuses = ["ALL", "REQUESTED", "ACCEPTED", "REJECTED", "CANCELLED"];
+const statuses = ["ALL", "REQUESTED", "ACCEPTED", "COMPLETED", "REJECTED", "CANCELLED"];
 const statusLabel = (status: string) => status.toLowerCase().replaceAll("_", " ");
 const getBaseAmount = (booking: Booking) => booking.chcService.price * booking.area;
 const getAdditionalChargesTotal = (booking: Booking) =>
@@ -58,7 +58,11 @@ const getStatusBadge = (booking: Booking) => {
     return <span className="flex w-fit items-center gap-1.5 bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full border border-amber-200"><Clock3 className="w-4 h-4" /> {statusLabel(booking.bookingStatus)}</span>;
 };
 
+import { useSession } from "next-auth/react";
+import { pusherClient } from "@/src/lib/pusher";
+
 export default function CHCBookingsPage() {
+    const { data: session } = useSession();
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [selectedStatus, setSelectedStatus] = useState("ALL");
     const [loading, setLoading] = useState(true);
@@ -96,18 +100,50 @@ export default function CHCBookingsPage() {
     };
 
     useEffect(() => {
-        fetch("/api/chc/bookings")
-            .then(async (response) => {
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || "Unable to load bookings");
-                setBookings(data.bookings);
-            })
-            .catch((err: unknown) => setError(err instanceof Error ? err.message : "Unable to load bookings"))
-            .finally(() => setLoading(false));
-    }, []);
+        const fetchBookings = () => {
+            fetch("/api/chc/bookings", { cache: "no-store" })
+                .then(async (response) => {
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.error || "Unable to load bookings");
+                    setBookings(data.bookings);
+                })
+                .catch((err: unknown) => setError(err instanceof Error ? err.message : "Unable to load bookings"))
+                .finally(() => setLoading(false));
+        };
+
+        fetchBookings();
+
+        if (!pusherClient || !session?.user) return;
+        const user = session.user as any;
+        if (user.role !== "chc") return;
+
+        const channelName = `chc-${user.profileId}`;
+        const channel = pusherClient.subscribe(channelName);
+
+        channel.bind("booking-updated", () => {
+            console.log("Real-time update received on CHC Bookings page.");
+            fetchBookings();
+        });
+
+        return () => {
+            //@ts-ignore
+            pusherClient.unsubscribe(channelName);
+        };
+    }, [session]);
+
+    const isBookingInStatus = (booking: Booking, status: string) => {
+        if (status === "ALL") return true;
+        if (status === "COMPLETED") {
+            return booking.workStatus === "COMPLETED" || booking.payment?.status === "PAID";
+        }
+        if (status === "ACCEPTED") {
+            return booking.bookingStatus === "ACCEPTED" && booking.workStatus !== "COMPLETED" && booking.payment?.status !== "PAID";
+        }
+        return booking.bookingStatus === status;
+    };
 
     const filteredBookings = useMemo(() => {
-        const list = selectedStatus === "ALL" ? bookings : bookings.filter((booking) => booking.bookingStatus === selectedStatus);
+        const list = bookings.filter((booking) => isBookingInStatus(booking, selectedStatus));
         return [...list].sort((a, b) => {
             const timeA = new Date(a.createdAt || a.bookingDate).getTime();
             const timeB = new Date(b.createdAt || b.bookingDate).getTime();
@@ -115,7 +151,7 @@ export default function CHCBookingsPage() {
         });
     }, [bookings, selectedStatus]);
 
-    const count = (status: string) => status === "ALL" ? bookings.length : bookings.filter((booking) => booking.bookingStatus === status).length;
+    const count = (status: string) => bookings.filter((booking) => isBookingInStatus(booking, status)).length;
 
     return (
         <div className="mx-auto max-w-6xl px-6 py-10 sm:px-10">

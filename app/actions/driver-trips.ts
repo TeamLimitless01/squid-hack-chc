@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { revalidatePath } from "next/cache";
 import { notifyBookingUpdate } from "@/src/lib/pusherServer";
+import { createAndSendNotification } from "@/src/lib/notifications";
 
 async function verifyDriverAuth(bookingId: string) {
   const session = await getServerSession(authOptions);
@@ -49,6 +50,25 @@ export async function startTrip(bookingId: string) {
       }
     });
     await notifyBookingUpdate(bookingId);
+
+    // Notify Farmer and CHC
+    await createAndSendNotification({
+      recipientId: booking.farmerId,
+      type: "TRIP_STARTED",
+      title: "Driver on the way",
+      message: `The driver has started the trip for your booking.`,
+      link: "/dashboard/farmer/bookings",
+      bookingId,
+    });
+    await createAndSendNotification({
+      recipientId: booking.chcId,
+      type: "TRIP_STARTED",
+      title: "Trip Started",
+      message: `Driver has started the trip.`,
+      link: "/dashboard/chc/bookings",
+      bookingId,
+    });
+
     revalidatePath("/dashboard/driver/trips");
     return { success: true };
   } catch (error: any) {
@@ -79,6 +99,25 @@ export async function startWork(bookingId: string) {
     });
 
     await notifyBookingUpdate(bookingId);
+
+    // Notify Farmer and CHC
+    await createAndSendNotification({
+      recipientId: booking.farmerId,
+      type: "WORK_STARTED",
+      title: "Work Started",
+      message: `The driver has arrived and started the work.`,
+      link: "/dashboard/farmer/bookings",
+      bookingId,
+    });
+    await createAndSendNotification({
+      recipientId: booking.chcId,
+      type: "WORK_STARTED",
+      title: "Work Started",
+      message: `Driver has arrived and started the work.`,
+      link: "/dashboard/chc/bookings",
+      bookingId,
+    });
+
     revalidatePath("/dashboard/driver/trips");
     return { success: true };
   } catch (error: any) {
@@ -131,6 +170,25 @@ export async function endWork(bookingId: string) {
     });
 
     await notifyBookingUpdate(bookingId);
+
+    // Notify Farmer and CHC
+    await createAndSendNotification({
+      recipientId: booking.farmerId,
+      type: "WORK_COMPLETED",
+      title: "Work Completed",
+      message: `The driver has completed the work.`,
+      link: "/dashboard/farmer/bookings",
+      bookingId,
+    });
+    await createAndSendNotification({
+      recipientId: booking.chcId,
+      type: "WORK_COMPLETED",
+      title: "Work Completed",
+      message: `Driver has completed the work.`,
+      link: "/dashboard/chc/bookings",
+      bookingId,
+    });
+
     revalidatePath("/dashboard/driver/trips");
     return { success: true };
   } catch (error: any) {

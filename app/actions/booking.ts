@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { revalidatePath } from "next/cache";
 import { notifyBookingUpdate } from "@/src/lib/pusherServer";
+import { createAndSendNotification } from "@/src/lib/notifications";
 
 export async function createBookingRequest(data: {
   chcServiceId: string;
@@ -39,6 +40,17 @@ export async function createBookingRequest(data: {
     });
 
     await notifyBookingUpdate(booking.id);
+    
+    // Notify CHC
+    await createAndSendNotification({
+      recipientId: data.chcId,
+      type: "BOOKING_REQUESTED",
+      title: "New Booking Request",
+      message: `${farmer.name} has requested a service for ${data.area} acres.`,
+      link: "/dashboard/chc/bookings",
+      bookingId: booking.id,
+    });
+
     revalidatePath("/dashboard/farmer");
     revalidatePath("/chc/services");
     

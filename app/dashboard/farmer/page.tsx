@@ -118,7 +118,7 @@ export default async function FarmerDashboard() {
           </div>
           <div>
             <p className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Total Area</p>
-            <p className="text-2xl font-bold text-slate-900">{totalArea} <span className="text-sm font-medium text-slate-500">Acres</span></p>
+            <p className="text-2xl font-bold text-slate-900">{Number(totalArea.toFixed(2))} <span className="text-sm font-medium text-slate-500">Acres</span></p>
           </div>
         </div>
 

@@ -6,6 +6,7 @@ import { Menu, X, Tractor, User, LayoutDashboard, Loader2, LogOut } from "lucide
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -74,6 +75,7 @@ export default function Navbar() {
               </div>
             ) : session ? (
               <>
+                <NotificationBell />
                 <Link
                   href="/dashboard"
                   className="bg-brand-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-700 hover:shadow-md transition-all active:scale-95 flex items-center gap-2"
@@ -152,6 +154,9 @@ export default function Navbar() {
                   </div>
                 ) : session ? (
                   <>
+                    <div className="flex justify-center py-2">
+                      <NotificationBell />
+                    </div>
                     <Link
                       href="/dashboard"
                       className="block w-full flex items-center justify-center gap-2 px-4 py-3 text-base font-medium text-white bg-brand-600 rounded-xl hover:bg-brand-700"

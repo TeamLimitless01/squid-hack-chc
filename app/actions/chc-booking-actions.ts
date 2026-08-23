@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/src/lib/db";
 import { revalidatePath } from "next/cache";
 import { notifyBookingUpdate } from "@/src/lib/pusherServer";
+import { createAndSendNotification } from "@/src/lib/notifications";
 
 export async function rejectBooking(bookingId: string) {
   try {
@@ -47,6 +48,19 @@ export async function rejectBooking(bookingId: string) {
     });
 
     await notifyBookingUpdate(bookingId);
+
+    // Notify Farmer
+    if (user.chcProfile) {
+      await createAndSendNotification({
+        recipientId: booking.farmerId,
+        type: "BOOKING_REJECTED",
+        title: "Booking Rejected",
+        message: `${user.chcProfile.centerName} has rejected your booking request.`,
+        link: "/dashboard/farmer/bookings",
+        bookingId: booking.id,
+      });
+    }
+
     revalidatePath("/dashboard/chc/bookings");
 
     return { success: true };

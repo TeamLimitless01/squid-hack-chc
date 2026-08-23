@@ -145,6 +145,38 @@ export const LicenseType: {
 
 export type LicenseType = (typeof LicenseType)[keyof typeof LicenseType]
 
+
+export const NotificationType: {
+  BOOKING_REQUESTED: 'BOOKING_REQUESTED',
+  BOOKING_ACCEPTED: 'BOOKING_ACCEPTED',
+  BOOKING_REJECTED: 'BOOKING_REJECTED',
+  BOOKING_CANCELLED: 'BOOKING_CANCELLED',
+  PROPOSAL_RECEIVED: 'PROPOSAL_RECEIVED',
+  PROPOSAL_APPROVED: 'PROPOSAL_APPROVED',
+  PROPOSAL_REJECTED: 'PROPOSAL_REJECTED',
+  DRIVER_ASSIGNED: 'DRIVER_ASSIGNED',
+  TRIP_STARTED: 'TRIP_STARTED',
+  DRIVER_ARRIVED: 'DRIVER_ARRIVED',
+  WORK_STARTED: 'WORK_STARTED',
+  WORK_COMPLETED: 'WORK_COMPLETED',
+  WORK_IMAGES_UPLOADED: 'WORK_IMAGES_UPLOADED',
+  PAYMENT_REQUIRED: 'PAYMENT_REQUIRED',
+  PAYMENT_SUCCESS: 'PAYMENT_SUCCESS',
+  PAYMENT_FAILED: 'PAYMENT_FAILED',
+  PAYMENT_REFUNDED: 'PAYMENT_REFUNDED',
+  ADDITIONAL_CHARGE_REQUESTED: 'ADDITIONAL_CHARGE_REQUESTED',
+  ADDITIONAL_CHARGE_APPROVED: 'ADDITIONAL_CHARGE_APPROVED',
+  ADDITIONAL_CHARGE_REJECTED: 'ADDITIONAL_CHARGE_REJECTED',
+  EQUIPMENT_ASSIGNED: 'EQUIPMENT_ASSIGNED',
+  EQUIPMENT_MAINTENANCE_DUE: 'EQUIPMENT_MAINTENANCE_DUE',
+  DEMAND_ALERT: 'DEMAND_ALERT',
+  MAINTENANCE_ALERT: 'MAINTENANCE_ALERT',
+  SERVICE_RECOMMENDATION: 'SERVICE_RECOMMENDATION',
+  SYSTEM: 'SYSTEM'
+};
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
 }
 
 export type EquipmentType = $Enums.EquipmentType
@@ -170,6 +202,10 @@ export const BookingStatus: typeof $Enums.BookingStatus
 export type LicenseType = $Enums.LicenseType
 
 export const LicenseType: typeof $Enums.LicenseType
+
+export type NotificationType = $Enums.NotificationType
+
+export const NotificationType: typeof $Enums.NotificationType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -17235,9 +17271,10 @@ export namespace Prisma {
   export type NotificationMinAggregateOutputType = {
     id: string | null
     recipientId: string | null
-    type: string | null
+    type: $Enums.NotificationType | null
     title: string | null
     message: string | null
+    link: string | null
     bookingId: string | null
     paymentId: string | null
     isRead: boolean | null
@@ -17249,9 +17286,10 @@ export namespace Prisma {
   export type NotificationMaxAggregateOutputType = {
     id: string | null
     recipientId: string | null
-    type: string | null
+    type: $Enums.NotificationType | null
     title: string | null
     message: string | null
+    link: string | null
     bookingId: string | null
     paymentId: string | null
     isRead: boolean | null
@@ -17266,6 +17304,7 @@ export namespace Prisma {
     type: number
     title: number
     message: number
+    link: number
     bookingId: number
     paymentId: number
     isRead: number
@@ -17282,6 +17321,7 @@ export namespace Prisma {
     type?: true
     title?: true
     message?: true
+    link?: true
     bookingId?: true
     paymentId?: true
     isRead?: true
@@ -17296,6 +17336,7 @@ export namespace Prisma {
     type?: true
     title?: true
     message?: true
+    link?: true
     bookingId?: true
     paymentId?: true
     isRead?: true
@@ -17310,6 +17351,7 @@ export namespace Prisma {
     type?: true
     title?: true
     message?: true
+    link?: true
     bookingId?: true
     paymentId?: true
     isRead?: true
@@ -17394,9 +17436,10 @@ export namespace Prisma {
   export type NotificationGroupByOutputType = {
     id: string
     recipientId: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link: string | null
     bookingId: string | null
     paymentId: string | null
     isRead: boolean
@@ -17428,6 +17471,7 @@ export namespace Prisma {
     type?: boolean
     title?: boolean
     message?: boolean
+    link?: boolean
     bookingId?: boolean
     paymentId?: boolean
     isRead?: boolean
@@ -17445,6 +17489,7 @@ export namespace Prisma {
     type?: boolean
     title?: boolean
     message?: boolean
+    link?: boolean
     bookingId?: boolean
     paymentId?: boolean
     isRead?: boolean
@@ -17462,6 +17507,7 @@ export namespace Prisma {
     type?: boolean
     title?: boolean
     message?: boolean
+    link?: boolean
     bookingId?: boolean
     paymentId?: boolean
     isRead?: boolean
@@ -17479,6 +17525,7 @@ export namespace Prisma {
     type?: boolean
     title?: boolean
     message?: boolean
+    link?: boolean
     bookingId?: boolean
     paymentId?: boolean
     isRead?: boolean
@@ -17487,7 +17534,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "recipientId" | "type" | "title" | "message" | "bookingId" | "paymentId" | "isRead" | "readAt" | "createdAt" | "updatedAt", ExtArgs["result"]["notification"]>
+  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "recipientId" | "type" | "title" | "message" | "link" | "bookingId" | "paymentId" | "isRead" | "readAt" | "createdAt" | "updatedAt", ExtArgs["result"]["notification"]>
   export type NotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     recipient?: boolean | UserDefaultArgs<ExtArgs>
     booking?: boolean | Notification$bookingArgs<ExtArgs>
@@ -17514,9 +17561,10 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       recipientId: string
-      type: string
+      type: $Enums.NotificationType
       title: string
       message: string
+      link: string | null
       bookingId: string | null
       paymentId: string | null
       isRead: boolean
@@ -17951,9 +17999,10 @@ export namespace Prisma {
   interface NotificationFieldRefs {
     readonly id: FieldRef<"Notification", 'String'>
     readonly recipientId: FieldRef<"Notification", 'String'>
-    readonly type: FieldRef<"Notification", 'String'>
+    readonly type: FieldRef<"Notification", 'NotificationType'>
     readonly title: FieldRef<"Notification", 'String'>
     readonly message: FieldRef<"Notification", 'String'>
+    readonly link: FieldRef<"Notification", 'String'>
     readonly bookingId: FieldRef<"Notification", 'String'>
     readonly paymentId: FieldRef<"Notification", 'String'>
     readonly isRead: FieldRef<"Notification", 'Boolean'>
@@ -18645,6 +18694,7 @@ export namespace Prisma {
     type: 'type',
     title: 'title',
     message: 'message',
+    link: 'link',
     bookingId: 'bookingId',
     paymentId: 'paymentId',
     isRead: 'isRead',
@@ -18860,6 +18910,20 @@ export namespace Prisma {
    * Reference to a field of type 'WorkStatus[]'
    */
   export type ListEnumWorkStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'NotificationType'
+   */
+  export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
+    
+
+
+  /**
+   * Reference to a field of type 'NotificationType[]'
+   */
+  export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
     
   /**
    * Deep Input Types
@@ -20024,9 +20088,10 @@ export namespace Prisma {
     NOT?: NotificationWhereInput | NotificationWhereInput[]
     id?: StringFilter<"Notification"> | string
     recipientId?: StringFilter<"Notification"> | string
-    type?: StringFilter<"Notification"> | string
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
     title?: StringFilter<"Notification"> | string
     message?: StringFilter<"Notification"> | string
+    link?: StringNullableFilter<"Notification"> | string | null
     bookingId?: StringNullableFilter<"Notification"> | string | null
     paymentId?: StringNullableFilter<"Notification"> | string | null
     isRead?: BoolFilter<"Notification"> | boolean
@@ -20044,6 +20109,7 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    link?: SortOrderInput | SortOrder
     bookingId?: SortOrderInput | SortOrder
     paymentId?: SortOrderInput | SortOrder
     isRead?: SortOrder
@@ -20061,9 +20127,10 @@ export namespace Prisma {
     OR?: NotificationWhereInput[]
     NOT?: NotificationWhereInput | NotificationWhereInput[]
     recipientId?: StringFilter<"Notification"> | string
-    type?: StringFilter<"Notification"> | string
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
     title?: StringFilter<"Notification"> | string
     message?: StringFilter<"Notification"> | string
+    link?: StringNullableFilter<"Notification"> | string | null
     bookingId?: StringNullableFilter<"Notification"> | string | null
     paymentId?: StringNullableFilter<"Notification"> | string | null
     isRead?: BoolFilter<"Notification"> | boolean
@@ -20081,6 +20148,7 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    link?: SortOrderInput | SortOrder
     bookingId?: SortOrderInput | SortOrder
     paymentId?: SortOrderInput | SortOrder
     isRead?: SortOrder
@@ -20098,9 +20166,10 @@ export namespace Prisma {
     NOT?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Notification"> | string
     recipientId?: StringWithAggregatesFilter<"Notification"> | string
-    type?: StringWithAggregatesFilter<"Notification"> | string
+    type?: EnumNotificationTypeWithAggregatesFilter<"Notification"> | $Enums.NotificationType
     title?: StringWithAggregatesFilter<"Notification"> | string
     message?: StringWithAggregatesFilter<"Notification"> | string
+    link?: StringNullableWithAggregatesFilter<"Notification"> | string | null
     bookingId?: StringNullableWithAggregatesFilter<"Notification"> | string | null
     paymentId?: StringNullableWithAggregatesFilter<"Notification"> | string | null
     isRead?: BoolWithAggregatesFilter<"Notification"> | boolean
@@ -21387,9 +21456,10 @@ export namespace Prisma {
 
   export type NotificationCreateInput = {
     id?: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     isRead?: boolean
     readAt?: Date | string | null
     createdAt?: Date | string
@@ -21402,9 +21472,10 @@ export namespace Prisma {
   export type NotificationUncheckedCreateInput = {
     id?: string
     recipientId: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     bookingId?: string | null
     paymentId?: string | null
     isRead?: boolean
@@ -21415,9 +21486,10 @@ export namespace Prisma {
 
   export type NotificationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21430,9 +21502,10 @@ export namespace Prisma {
   export type NotificationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     recipientId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     bookingId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
@@ -21444,9 +21517,10 @@ export namespace Prisma {
   export type NotificationCreateManyInput = {
     id?: string
     recipientId: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     bookingId?: string | null
     paymentId?: string | null
     isRead?: boolean
@@ -21457,9 +21531,10 @@ export namespace Prisma {
 
   export type NotificationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21469,9 +21544,10 @@ export namespace Prisma {
   export type NotificationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     recipientId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     bookingId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
@@ -22647,6 +22723,13 @@ export namespace Prisma {
     rating?: SortOrder
   }
 
+  export type EnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
   export type BookingNullableScalarRelationFilter = {
     is?: BookingWhereInput | null
     isNot?: BookingWhereInput | null
@@ -22658,6 +22741,7 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    link?: SortOrder
     bookingId?: SortOrder
     paymentId?: SortOrder
     isRead?: SortOrder
@@ -22672,6 +22756,7 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    link?: SortOrder
     bookingId?: SortOrder
     paymentId?: SortOrder
     isRead?: SortOrder
@@ -22686,12 +22771,23 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    link?: SortOrder
     bookingId?: SortOrder
     paymentId?: SortOrder
     isRead?: SortOrder
     readAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
   }
 
   export type FarmerProfileCreateNestedOneWithoutUserInput = {
@@ -24006,6 +24102,10 @@ export namespace Prisma {
     connect?: PaymentWhereUniqueInput
   }
 
+  export type EnumNotificationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.NotificationType
+  }
+
   export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
     create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
@@ -24392,6 +24492,23 @@ export namespace Prisma {
     _max?: NestedEnumWorkStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
+  export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
+  }
+
   export type FarmerProfileCreateWithoutUserInput = {
     id?: string
     creditScore?: number
@@ -24651,9 +24768,10 @@ export namespace Prisma {
 
   export type NotificationCreateWithoutRecipientInput = {
     id?: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     isRead?: boolean
     readAt?: Date | string | null
     createdAt?: Date | string
@@ -24664,9 +24782,10 @@ export namespace Prisma {
 
   export type NotificationUncheckedCreateWithoutRecipientInput = {
     id?: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     bookingId?: string | null
     paymentId?: string | null
     isRead?: boolean
@@ -24937,9 +25056,10 @@ export namespace Prisma {
     NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
     id?: StringFilter<"Notification"> | string
     recipientId?: StringFilter<"Notification"> | string
-    type?: StringFilter<"Notification"> | string
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
     title?: StringFilter<"Notification"> | string
     message?: StringFilter<"Notification"> | string
+    link?: StringNullableFilter<"Notification"> | string | null
     bookingId?: StringNullableFilter<"Notification"> | string | null
     paymentId?: StringNullableFilter<"Notification"> | string | null
     isRead?: BoolFilter<"Notification"> | boolean
@@ -26578,9 +26698,10 @@ export namespace Prisma {
 
   export type NotificationCreateWithoutBookingInput = {
     id?: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     isRead?: boolean
     readAt?: Date | string | null
     createdAt?: Date | string
@@ -26592,9 +26713,10 @@ export namespace Prisma {
   export type NotificationUncheckedCreateWithoutBookingInput = {
     id?: string
     recipientId: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     paymentId?: string | null
     isRead?: boolean
     readAt?: Date | string | null
@@ -27501,9 +27623,10 @@ export namespace Prisma {
 
   export type NotificationCreateWithoutPaymentInput = {
     id?: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     isRead?: boolean
     readAt?: Date | string | null
     createdAt?: Date | string
@@ -27515,9 +27638,10 @@ export namespace Prisma {
   export type NotificationUncheckedCreateWithoutPaymentInput = {
     id?: string
     recipientId: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     bookingId?: string | null
     isRead?: boolean
     readAt?: Date | string | null
@@ -28527,9 +28651,10 @@ export namespace Prisma {
 
   export type NotificationCreateManyRecipientInput = {
     id?: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     bookingId?: string | null
     paymentId?: string | null
     isRead?: boolean
@@ -28741,9 +28866,10 @@ export namespace Prisma {
 
   export type NotificationUpdateWithoutRecipientInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28754,9 +28880,10 @@ export namespace Prisma {
 
   export type NotificationUncheckedUpdateWithoutRecipientInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     bookingId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
@@ -28767,9 +28894,10 @@ export namespace Prisma {
 
   export type NotificationUncheckedUpdateManyWithoutRecipientInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     bookingId?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
@@ -29549,9 +29677,10 @@ export namespace Prisma {
   export type NotificationCreateManyBookingInput = {
     id?: string
     recipientId: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     paymentId?: string | null
     isRead?: boolean
     readAt?: Date | string | null
@@ -29597,9 +29726,10 @@ export namespace Prisma {
 
   export type NotificationUpdateWithoutBookingInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29611,9 +29741,10 @@ export namespace Prisma {
   export type NotificationUncheckedUpdateWithoutBookingInput = {
     id?: StringFieldUpdateOperationsInput | string
     recipientId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29624,9 +29755,10 @@ export namespace Prisma {
   export type NotificationUncheckedUpdateManyWithoutBookingInput = {
     id?: StringFieldUpdateOperationsInput | string
     recipientId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     paymentId?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29637,9 +29769,10 @@ export namespace Prisma {
   export type NotificationCreateManyPaymentInput = {
     id?: string
     recipientId: string
-    type: string
+    type: $Enums.NotificationType
     title: string
     message: string
+    link?: string | null
     bookingId?: string | null
     isRead?: boolean
     readAt?: Date | string | null
@@ -29649,9 +29782,10 @@ export namespace Prisma {
 
   export type NotificationUpdateWithoutPaymentInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29663,9 +29797,10 @@ export namespace Prisma {
   export type NotificationUncheckedUpdateWithoutPaymentInput = {
     id?: StringFieldUpdateOperationsInput | string
     recipientId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     bookingId?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29676,9 +29811,10 @@ export namespace Prisma {
   export type NotificationUncheckedUpdateManyWithoutPaymentInput = {
     id?: StringFieldUpdateOperationsInput | string
     recipientId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
     bookingId?: NullableStringFieldUpdateOperationsInput | string | null
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

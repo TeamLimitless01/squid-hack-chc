@@ -291,13 +291,60 @@ model Review {
   updatedAt   DateTime   @updatedAt
 }
 
+enum NotificationType {
+  // Booking
+  BOOKING_REQUESTED
+  BOOKING_ACCEPTED
+  BOOKING_REJECTED
+  BOOKING_CANCELLED
+
+  // Vendor Proposal
+  PROPOSAL_RECEIVED
+  PROPOSAL_APPROVED
+  PROPOSAL_REJECTED
+
+  // Driver / Trip
+  DRIVER_ASSIGNED
+  TRIP_STARTED
+  DRIVER_ARRIVED
+
+  // Work
+  WORK_STARTED
+  WORK_COMPLETED
+  WORK_IMAGES_UPLOADED
+
+  // Payment
+  PAYMENT_REQUIRED
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  PAYMENT_REFUNDED
+
+  // Additional Charges
+  ADDITIONAL_CHARGE_REQUESTED
+  ADDITIONAL_CHARGE_APPROVED
+  ADDITIONAL_CHARGE_REJECTED
+
+  // Equipment / CHC
+  EQUIPMENT_ASSIGNED
+  EQUIPMENT_MAINTENANCE_DUE
+
+  // AI / Smart Alerts
+  DEMAND_ALERT
+  MAINTENANCE_ALERT
+  SERVICE_RECOMMENDATION
+
+  // General
+  SYSTEM
+}
+
 model Notification {
-  id          String    @id @default(cuid())
+  id          String           @id @default(cuid())
   recipientId String
-  recipient   User      @relation(fields: [recipientId], references: [id], onDelete: Cascade)
-  type        String
+  recipient   User             @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  type        NotificationType
   title       String
   message     String
+  link        String?
   bookingId   String?
   booking     Booking?  @relation(fields: [bookingId], references: [id])
   paymentId   String?
