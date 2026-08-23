@@ -215,9 +215,32 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
             </p>
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Final Amount</p>
-            <p className="font-black text-emerald-700 text-lg">
-              ₹{(booking.vpFinalAmount || (booking.chcService.price * booking.area)).toLocaleString('en-IN')}
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Work Charges</p>
+            <p className="font-semibold text-slate-900 text-lg">
+              ₹{(booking.chcService.price * booking.area).toLocaleString('en-IN')}
+            </p>
+          </div>
+
+          {booking.additionalCharges && booking.additionalCharges.length > 0 && (
+            <div className="col-span-2 md:col-span-4 pt-3 border-t border-slate-200/60 mt-1">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Additional Charges</p>
+              <div className="space-y-1">
+                {booking.additionalCharges.map((charge: any) => (
+                  <div key={charge.id} className="flex items-center justify-between">
+                    <p className="font-medium text-slate-700 text-sm">{charge.reason}</p>
+                    <p className="text-sm font-bold text-slate-800">+₹{charge.amount.toLocaleString('en-IN')}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="col-span-2 md:col-span-4 pt-3 border-t border-slate-200/60 mt-1 flex items-center justify-between">
+            <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">
+              {(booking.workStatus === "COMPLETED" || booking.payment?.status === "PAID") ? "Total Final Amount" : "Total Estimated Amount"}
+            </p>
+            <p className="font-black text-emerald-700 text-xl">
+              ₹{(booking.vpFinalAmount || (booking.chcService.price * booking.area + (booking.additionalCharges?.reduce((acc: number, curr: any) => acc + curr.amount, 0) || 0))).toLocaleString('en-IN')}
             </p>
           </div>
 
