@@ -1,6 +1,6 @@
 import prisma from "@/src/lib/db";
 import { pusherServer } from "@/src/lib/pusherServer";
-import { NotificationType } from "@prisma/client";
+import { NotificationType } from "@/generated/prisma/client";
 
 interface CreateNotificationParams {
   recipientId: string;

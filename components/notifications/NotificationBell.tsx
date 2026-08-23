@@ -24,19 +24,20 @@ export default function NotificationBell() {
   }, [session]);
 
   useEffect(() => {
-    if (!session?.user) return;
+    if (!session?.user || !pusherClient) return;
     
+    const client = pusherClient;
     const user = session.user as any;
     const channelName = `user-notifications-${user.id}`;
     
-    const channel = pusherClient.subscribe(channelName);
+    const channel = client.subscribe(channelName);
     
     channel.bind("new-notification", (newNotification: any) => {
       setNotifications(prev => [newNotification, ...prev]);
     });
 
     return () => {
-      pusherClient.unsubscribe(channelName);
+      client.unsubscribe(channelName);
     };
   }, [session]);
 
