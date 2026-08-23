@@ -10,7 +10,9 @@ export function PusherListener() {
   const { data: session } = useSession();
 
   useEffect(() => {
-    if (!pusherClient || !session?.user) return;
+    const client = pusherClient;
+
+    if (!client || !session?.user) return;
 
     // Determine channel name based on user role
     const user = session.user as any;
@@ -26,7 +28,7 @@ export function PusherListener() {
     if (!channelName) return;
 
     // Subscribe to the specific channel
-    const channel = pusherClient.subscribe(channelName);
+    const channel = client.subscribe(channelName);
 
     // Listen for booking updates
     channel.bind("booking-updated", (data: any) => {
@@ -37,7 +39,7 @@ export function PusherListener() {
     });
 
     return () => {
-      pusherClient.unsubscribe(channelName);
+      client.unsubscribe(channelName);
     };
   }, [router, session]);
 
