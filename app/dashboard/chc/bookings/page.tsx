@@ -22,6 +22,7 @@ type Booking = {
     assignedDriver: { user: { name: string; phone?: string } } | null;
     tripStatus?: string;
     workStatus?: string;
+    createdAt?: string;
     updatedAt: string;
     payment?: { status: string; amount: number; method: string; paidAt: string };
     chc?: { location?: { lat?: number; lng?: number; lon?: number } };
@@ -105,10 +106,14 @@ export default function CHCBookingsPage() {
             .finally(() => setLoading(false));
     }, []);
 
-    const filteredBookings = useMemo(() =>
-        selectedStatus === "ALL" ? bookings : bookings.filter((booking) => booking.bookingStatus === selectedStatus),
-        [bookings, selectedStatus]
-    );
+    const filteredBookings = useMemo(() => {
+        const list = selectedStatus === "ALL" ? bookings : bookings.filter((booking) => booking.bookingStatus === selectedStatus);
+        return [...list].sort((a, b) => {
+            const timeA = new Date(a.createdAt || a.bookingDate).getTime();
+            const timeB = new Date(b.createdAt || b.bookingDate).getTime();
+            return timeB - timeA;
+        });
+    }, [bookings, selectedStatus]);
 
     const count = (status: string) => status === "ALL" ? bookings.length : bookings.filter((booking) => booking.bookingStatus === status).length;
 

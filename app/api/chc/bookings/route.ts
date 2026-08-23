@@ -26,7 +26,8 @@ export async function GET() {
       additionalCharges: true,
       payment: true,
     },
-    orderBy: [{ bookingDate: "desc" }, { createdAt: "desc" }],
+       orderBy: [{ bookingDate: "asc" }],
+
   });
 
   return NextResponse.json({ bookings });
