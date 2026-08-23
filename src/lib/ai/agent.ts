@@ -7,6 +7,9 @@ import { allAITools, AIUserContext } from "./tools";
 const getSystemPrompt = (userContext?: AIUserContext) => {
   const userInfo = userContext?.id
     ? `
+
+##TodaysDate: ${new Date().toDateString()}
+
 ### Current Logged-In User Details:
 - Name: ${userContext.name || "User"}
 - Email: ${userContext.email || "N/A"}

@@ -5,6 +5,8 @@ import { Send, Loader2, Sparkles, Bot, User } from "lucide-react";
 import { chatWithAI } from "@/app/actions/ai";
 import ReactMarkdown from "react-markdown";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import remarkGfm from "remark-gfm";
 
 export default function ChatAssistant() {
   const { data: session, status } = useSession();
@@ -139,9 +141,8 @@ export default function ChatAssistant() {
           {messages.map((m, i) => (
             <div
               key={i}
-              className={`flex ${
-                m.role === "user" ? "justify-end" : "justify-start"
-              } items-start gap-3`}
+              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"
+                } items-start gap-3`}
             >
               {m.role === "assistant" && (
                 <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
@@ -149,21 +150,35 @@ export default function ChatAssistant() {
                 </div>
               )}
               <div
-                className={`max-w-[85%] break-words overflow-hidden rounded-2xl px-5 py-4 text-sm ${
-                  m.role === "user"
-                    ? "bg-emerald-600 text-white rounded-tr-xs shadow-md"
-                    : "bg-white text-slate-800 border border-slate-200/90 rounded-tl-xs shadow-sm leading-relaxed"
-                }`}
+                className={`max-w-[85%] break-words overflow-hidden rounded-2xl px-5 py-4 text-sm ${m.role === "user"
+                  ? "bg-emerald-600 text-white rounded-tr-xs shadow-md"
+                  : "bg-white text-slate-800 border border-slate-200/90 rounded-tl-xs shadow-sm leading-relaxed"
+                  }`}
               >
                 <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
                   components={{
-                    a: ({ node, ...props }) => (
-                      <a
-                        {...props}
-                        className="text-emerald-700 hover:text-emerald-800 font-semibold underline underline-offset-2"
-                        target="_self"
-                      />
-                    ),
+                    a: ({ node, href, ...props }) => {
+                      if (href?.startsWith('/')) {
+                        return (
+                          <Link
+                            href={href}
+                            className="text-emerald-700 hover:text-emerald-800 font-semibold underline underline-offset-2 transition-colors"
+                          >
+                            {props.children}
+                          </Link>
+                        );
+                      }
+                      return (
+                        <a
+                          {...props}
+                          href={href}
+                          className="text-emerald-700 hover:text-emerald-800 font-semibold underline underline-offset-2 transition-colors"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        />
+                      );
+                    },
                     p: ({ node, ...props }) => <p {...props} className="mb-2.5 last:mb-0" />,
                     ul: ({ node, ...props }) => (
                       <ul {...props} className="list-disc pl-5 mb-2.5 space-y-1" />
