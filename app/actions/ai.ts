@@ -1,6 +1,13 @@
 "use server";
 
-export async function chatWithAI(messages: any[]) {
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { runAgentConversation } from "@/src/lib/ai/agent";
+import { AIUserContext } from "@/src/lib/ai/tools";
+
+export async function chatWithAI(
+  messages: any[]
+): Promise<{ content?: string; error?: string }> {
   const apiKey = process.env.AI_API_KEY;
 
   if (!apiKey) {
@@ -8,27 +15,23 @@ export async function chatWithAI(messages: any[]) {
   }
 
   try {
-    const res = await fetch("https://gen.pollinations.ai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: "openai",
-        messages: messages,
-      })
-    });
+    const session = await getServerSession(authOptions);
 
-    const data = await res.json();
-
-    if (data.error) {
-      throw new Error(data.error.message || "API Error");
+    let userContext: AIUserContext | undefined;
+    if (session?.user) {
+      const u = session.user as any;
+      userContext = {
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        profileId: u.profileId,
+      };
     }
 
-    return { content: data.choices[0].message.content };
+    return await runAgentConversation(messages, userContext);
   } catch (error: any) {
-    console.error("Error calling AI API:", error);
-    return { error: error.message || "Failed to communicate with AI." };
+    console.error("Error in chatWithAI server action:", error);
+    return { error: error.message || "Failed to communicate with AI Assistant." };
   }
 }
