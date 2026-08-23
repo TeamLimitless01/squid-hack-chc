@@ -189,21 +189,28 @@ export async function confirmCashAndCloseJob(bookingId: string) {
       return { success: false, error: "No pending cash payment found." };
     }
 
-    // 1. Mark payment as PAID
-    await prisma.payment.update({
-      where: { id: fullBooking.payment.id },
-      data: {
-        status: "PAID",
-        paidAt: new Date()
-      }
-    });
+    // Mark payment as paid, close the job, and release the equipment together.
+    // Service availability is derived from these assignments, so this makes the
+    // CHC service bookable again after cash payment is confirmed.
+    await prisma.$transaction(async (transaction) => {
+      await transaction.payment.update({
+        where: { id: fullBooking.payment.id },
+        data: {
+          status: "PAID",
+          paidAt: new Date(),
+        },
+      });
 
-    // 2. Close Job
-    await prisma.booking.update({
-      where: { id: bookingId },
-      data: {
-        workCompleteTime: new Date(),
-      }
+      await transaction.booking.update({
+        where: { id: bookingId },
+        data: {
+          workCompleteTime: new Date(),
+        },
+      });
+
+      await transaction.assignedResource.deleteMany({
+        where: { bookingId },
+      });
     });
 
     await notifyBookingUpdate(bookingId);

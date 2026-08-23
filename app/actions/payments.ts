@@ -111,15 +111,26 @@ export async function verifyPayment(
       throw new Error("Invalid payment signature");
     }
 
-    // Signature matches, update payment record
-    await prisma.payment.update({
-      where: { razorpayOrderId },
-      data: {
-        status: "PAID",
-        razorpayPaymentId,
-        razorpaySignature,
-        paidAt: new Date(),
+    // Signature matches. Releasing the assigned resources makes this CHC's
+    // affected services available for a new booking again.
+    await prisma.$transaction(async (transaction) => {
+      const payment = await transaction.payment.update({
+        where: { razorpayOrderId },
+        data: {
+          status: "PAID",
+          razorpayPaymentId,
+          razorpaySignature,
+          paidAt: new Date(),
+        },
+      });
+
+      if (payment.bookingId !== bookingId) {
+        throw new Error("Payment does not belong to this booking");
       }
+
+      await transaction.assignedResource.deleteMany({
+        where: { bookingId },
+      });
     });
 
     await notifyBookingUpdate(bookingId);
