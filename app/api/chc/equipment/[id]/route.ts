@@ -106,3 +106,72 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  _request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  const user = await getCHCSession();
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { id } = await context.params;
+
+  try {
+    const equipment = await prisma.equipment.findFirst({
+      where: { id, chcId: user.profileId },
+      select: { id: true, type: true },
+    });
+    if (!equipment)
+      return NextResponse.json(
+        { error: "Equipment not found" },
+        { status: 404 },
+      );
+
+    const servicesToRemove = await prisma.cHCService.findMany({
+      where: {
+        chcId: user.profileId,
+        service: { resourcesRequired: { has: equipment.type } },
+      },
+      select: { id: true },
+    });
+    const serviceIds = servicesToRemove.map((service) => service.id);
+
+    const [assignedResourceCount, bookingCount] = await Promise.all([
+      prisma.assignedResource.count({ where: { equipmentId: id } }),
+      serviceIds.length
+        ? prisma.booking.count({ where: { chcServiceId: { in: serviceIds } } })
+        : Promise.resolve(0),
+    ]);
+
+    if (assignedResourceCount || bookingCount) {
+      return NextResponse.json(
+        {
+          error:
+            "This equipment or one of its dependent service offers has bookings. Resolve those bookings before deleting it.",
+        },
+        { status: 409 },
+      );
+    }
+
+    await prisma.$transaction(async (transaction) => {
+      if (serviceIds.length) {
+        await transaction.cHCService.deleteMany({
+          where: { id: { in: serviceIds } },
+        });
+      }
+      await transaction.equipment.delete({ where: { id } });
+    });
+
+    return NextResponse.json({
+      deletedEquipmentId: id,
+      removedServiceCount: serviceIds.length,
+    });
+  } catch (error: unknown) {
+    console.error("Equipment deletion error:", error);
+    return NextResponse.json(
+      { error: "Unable to delete equipment" },
+      { status: 500 },
+    );
+  }
+}
