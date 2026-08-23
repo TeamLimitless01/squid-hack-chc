@@ -24,6 +24,22 @@ function LoginForm() {
     setLoading(true);
     setError("");
 
+    const emailOrPhone = formData.email.trim();
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailOrPhone);
+    const isPhone = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(emailOrPhone.replace(/\s+/g, ''));
+    
+    if (!isEmail && !isPhone) {
+      setError("Please enter a valid email address or phone number.");
+      setLoading(false);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await signIn("credentials", {
         redirect: false,

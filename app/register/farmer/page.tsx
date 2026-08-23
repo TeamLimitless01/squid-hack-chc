@@ -88,6 +88,27 @@ export default function FarmerRegistration() {
     setLoading(true);
     setError("");
 
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim());
+    const isPhone = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(formData.phone.replace(/\s+/g, ''));
+
+    if (!isEmail) {
+      setError("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+
+    if (!isPhone) {
+      setError("Please enter a valid 10-digit phone number.");
+      setLoading(false);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      setLoading(false);
+      return;
+    }
+
     if (!formData.address) {
       setError("Please select a location from the suggestions.");
       setLoading(false);
