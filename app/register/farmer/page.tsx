@@ -117,7 +117,7 @@ export default function FarmerRegistration() {
         throw new Error("Registration successful, but auto-login failed. Please log in manually.");
       }
 
-      router.push("/dashboard");
+      router.push("/");
     } catch (err: any) {
       setError(err.message);
     } finally {

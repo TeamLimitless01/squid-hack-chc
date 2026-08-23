@@ -9,7 +9,7 @@ export default function CHCRegistration() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -34,14 +34,14 @@ export default function CHCRegistration() {
 
   const handleLocationSearch = (query: string) => {
     setSearchQuery(query);
-    
+
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
-    
+
     if (query.length < 3) {
       setSuggestions([]);
       return;
     }
-    
+
     setIsSearching(true);
     searchTimeout.current = setTimeout(async () => {
       try {
@@ -66,7 +66,7 @@ export default function CHCRegistration() {
     const addr = place.address || {};
     const city = addr.city || addr.town || addr.village || addr.county || "";
     const state = addr.state || "";
-    
+
     const fullAddress = place.display_name.split(',').slice(0, 2).join(',');
 
     setFormData(prev => ({
@@ -118,7 +118,7 @@ export default function CHCRegistration() {
         throw new Error("Registration successful, but auto-login failed. Please log in manually.");
       }
 
-      router.push("/dashboard");
+      router.push("/");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -151,7 +151,7 @@ export default function CHCRegistration() {
           {/* Section: Business Details */}
           <div className="space-y-5">
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Business Details</h3>
-            
+
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">Center Name</label>
               <div className="relative group">
@@ -166,7 +166,7 @@ export default function CHCRegistration() {
           {/* Section: Personal Details */}
           <div className="space-y-5">
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Account Details</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">Owner Name</label>
@@ -177,7 +177,7 @@ export default function CHCRegistration() {
                   <input type="text" name="name" required value={formData.name} onChange={handleChange} className="text-gray-900 pl-11 block w-full bg-gray-50/50 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white sm:text-sm h-12 transition-all duration-200" placeholder="John Doe" />
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
                 <div className="relative group">
@@ -213,7 +213,7 @@ export default function CHCRegistration() {
           {/* Section: Location */}
           <div className="space-y-5 relative">
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Location</h3>
-            
+
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">Search Area / Village</label>
               <div className="relative group">
@@ -233,7 +233,7 @@ export default function CHCRegistration() {
                   </div>
                 )}
               </div>
-              
+
               {suggestions.length > 0 && (
                 <ul className="absolute z-20 mt-2 w-full bg-white/90 backdrop-blur-xl shadow-2xl rounded-xl py-2 text-base ring-1 ring-black/5 overflow-auto max-h-60 focus:outline-none sm:text-sm transform opacity-100 scale-100 transition-all origin-top">
                   {suggestions.map((place, idx) => (
@@ -253,7 +253,7 @@ export default function CHCRegistration() {
                 </ul>
               )}
             </div>
-            
+
             {formData.address && (
               <div className="mt-3 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100/50 text-sm shadow-sm backdrop-blur-sm transition-all">
                 <div className="flex items-start gap-3">
