@@ -5,6 +5,7 @@ import { CalendarDays, CarFront, Cog, LayoutDashboard, UserRound, Wrench, Home }
 import SignOutButton from "./sign-out-button";
 import { usePathname } from "next/navigation";
 import { PusherListener } from "@/components/PusherListener";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 export default function CHCDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -32,17 +33,25 @@ export default function CHCDashboardLayout({ children }: { children: React.React
           <Link href="/dashboard/chc/profile" className={desktopLinkClass("profile")}><UserRound className="h-4 w-4" /> Profile</Link>
           <Link href="/" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition"><Home className="h-4 w-4" /> Back to Home</Link>
         </nav>
-        <div className="mt-auto border-t border-slate-100 pt-5"><SignOutButton /></div>
+        <div className="mt-auto border-t border-slate-100 pt-5 flex items-center justify-between">
+          <SignOutButton />
+          <NotificationBell />
+        </div>
       </aside>
       <main className="min-h-screen lg:pl-72">
-        <nav className="flex items-center gap-2 overflow-x-auto border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
-          <Link href="/dashboard/chc" className={mobileLinkClass("overview")}>Overview</Link>
-          <Link href="/dashboard/chc/equipment" className={mobileLinkClass("equipment")}>Equipment</Link>
-          <Link href="/dashboard/chc/add-services" className={mobileLinkClass("add-services")}>Add services</Link>
-          <Link href="/dashboard/chc/bookings" className={mobileLinkClass("bookings")}>Bookings</Link>
-          <Link href="/dashboard/chc/drivers" className={mobileLinkClass("drivers")}>Drivers</Link>
-          <Link href="/dashboard/chc/profile" className={mobileLinkClass("profile")}>Profile</Link>
-          <Link href="/" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600">Back to Home</Link>
+        <nav className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
+          <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar">
+            <Link href="/dashboard/chc" className={mobileLinkClass("overview")}>Overview</Link>
+            <Link href="/dashboard/chc/equipment" className={mobileLinkClass("equipment")}>Equipment</Link>
+            <Link href="/dashboard/chc/add-services" className={mobileLinkClass("add-services")}>Add services</Link>
+            <Link href="/dashboard/chc/bookings" className={mobileLinkClass("bookings")}>Bookings</Link>
+            <Link href="/dashboard/chc/drivers" className={mobileLinkClass("drivers")}>Drivers</Link>
+            <Link href="/dashboard/chc/profile" className={mobileLinkClass("profile")}>Profile</Link>
+            <Link href="/" className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-slate-600">Back to Home</Link>
+          </div>
+          <div className="shrink-0 ml-2">
+            <NotificationBell />
+          </div>
         </nav>
         {children}
       </main>

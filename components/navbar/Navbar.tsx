@@ -105,13 +105,16 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Actions */}
+          <div className="flex items-center gap-1 md:hidden">
+            {session && <NotificationBell />}
+            <button
+              className="p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -149,9 +152,6 @@ export default function Navbar() {
                   </div>
                 ) : session ? (
                   <>
-                    <div className="flex justify-center py-2">
-                      <NotificationBell />
-                    </div>
                     <Link
                       href="/dashboard"
                       className="block w-full flex items-center justify-center gap-2 px-4 py-3 text-base font-medium text-white bg-brand-600 rounded-xl hover:bg-brand-700"

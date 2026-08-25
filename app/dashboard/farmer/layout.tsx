@@ -5,6 +5,7 @@ import { User, LayoutDashboard, Calendar, Home } from "lucide-react";
 import SignOutButton from "../chc/sign-out-button";
 import { usePathname } from "next/navigation";
 import { PusherListener } from "@/components/PusherListener";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 export default function FarmerDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -42,16 +43,22 @@ export default function FarmerDashboardLayout({ children }: { children: React.Re
             <Home className="h-4 w-4" /> Back to Home
           </Link>
         </nav>
-        <div className="mt-auto border-t border-slate-100 pt-5">
+        <div className="mt-auto border-t border-slate-100 pt-5 flex items-center justify-between">
           <SignOutButton />
+          <NotificationBell />
         </div>
       </aside>
 
       <main className="min-h-screen lg:pl-72">
-        <nav className="flex items-center gap-2 overflow-x-auto border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
-          <Link href="/dashboard/farmer" className={mobileLinkClass("overview")}>Overview</Link>
-          <Link href="/dashboard/farmer/profile" className={mobileLinkClass("profile")}>Profile</Link>
-          <Link href="/dashboard/farmer/bookings" className={mobileLinkClass("bookings")}>My Bookings</Link>
+        <nav className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
+          <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar">
+            <Link href="/dashboard/farmer" className={mobileLinkClass("overview")}>Overview</Link>
+            <Link href="/dashboard/farmer/profile" className={mobileLinkClass("profile")}>Profile</Link>
+            <Link href="/dashboard/farmer/bookings" className={mobileLinkClass("bookings")}>My Bookings</Link>
+          </div>
+          <div className="shrink-0 ml-2">
+            <NotificationBell />
+          </div>
         </nav>
         {children}
       </main>
