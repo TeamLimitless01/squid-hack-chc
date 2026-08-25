@@ -18,7 +18,7 @@ export async function GET() {
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const bookings = await prisma.booking.findMany({
+  const rawBookings = await prisma.booking.findMany({
     where: { chcId: user.profileId },
     include: {
       farmer: true,
@@ -26,10 +26,30 @@ export async function GET() {
       assignedDriver: { include: { user: true } },
       additionalCharges: true,
       payment: true,
+      chc: { include: { user: true } },
     },
-       orderBy: [{ bookingDate: "asc" }],
-
+    orderBy: [{ bookingDate: "asc" }],
   });
+
+  const { getRouteDistance } = await import('@/src/lib/geo');
+
+  const bookings = await Promise.all(rawBookings.map(async (b) => {
+    let distance = null;
+    const farmerLoc = b.farmer.location as any;
+    const chcLoc = b.chc.user.location as any;
+    
+    if (farmerLoc?.lat && chcLoc?.lat) {
+      const fLat = farmerLoc.lat;
+      const fLon = farmerLoc.lng ?? farmerLoc.lon;
+      const cLat = chcLoc.lat;
+      const cLon = chcLoc.lng ?? chcLoc.lon;
+      if (fLat && fLon && cLat && cLon) {
+        distance = await getRouteDistance(fLat, fLon, cLat, cLon);
+      }
+    }
+    
+    return { ...b, distance };
+  }));
 
   return NextResponse.json({ bookings });
 }

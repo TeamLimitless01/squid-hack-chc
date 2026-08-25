@@ -25,3 +25,43 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
   // Distance in kilometers
   return R * c;
 }
+
+/**
+ * Calculates the actual road distance using OSRM API, with a fallback to Haversine.
+ */
+export async function getRouteDistance(lat1: number, lon1: number, lat2: number, lon2: number): Promise<number> {
+  const straightLine = calculateDistance(lat1, lon1, lat2, lon2);
+
+  // Round coordinates to 4 decimal places (~11 meters precision) to improve cache hits and reduce API load
+  const rLon1 = lon1.toFixed(4);
+  const rLat1 = lat1.toFixed(4);
+  const rLon2 = lon2.toFixed(4);
+  const rLat2 = lat2.toFixed(4);
+
+  // If points are virtually identical, return 0
+  if (rLon1 === rLon2 && rLat1 === rLat2) {
+    return 0;
+  }
+
+  try {
+    const url = `http://router.project-osrm.org/route/v1/driving/${rLon1},${rLat1};${rLon2},${rLat2}?overview=false`;
+
+    const res = await fetch(url, {
+      next: { revalidate: 3600 }, // Cache the distance result for 1 hour
+      // Add timeout to not block rendering indefinitely
+      signal: AbortSignal.timeout(2000)
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+        return data.routes[0].distance / 1000; // Convert meters to km
+      }
+    }
+  } catch (e) {
+    console.error("Failed to fetch route distance from OSRM, falling back to Haversine", e);
+  }
+
+  // Fallback to straight-line distance slightly inflated to approximate road network
+  return straightLine * 1.3;
+}

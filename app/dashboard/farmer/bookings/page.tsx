@@ -25,7 +25,7 @@ export default async function FarmerBookingsPage() {
   }
 
   // Fetch all bookings for this farmer
-  const bookings = await prisma.booking.findMany({
+  const rawBookings = await prisma.booking.findMany({
     where: {
       farmerId: farmer.id,
     },
@@ -35,7 +35,11 @@ export default async function FarmerBookingsPage() {
           service: true,
         }
       },
-      chc: true,
+      chc: {
+        include: {
+          user: true
+        }
+      },
       additionalCharges: true,
       payment: true,
       assignedDriver: {
@@ -49,6 +53,26 @@ export default async function FarmerBookingsPage() {
       bookingDate: 'desc',
     }
   });
+
+  const { getRouteDistance } = await import('@/src/lib/geo');
+
+  const bookings = await Promise.all(rawBookings.map(async (b) => {
+    let distance = null;
+    const farmerLoc = b.farmer.location as any;
+    const chcLoc = b.chc.user.location as any;
+
+    if (farmerLoc?.lat && chcLoc?.lat) {
+      const fLat = farmerLoc.lat;
+      const fLon = farmerLoc.lng ?? farmerLoc.lon;
+      const cLat = chcLoc.lat;
+      const cLon = chcLoc.lng ?? chcLoc.lon;
+      if (fLat && fLon && cLat && cLon) {
+        distance = await getRouteDistance(fLat, fLon, cLat, cLon);
+      }
+    }
+
+    return { ...b, distance };
+  }));
 
   const currentBookings = bookings.filter(b =>
     b.tripStatus === 'STARTED' ||

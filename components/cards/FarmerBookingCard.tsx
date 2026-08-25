@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Calendar, Layers, Clock, CheckCircle2, XCircle, AlertCircle, FileText, CreditCard, Loader2, Banknote, Receipt, Printer, ChevronDown, ChevronUp } from "lucide-react";
+import { MapPin, Calendar, Layers, Clock, CheckCircle2, XCircle, AlertCircle, FileText, CreditCard, Loader2, Banknote, Receipt, Printer, ChevronDown, ChevronUp, Map } from "lucide-react";
 import ReviewProposalModal from "@/components/modals/ReviewProposalModal";
 import { createPaymentOrder, verifyPayment, payInCash } from "@/app/actions/payments";
+import MapModal from "@/components/map/MapModal";
 
 export default function FarmerBookingCard({ booking }: { booking: any }) {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isProcessingCash, setIsProcessingCash] = useState(false);
   const [showInvoice, setShowInvoice] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   const printInvoice = () => {
     window.print();
@@ -186,6 +188,17 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
             <p className="text-slate-500 font-medium flex items-center gap-1.5 mt-1">
               <MapPin className="w-4 h-4 text-emerald-600" />
               {booking.chc.centerName}
+              {booking.distance != null && (
+                <span className="text-slate-400 text-sm ml-1">• {booking.distance.toFixed(1)} km away</span>
+              )}
+              {booking.chc.user?.location && (
+                <button
+                  onClick={() => setShowMap(true)}
+                  className="ml-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition flex items-center gap-1 border border-emerald-100"
+                >
+                  <Map className="w-3 h-3" /> Map
+                </button>
+              )}
             </p>
           </div>
           <div>
@@ -397,7 +410,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
                   </tfoot>
                 </table>
               </div>
-              
+
               <div className="mt-6 text-center text-slate-400 text-xs font-medium">
                 <p>Payment Method: {booking.payment?.method || 'Online'} • Paid on {new Date(booking.payment?.paidAt || booking.updatedAt).toLocaleDateString('en-GB')}</p>
               </div>
@@ -413,6 +426,17 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
             setShowReviewModal(false);
             window.location.reload();
           }}
+        />
+      )}
+
+      {showMap && booking.chc.user?.location && (
+        <MapModal
+          lat={booking.chc.user.location.lat}
+          lon={booking.chc.user.location.lng ?? booking.chc.user.location.lon ?? 0}
+          name={booking.chc.centerName}
+          farmerLat={booking.farmer?.location?.lat}
+          farmerLon={booking.farmer?.location?.lng ?? booking.farmer?.location?.lon}
+          onClose={() => setShowMap(false)}
         />
       )}
     </>

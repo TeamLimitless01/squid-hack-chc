@@ -26,6 +26,7 @@ type Booking = {
     updatedAt: string;
     payment?: { status: string; amount: number; method: string; paidAt: string };
     chc?: { location?: { lat?: number; lng?: number; lon?: number } };
+    distance?: number | null;
 };
 
 const statuses = ["ALL", "REQUESTED", "ACCEPTED", "COMPLETED", "REJECTED", "CANCELLED"];
@@ -142,8 +143,18 @@ export default function CHCBookingsPage() {
         return booking.bookingStatus === status;
     };
 
-    const filteredBookings = useMemo(() => {
-        const list = bookings.filter((booking) => isBookingInStatus(booking, selectedStatus));
+    const currentBookings = useMemo(() => {
+        return bookings.filter(b => b.tripStatus === 'STARTED' || b.workStatus === 'IN_PROGRESS' || (b.workStatus === 'COMPLETED' && b.payment?.status !== 'PAID'))
+            .sort((a, b) => {
+                const timeA = new Date(a.updatedAt || a.bookingDate).getTime();
+                const timeB = new Date(b.updatedAt || b.bookingDate).getTime();
+                return timeB - timeA;
+            });
+    }, [bookings]);
+
+    const otherBookings = useMemo(() => {
+        const list = bookings.filter(b => !(b.tripStatus === 'STARTED' || b.workStatus === 'IN_PROGRESS' || (b.workStatus === 'COMPLETED' && b.payment?.status !== 'PAID')))
+            .filter((booking) => isBookingInStatus(booking, selectedStatus));
         return [...list].sort((a, b) => {
             const timeA = new Date(a.createdAt || a.bookingDate).getTime();
             const timeB = new Date(b.createdAt || b.bookingDate).getTime();
@@ -151,7 +162,249 @@ export default function CHCBookingsPage() {
         });
     }, [bookings, selectedStatus]);
 
-    const count = (status: string) => bookings.filter((booking) => isBookingInStatus(booking, status)).length;
+    const count = (status: string) => bookings
+        .filter(b => !(b.tripStatus === 'STARTED' || b.workStatus === 'IN_PROGRESS' || (b.workStatus === 'COMPLETED' && b.payment?.status !== 'PAID')))
+        .filter((booking) => isBookingInStatus(booking, status)).length;
+
+    const renderBookingCard = (booking: Booking) => (
+        <article key={booking.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start mb-6">
+                <div>
+                    <h3 className="text-xl font-bold text-slate-900">{booking.chcService.service.name}</h3>
+                    <p className="text-slate-500 font-medium flex items-center gap-1.5 mt-1">
+                        <span className="text-emerald-600 font-bold">{booking.farmer.name}</span> • {booking.farmer.phone}
+                        {booking.distance != null && (
+                            <span className="text-slate-400 text-sm ml-1">• {booking.distance.toFixed(1)} km away</span>
+                        )}
+                        {booking.farmer.location && (
+                            <button
+                                onClick={() => setMapBooking(booking)}
+                                className="ml-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition flex items-center gap-1 border border-emerald-100"
+                            >
+                                <Map className="w-3 h-3" /> Map
+                            </button>
+                        )}
+                    </p>
+                </div>
+
+                {getStatusBadge(booking)}
+            </div>
+
+            {/* Pricing and Details Grid matching Farmer Dashboard */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Date Needed</p>
+                    <p className="font-semibold text-slate-900 flex items-center gap-1.5">
+                        <CalendarDays className="h-4 w-4 text-emerald-600" />
+                        {new Date(booking.bookingDate).toLocaleDateString()}
+                    </p>
+                </div>
+                <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Quantity</p>
+                    <p className="font-semibold text-slate-900 flex items-center gap-1.5">
+                        <Layers className="h-4 w-4 text-emerald-600" />
+                        {booking.area} {booking.chcService.pricingUnit.toLowerCase()}s
+                    </p>
+                </div>
+                <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Rate</p>
+                    <p className="font-semibold text-slate-900">
+                        ₹{booking.chcService.price} / {booking.chcService.pricingUnit.toLowerCase()}
+                    </p>
+                </div>
+                <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Estimated Total</p>
+                    <p className="font-black text-emerald-700 text-lg">
+                        ₹{(booking.vpFinalAmount !== null ? booking.vpFinalAmount : (booking.chcService.price * booking.area)).toLocaleString('en-IN')}
+                    </p>
+                </div>
+            </div>
+
+            {booking.additionalCharges.length > 0 && (
+                <div className="mt-4 rounded-xl border border-amber-100 bg-amber-50/60 p-4">
+                    <div className="flex items-center justify-between gap-4 border-b border-amber-100 pb-3">
+                        <p className="text-sm font-bold text-slate-700">Work charges</p>
+                        <p className="text-sm font-bold text-slate-900">₹{getBaseAmount(booking).toLocaleString("en-IN")}</p>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                        <p className="mt-3 text-sm font-bold text-amber-900">Additional charges</p>
+                        <p className="text-sm font-bold text-amber-800">+ ₹{getAdditionalChargesTotal(booking).toLocaleString("en-IN")}</p>
+                    </div>
+                    <div className="mt-3 space-y-2 border-t border-amber-100 pt-3">
+                        {booking.additionalCharges.map((charge) => (
+                            <div key={charge.id} className="flex items-center justify-between gap-4 text-sm">
+                                <span className="font-medium text-slate-600">{charge.reason}</span>
+                                <span className="font-bold text-slate-900">₹{charge.amount.toLocaleString("en-IN")}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div className="mt-4 flex items-center justify-between rounded-xl bg-emerald-50 px-4 py-3">
+                <span className="text-sm font-bold text-emerald-900">Total amount</span>
+                <span className="text-lg font-black text-emerald-700">₹{getTotalAmount(booking).toLocaleString("en-IN")}</span>
+            </div>
+
+            {/* Assigned Driver Info */}
+            {booking.assignedDriver && (
+                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between gap-2 text-sm">
+                    <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-500">Assigned Driver:</span>
+                        <span className="font-semibold text-slate-900">{booking.assignedDriver.user.name}</span>
+                        {booking.tripStatus === "STARTED" && booking.workStatus !== "COMPLETED" && (
+                            <button
+                                onClick={() => setMapBooking(booking)}
+                                className="ml-2 text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 hover:bg-amber-100 transition flex items-center gap-1.5"
+                            >
+                                <Navigation className="w-3.5 h-3.5" /> Track Driver
+                            </button>
+                        )}
+                    </div>
+                    {/* Only allow changing driver if the trip hasn't started */}
+                    {booking.tripStatus !== "STARTED" && booking.workStatus !== "IN_PROGRESS" && booking.workStatus !== "COMPLETED" && (
+                        <button
+                            onClick={() => setAssignBooking(booking)}
+                            className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 hover:bg-emerald-100 transition"
+                        >
+                            Change Driver
+                        </button>
+                    )}
+                </div>
+            )}
+
+            {booking.bookingStatus === "REQUESTED" && (
+                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-3">
+                    {booking.vpProposedAt ? (
+                        <div className="flex-1 flex items-center gap-2 text-amber-600 bg-amber-50 px-4 py-2.5 rounded-xl text-sm font-bold border border-amber-200">
+                            <Send className="w-4 h-4" /> Proposal Sent to Farmer
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => setProposalBooking(booking)}
+                            className="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-emerald-700 transition"
+                        >
+                            Send Proposal
+                        </button>
+                    )}
+                    <button
+                        onClick={() => handleReject(booking.id)}
+                        disabled={processingId === booking.id}
+                        className="bg-white text-rose-600 border border-rose-200 font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-rose-50 transition disabled:opacity-50 flex items-center gap-2"
+                    >
+                        {processingId === booking.id ? (
+                            <><Loader2 className="w-4 h-4 animate-spin" /> Rejecting...</>
+                        ) : "Reject"}
+                    </button>
+                </div>
+            )}
+
+            {booking.bookingStatus === "ACCEPTED" && !booking.assignedDriver && (
+                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-end">
+                    <button
+                        onClick={() => setAssignBooking(booking)}
+                        className="bg-slate-900 text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-slate-800 transition flex items-center gap-2"
+                    >
+                        <Tractor className="w-4 h-4" /> Assign Resources
+                    </button>
+                </div>
+            )}
+
+            {/* Invoice Toggle Button */}
+            {booking.payment?.status === "PAID" && (
+                <button
+                    onClick={() => toggleInvoice(booking.id)}
+                    className="w-full mt-4 bg-white hover:bg-slate-50 text-slate-700 font-bold py-3 rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2 shadow-sm"
+                >
+                    <Receipt className="w-5 h-5 text-emerald-600" />
+                    {expandedInvoiceId === booking.id ? "Hide Invoice Details" : "See Invoice Details"}
+                    {expandedInvoiceId === booking.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+            )}
+
+            {/* Detailed Invoice View (Expandable) */}
+            {expandedInvoiceId === booking.id && booking.payment?.status === "PAID" && (
+                <div className="mt-6 border-t border-dashed border-slate-300 pt-6 animate-in slide-in-from-top-4 duration-300">
+                    <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200" id={`invoice-${booking.id}`}>
+                        <div className="flex justify-between items-start mb-8">
+                            <div>
+                                <h4 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Invoice</h4>
+                                <p className="text-slate-500 font-medium mt-1">Receipt for #{booking.id.substring(0, 8).toUpperCase()}</p>
+                            </div>
+                            <button
+                                onClick={printInvoice}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors print:hidden shadow-sm"
+                            >
+                                <Printer className="w-4 h-4" /> Download PDF
+                            </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Billed To (Farmer)</p>
+                                <p className="font-bold text-slate-800">{booking.farmer?.name}</p>
+                                <p className="text-slate-600 text-sm mt-1">{booking.farmer?.address || "Address not provided"}</p>
+                                {booking.farmer?.city && <p className="text-slate-600 text-sm">{booking.farmer.city}, {booking.farmer.state}</p>}
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Service Provider (You)</p>
+                                <p className="font-bold text-slate-800">Your CHC Center</p>
+                                {booking.assignedDriver && (
+                                    <p className="text-slate-600 text-sm mt-1">Driver: {booking.assignedDriver.user.name} {booking.assignedDriver.user.phone ? `(${booking.assignedDriver.user.phone})` : ''}</p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-slate-100 border-b border-slate-200">
+                                        <th className="py-3 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Description</th>
+                                        <th className="py-3 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr className="border-b border-slate-100">
+                                        <td className="py-4 px-4">
+                                            <p className="font-bold text-slate-800">{booking.chcService.service.name}</p>
+                                            <p className="text-sm text-slate-500 mt-1">Base Rate: ₹{booking.chcService.price} x {booking.area} {booking.chcService.pricingUnit.toLowerCase()}s</p>
+                                        </td>
+                                        <td className="py-4 px-4 text-right font-medium text-slate-900">
+                                            ₹{(booking.chcService.price * booking.area).toLocaleString('en-IN')}
+                                        </td>
+                                    </tr>
+                                    {booking.additionalCharges?.map((charge: any) => (
+                                        <tr key={charge.id} className="border-b border-slate-100">
+                                            <td className="py-4 px-4">
+                                                <p className="font-medium text-slate-700">{charge.reason}</p>
+                                            </td>
+                                            <td className="py-4 px-4 text-right font-medium text-slate-900">
+                                                ₹{charge.amount.toLocaleString('en-IN')}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                <tfoot>
+                                    <tr className="bg-emerald-50">
+                                        <td className="py-4 px-4 font-black text-emerald-900 text-right uppercase text-sm tracking-wider">
+                                            Total Received
+                                        </td>
+                                        <td className="py-4 px-4 text-right font-black text-emerald-700 text-xl">
+                                            ₹{(booking.payment?.amount || booking.vpFinalAmount || (booking.chcService.price * booking.area)).toLocaleString('en-IN')}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div className="mt-6 text-center text-slate-400 text-xs font-medium">
+                            <p>Payment Method: {booking.payment?.method || 'Online'} • Paid on {new Date(booking.payment?.paidAt || booking.updatedAt).toLocaleDateString('en-GB')}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </article>
+    );
 
     return (
         <div className="mx-auto max-w-6xl px-6 py-10 sm:px-10">
@@ -172,7 +425,21 @@ export default function CHCBookingsPage() {
                 </div>
             ) : (
                 <>
-                    <div className="mt-8 flex gap-2 overflow-x-auto pb-2">
+                    {/* Current Works Section */}
+                    {currentBookings.length > 0 && (
+                        <div className="mt-12">
+                            <h3 className="text-2xl font-black text-slate-900 mb-6">Current Bookings & Works</h3>
+                            <div className="space-y-4">
+                                {currentBookings.map(renderBookingCard)}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Filter Tabs for Other Bookings */}
+                    <div className="mt-12 flex items-center justify-between">
+                        <h3 className="text-2xl font-black text-slate-900">Other Bookings</h3>
+                    </div>
+                    <div className="mt-6 flex gap-2 overflow-x-auto pb-2">
                         {statuses.map((status) => (
                             <button
                                 key={status}
@@ -186,237 +453,10 @@ export default function CHCBookingsPage() {
                     </div>
 
                     <div className="mt-4 space-y-4">
-                        {filteredBookings.map((booking) => (
-                            <article key={booking.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-                                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start mb-6">
-                                    <div>
-                                        <h3 className="text-xl font-bold text-slate-900">{booking.chcService.service.name}</h3>
-                                        <p className="text-slate-500 font-medium flex items-center gap-1.5 mt-1">
-                                            <span className="text-emerald-600 font-bold">{booking.farmer.name}</span> • {booking.farmer.phone}
-                                            {booking.farmer.location && (
-                                                <button
-                                                    onClick={() => setMapBooking(booking)}
-                                                    className="ml-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition flex items-center gap-1 border border-emerald-100"
-                                                >
-                                                    <Map className="w-3 h-3" /> Map
-                                                </button>
-                                            )}
-                                        </p>
-                                    </div>
-
-                                    {getStatusBadge(booking)}
-                                </div>
-
-                                {/* Pricing and Details Grid matching Farmer Dashboard */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                    <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Date Needed</p>
-                                        <p className="font-semibold text-slate-900 flex items-center gap-1.5">
-                                            <CalendarDays className="h-4 w-4 text-emerald-600" />
-                                            {new Date(booking.bookingDate).toLocaleDateString()}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Quantity</p>
-                                        <p className="font-semibold text-slate-900 flex items-center gap-1.5">
-                                            <Layers className="h-4 w-4 text-emerald-600" />
-                                            {booking.area} {booking.chcService.pricingUnit.toLowerCase()}s
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Rate</p>
-                                        <p className="font-semibold text-slate-900">
-                                            ₹{booking.chcService.price} / {booking.chcService.pricingUnit.toLowerCase()}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Estimated Total</p>
-                                        <p className="font-black text-emerald-700 text-lg">
-                                            ₹{(booking.vpFinalAmount !== null ? booking.vpFinalAmount : (booking.chcService.price * booking.area)).toLocaleString('en-IN')}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {booking.additionalCharges.length > 0 && (
-                                    <div className="mt-4 rounded-xl border border-amber-100 bg-amber-50/60 p-4">
-                                        <div className="flex items-center justify-between gap-4 border-b border-amber-100 pb-3">
-                                            <p className="text-sm font-bold text-slate-700">Work charges</p>
-                                            <p className="text-sm font-bold text-slate-900">₹{getBaseAmount(booking).toLocaleString("en-IN")}</p>
-                                        </div>
-                                        <div className="flex items-center justify-between gap-4">
-                                            <p className="mt-3 text-sm font-bold text-amber-900">Additional charges</p>
-                                            <p className="text-sm font-bold text-amber-800">+ ₹{getAdditionalChargesTotal(booking).toLocaleString("en-IN")}</p>
-                                        </div>
-                                        <div className="mt-3 space-y-2 border-t border-amber-100 pt-3">
-                                            {booking.additionalCharges.map((charge) => (
-                                                <div key={charge.id} className="flex items-center justify-between gap-4 text-sm">
-                                                    <span className="font-medium text-slate-600">{charge.reason}</span>
-                                                    <span className="font-bold text-slate-900">₹{charge.amount.toLocaleString("en-IN")}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="mt-4 flex items-center justify-between rounded-xl bg-emerald-50 px-4 py-3">
-                                    <span className="text-sm font-bold text-emerald-900">Total amount</span>
-                                    <span className="text-lg font-black text-emerald-700">₹{getTotalAmount(booking).toLocaleString("en-IN")}</span>
-                                </div>
-
-                                {/* Assigned Driver Info */}
-                                {booking.assignedDriver && (
-                                    <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between gap-2 text-sm">
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-bold text-slate-500">Assigned Driver:</span>
-                                            <span className="font-semibold text-slate-900">{booking.assignedDriver.user.name}</span>
-                                        </div>
-                                        {/* Only allow changing driver if the trip hasn't started */}
-                                        {booking.tripStatus !== "STARTED" && booking.workStatus !== "IN_PROGRESS" && booking.workStatus !== "COMPLETED" && (
-                                            <button
-                                                onClick={() => setAssignBooking(booking)}
-                                                className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 hover:bg-emerald-100 transition"
-                                            >
-                                                Change Driver
-                                            </button>
-                                        )}
-                                    </div>
-                                )}
-
-                                {booking.bookingStatus === "REQUESTED" && (
-                                    <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-3">
-                                        {booking.vpProposedAt ? (
-                                            <div className="flex-1 flex items-center gap-2 text-amber-600 bg-amber-50 px-4 py-2.5 rounded-xl text-sm font-bold border border-amber-200">
-                                                <Send className="w-4 h-4" /> Proposal Sent to Farmer
-                                            </div>
-                                        ) : (
-                                            <button
-                                                onClick={() => setProposalBooking(booking)}
-                                                className="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-emerald-700 transition"
-                                            >
-                                                Send Proposal
-                                            </button>
-                                        )}
-                                        <button
-                                            onClick={() => handleReject(booking.id)}
-                                            disabled={processingId === booking.id}
-                                            className="bg-white text-rose-600 border border-rose-200 font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-rose-50 transition disabled:opacity-50 flex items-center gap-2"
-                                        >
-                                            {processingId === booking.id ? (
-                                                <><Loader2 className="w-4 h-4 animate-spin" /> Rejecting...</>
-                                            ) : "Reject"}
-                                        </button>
-                                    </div>
-                                )}
-
-                                {booking.bookingStatus === "ACCEPTED" && !booking.assignedDriver && (
-                                    <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-end">
-                                        <button
-                                            onClick={() => setAssignBooking(booking)}
-                                            className="bg-slate-900 text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-slate-800 transition flex items-center gap-2"
-                                        >
-                                            <Tractor className="w-4 h-4" /> Assign Resources
-                                        </button>
-                                    </div>
-                                )}
-
-                                {/* Invoice Toggle Button */}
-                                {booking.payment?.status === "PAID" && (
-                                    <button
-                                        onClick={() => toggleInvoice(booking.id)}
-                                        className="w-full mt-4 bg-white hover:bg-slate-50 text-slate-700 font-bold py-3 rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2 shadow-sm"
-                                    >
-                                        <Receipt className="w-5 h-5 text-emerald-600" />
-                                        {expandedInvoiceId === booking.id ? "Hide Invoice Details" : "See Invoice Details"}
-                                        {expandedInvoiceId === booking.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                                    </button>
-                                )}
-
-                                {/* Detailed Invoice View (Expandable) */}
-                                {expandedInvoiceId === booking.id && booking.payment?.status === "PAID" && (
-                                    <div className="mt-6 border-t border-dashed border-slate-300 pt-6 animate-in slide-in-from-top-4 duration-300">
-                                        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200" id={`invoice-${booking.id}`}>
-                                            <div className="flex justify-between items-start mb-8">
-                                                <div>
-                                                    <h4 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Invoice</h4>
-                                                    <p className="text-slate-500 font-medium mt-1">Receipt for #{booking.id.substring(0, 8).toUpperCase()}</p>
-                                                </div>
-                                                <button
-                                                    onClick={printInvoice}
-                                                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors print:hidden shadow-sm"
-                                                >
-                                                    <Printer className="w-4 h-4" /> Download PDF
-                                                </button>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                                                <div>
-                                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Billed To (Farmer)</p>
-                                                    <p className="font-bold text-slate-800">{booking.farmer?.name}</p>
-                                                    <p className="text-slate-600 text-sm mt-1">{booking.farmer?.address || "Address not provided"}</p>
-                                                    {booking.farmer?.city && <p className="text-slate-600 text-sm">{booking.farmer.city}, {booking.farmer.state}</p>}
-                                                </div>
-                                                <div>
-                                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Service Provider (You)</p>
-                                                    <p className="font-bold text-slate-800">Your CHC Center</p>
-                                                    {booking.assignedDriver && (
-                                                        <p className="text-slate-600 text-sm mt-1">Driver: {booking.assignedDriver.user.name} {booking.assignedDriver.user.phone ? `(${booking.assignedDriver.user.phone})` : ''}</p>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
-                                                <table className="w-full text-left border-collapse">
-                                                    <thead>
-                                                        <tr className="bg-slate-100 border-b border-slate-200">
-                                                            <th className="py-3 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Description</th>
-                                                            <th className="py-3 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Amount</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr className="border-b border-slate-100">
-                                                            <td className="py-4 px-4">
-                                                                <p className="font-bold text-slate-800">{booking.chcService.service.name}</p>
-                                                                <p className="text-sm text-slate-500 mt-1">Base Rate: ₹{booking.chcService.price} x {booking.area} {booking.chcService.pricingUnit.toLowerCase()}s</p>
-                                                            </td>
-                                                            <td className="py-4 px-4 text-right font-medium text-slate-900">
-                                                                ₹{(booking.chcService.price * booking.area).toLocaleString('en-IN')}
-                                                            </td>
-                                                        </tr>
-                                                        {booking.additionalCharges?.map((charge: any) => (
-                                                            <tr key={charge.id} className="border-b border-slate-100">
-                                                                <td className="py-4 px-4">
-                                                                    <p className="font-medium text-slate-700">{charge.reason}</p>
-                                                                </td>
-                                                                <td className="py-4 px-4 text-right font-medium text-slate-900">
-                                                                    ₹{charge.amount.toLocaleString('en-IN')}
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr className="bg-emerald-50">
-                                                            <td className="py-4 px-4 font-black text-emerald-900 text-right uppercase text-sm tracking-wider">
-                                                                Total Received
-                                                            </td>
-                                                            <td className="py-4 px-4 text-right font-black text-emerald-700 text-xl">
-                                                                ₹{(booking.payment?.amount || booking.vpFinalAmount || (booking.chcService.price * booking.area)).toLocaleString('en-IN')}
-                                                            </td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-
-                                            <div className="mt-6 text-center text-slate-400 text-xs font-medium">
-                                                <p>Payment Method: {booking.payment?.method || 'Online'} • Paid on {new Date(booking.payment?.paidAt || booking.updatedAt).toLocaleDateString('en-GB')}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </article>
-                        ))}
+                        {otherBookings.map(renderBookingCard)}
                     </div>
 
-                    {filteredBookings.length === 0 && (
+                    {otherBookings.length === 0 && (
                         <div className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
                             <CalendarDays className="mx-auto h-10 w-10 text-slate-300" />
                             <h3 className="mt-4 text-lg font-bold">No {selectedStatus === "ALL" ? "bookings" : statusLabel(selectedStatus) + " bookings"}</h3>

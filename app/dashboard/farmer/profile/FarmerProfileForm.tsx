@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { updateFarmerProfile } from "@/app/actions/farmer-profile";
 import { Loader2, CheckCircle2, AlertCircle, MapPin } from "lucide-react";
+import LocationPicker from "@/components/map/LocationPicker";
 
 type UserProps = {
   name: string;
@@ -32,55 +33,13 @@ export default function FarmerProfileForm({ user }: { user: UserProps }) {
     location: user.location
   });
 
-  const handleLocationSearch = (query: string) => {
-    setSearchQuery(query);
-
-    if (searchTimeout.current) clearTimeout(searchTimeout.current);
-
-    if (query.length < 3) {
-      setSuggestions([]);
-      return;
-    }
-
-    setIsSearching(true);
-    searchTimeout.current = setTimeout(async () => {
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?${new URLSearchParams({
-          q: query,
-          format: "json",
-          addressdetails: "1",
-          limit: "5",
-          countrycodes: "in",
-        })}`);
-        const data = await res.json();
-        setSuggestions(data);
-      } catch (err) {
-        console.error("Location search failed", err);
-      } finally {
-        setIsSearching(false);
-      }
-    }, 500);
-  };
-
-  const handleSelectLocation = (place: any) => {
-    const addr = place.address || {};
-    const city = addr.city || addr.town || addr.village || addr.county || "";
-    const state = addr.state || "";
-
-    const fullAddress = place.display_name.split(',').slice(0, 2).join(',');
-
+  const handleLocationSelect = (data: any) => {
     setAddressData({
-      address: fullAddress,
-      city,
-      state,
-      location: {
-        name: place.display_name,
-        lat: parseFloat(place.lat),
-        lon: parseFloat(place.lon)
-      }
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      location: data.location
     });
-    setSearchQuery(place.display_name);
-    setSuggestions([]);
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -162,45 +121,12 @@ export default function FarmerProfileForm({ user }: { user: UserProps }) {
       <div className="space-y-5 pt-4 border-t border-slate-100 relative">
         <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Location</h3>
 
-        <div className="relative">
-          <label className="block text-sm font-semibold text-slate-700 mb-1.5">Search Area / Village</label>
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
-              <MapPin className="h-5 w-5" />
-            </div>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => handleLocationSearch(e.target.value)}
-              className="text-slate-900 pl-11 block w-full bg-slate-50 border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white sm:text-sm h-12 transition-all duration-200"
-              placeholder="Search to update your farm location..."
-            />
-            {isSearching && (
-              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
-                <Loader2 className="h-4 w-4 text-emerald-500 animate-spin" />
-              </div>
-            )}
-          </div>
-
-          {suggestions.length > 0 && (
-            <ul className="absolute z-20 mt-2 w-full bg-white/90 backdrop-blur-xl shadow-2xl rounded-xl py-2 text-base ring-1 ring-black/5 overflow-auto max-h-60 focus:outline-none sm:text-sm transform opacity-100 scale-100 transition-all origin-top border border-slate-100">
-              {suggestions.map((place, idx) => (
-                <li
-                  key={idx}
-                  className="text-slate-800 cursor-default select-none relative py-2.5 px-4 hover:bg-emerald-50 hover:text-emerald-900 transition-colors"
-                  onClick={() => handleSelectLocation(place)}
-                >
-                  <span className="block truncate font-semibold">
-                    {place.display_name.split(',')[0]}
-                  </span>
-                  <span className="block truncate text-xs text-slate-500 mt-0.5">
-                    {place.display_name}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <LocationPicker 
+          initialQuery={addressData.location?.name || ""}
+          initialLocation={addressData.location}
+          onLocationSelect={handleLocationSelect} 
+          placeholder="Search to update your farm location..." 
+        />
 
         {addressData.address && (
           <div className="mt-3 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100/50 text-sm shadow-sm backdrop-blur-sm transition-all">

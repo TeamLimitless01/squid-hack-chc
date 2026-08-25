@@ -110,10 +110,10 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
     }
   });
 
-  // Filter and process the results
-  const nearbyServices = allServices.map(chcService => {
-    // 1. Calculate Distance
-    let distance = Infinity;
+  // Filter and process the results in two steps to minimize OSRM API calls
+  // Step 1: Pre-filter using straight-line distance and category
+  const candidateServices = allServices.map(chcService => {
+    let straightDistance = Infinity;
     let chcLat = 0;
     let chcLon = 0;
     try {
@@ -123,7 +123,7 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
         if (lon) {
           chcLat = parseFloat(chcLoc.lat);
           chcLon = parseFloat(lon);
-          distance = calculateDistance(farmerLat, farmerLon, chcLat, chcLon);
+          straightDistance = calculateDistance(farmerLat, farmerLon, chcLat, chcLon);
         }
       }
     } catch (e) {
@@ -132,11 +132,52 @@ export default async function CHCServicesPage(props: { searchParams: Promise<{ c
 
     return {
       ...chcService,
-      distance,
+      straightDistance,
       chcLat,
       chcLon,
       farmerLat,
       farmerLon
+    };
+  }).filter(s => {
+    // Fast rejection: Category
+    if (categoryId && s.serviceId !== categoryId) return false;
+    
+    // Fast rejection: If straight line distance is already way larger than max (e.g. > max * 2 + 5km), skip API call
+    if (s.straightDistance > maxDistance * 2 + 5) return false;
+    
+    return true;
+  });
+
+  // Step 2: Get actual route distances for unique CHC locations
+  const { getRouteDistance } = await import("@/src/lib/geo");
+  const uniqueChcLocations = new Map<string, { lat: number, lon: number, distance: number }>();
+  
+  for (const s of candidateServices) {
+    if (s.chcLat && s.chcLon) {
+      const key = `${s.chcLat.toFixed(6)},${s.chcLon.toFixed(6)}`;
+      if (!uniqueChcLocations.has(key)) {
+        uniqueChcLocations.set(key, { lat: s.chcLat, lon: s.chcLon, distance: Infinity });
+      }
+    }
+  }
+
+  // Fetch all route distances concurrently
+  await Promise.all(
+    Array.from(uniqueChcLocations.entries()).map(async ([key, loc]) => {
+      loc.distance = await getRouteDistance(farmerLat, farmerLon, loc.lat, loc.lon);
+    })
+  );
+
+  // Step 3: Map actual distances back and apply final filters
+  const nearbyServices = candidateServices.map(s => {
+    let distance = Infinity;
+    if (s.chcLat && s.chcLon) {
+      const key = `${s.chcLat.toFixed(6)},${s.chcLon.toFixed(6)}`;
+      distance = uniqueChcLocations.get(key)?.distance ?? Infinity;
+    }
+    return {
+      ...s,
+      distance
     };
   }).filter(s => {
     // 1. Category Filter
