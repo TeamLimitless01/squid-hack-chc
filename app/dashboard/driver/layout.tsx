@@ -18,11 +18,12 @@ export default function DriverDashboardLayout({ children }: { children: React.Re
     <div className="min-h-screen bg-[#f7f8f3] text-slate-900">
       <PusherListener />
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-72 border-r border-slate-200 bg-white px-5 py-7 lg:flex lg:flex-col">
-        <div className="mb-10 px-3">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600 flex items-center gap-2">
-            <Tractor className="w-4 h-4" /> Squid Hack
-          </p>
-          <h1 className="mt-2 text-2xl font-black tracking-tight">Driver Workspace</h1>
+        <div className="mb-10 px-3 flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <img src="https://img.pikbest.com/png-images/20241029/an-agriculture-logo-sun-and-crops-icon_11024322.png!sw800" alt="Logo" className="w-6 h-6 object-contain" />
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">AgriConnect</p>
+          </div>
+          <h1 className="text-2xl font-black tracking-tight">Driver Workspace</h1>
         </div>
         <nav className="space-y-2">
           <Link href="/dashboard/driver" className={desktopLinkClass("overview")}>

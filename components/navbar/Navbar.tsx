@@ -33,17 +33,14 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 ${
-        isScrolled ? "py-3" : "py-5"
-      }`}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 ${isScrolled ? "py-3" : "py-5"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-brand-500 text-white p-2 rounded-xl group-hover:bg-brand-600 transition-colors">
-              <Tractor className="w-6 h-6" />
-            </div>
+          <Link href="/" className="flex items-center gap-3 group">
+            <img src="https://img.pikbest.com/png-images/20241029/an-agriculture-logo-sun-and-crops-icon_11024322.png!sw800" alt="AgriConnect Logo" className="w-10 h-10 object-contain drop-shadow-sm" />
             <span className="font-bold text-xl tracking-tight text-gray-900">
               AgriConnect
             </span>
@@ -57,9 +54,8 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`text-sm font-medium transition-colors ${
-                    isActive ? "text-brand-600" : "text-gray-600 hover:text-brand-600"
-                  }`}
+                  className={`text-sm font-medium transition-colors ${isActive ? "text-brand-600" : "text-gray-600 hover:text-brand-600"
+                    }`}
                 >
                   {link.name}
                 </Link>
@@ -136,11 +132,10 @@ export default function Navbar() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className={`block px-3 py-3 text-base font-medium rounded-lg ${
-                      isActive 
-                        ? "text-brand-600 bg-brand-50" 
+                    className={`block px-3 py-3 text-base font-medium rounded-lg ${isActive
+                        ? "text-brand-600 bg-brand-50"
                         : "text-gray-700 hover:bg-gray-50 hover:text-brand-600"
-                    }`}
+                      }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.name}

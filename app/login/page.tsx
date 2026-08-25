@@ -61,8 +61,9 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
+        <img src="https://img.pikbest.com/png-images/20241029/an-agriculture-logo-sun-and-crops-icon_11024322.png!sw800" alt="AgriConnect Logo" className="w-16 h-16 object-contain drop-shadow-sm mb-2" />
+        <h2 className="mt-4 text-center text-3xl font-extrabold text-gray-900">
           Sign in to your account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
