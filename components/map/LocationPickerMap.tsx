@@ -42,14 +42,14 @@ function LocationMarker({ position, setPosition }: { position: L.LatLng | null, 
   );
 }
 
-export default function LocationPickerMap({ 
-  initialLat, 
-  initialLon, 
-  onConfirm, 
-  onCancel 
-}: { 
-  initialLat?: number; 
-  initialLon?: number; 
+export default function LocationPickerMap({
+  initialLat,
+  initialLon,
+  onConfirm,
+  onCancel
+}: {
+  initialLat?: number;
+  initialLon?: number;
   onConfirm: (lat: number, lon: number) => void;
   onCancel: () => void;
 }) {
@@ -65,14 +65,14 @@ export default function LocationPickerMap({
   return (
     <div className="w-full h-full flex flex-col relative">
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1000] flex gap-3 shadow-xl p-2 bg-white/90 backdrop-blur-md rounded-2xl">
-        <button 
+        <button
           type="button"
           onClick={onCancel}
           className="px-6 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors"
         >
           Cancel
         </button>
-        <button 
+        <button
           type="button"
           onClick={() => {
             if (position) onConfirm(position.lat, position.lng);
@@ -84,9 +84,9 @@ export default function LocationPickerMap({
         </button>
       </div>
 
-      <MapContainer 
-        center={center} 
-        zoom={zoom} 
+      <MapContainer
+        center={center}
+        zoom={zoom}
         style={{ height: "100%", width: "100%", zIndex: 0 }}
       >
         <TileLayer

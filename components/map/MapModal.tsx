@@ -2,16 +2,37 @@
 
 import dynamic from "next/dynamic";
 import { X, MapPin } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { pusherClient } from "@/src/lib/pusher";
 
 const MapComponent = dynamic(() => import("./MapComponent"), { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center bg-gray-100 animate-pulse text-gray-500">Loading Map...</div> });
 
-export default function MapModal({ lat, lon, name, farmerLat, farmerLon, onClose }: { lat: number, lon: number, name: string, farmerLat?: number, farmerLon?: number, onClose: () => void }) {
+export default function MapModal({ lat, lon, name, farmerLat, farmerLon, bookingId, onClose }: { lat: number, lon: number, name: string, farmerLat?: number, farmerLon?: number, bookingId?: string, onClose: () => void }) {
+  const [driverLat, setDriverLat] = useState<number | undefined>();
+  const [driverLon, setDriverLon] = useState<number | undefined>();
+
   // Prevent scrolling on body when modal is open
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = "unset"; };
   }, []);
+
+  useEffect(() => {
+    if (bookingId && pusherClient) {
+      const channelName = `booking-${bookingId}`;
+      const channel = pusherClient.subscribe(channelName);
+
+      channel.bind("location-update", (data: { lat: number, lon: number }) => {
+        setDriverLat(data.lat);
+        setDriverLon(data.lon);
+      });
+
+      return () => {
+        channel.unbind("location-update");
+        pusherClient?.unsubscribe(channelName);
+      };
+    }
+  }, [bookingId]);
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -28,7 +49,7 @@ export default function MapModal({ lat, lon, name, farmerLat, farmerLon, onClose
           </button>
         </div>
         <div className="flex-1 w-full bg-gray-50 relative z-0">
-          <MapComponent lat={lat} lon={lon} name={name} farmerLat={farmerLat} farmerLon={farmerLon} />
+          <MapComponent lat={lat} lon={lon} name={name} farmerLat={farmerLat} farmerLon={farmerLon} driverLat={driverLat} driverLon={driverLon} />
         </div>
       </div>
     </div>

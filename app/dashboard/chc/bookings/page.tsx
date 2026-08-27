@@ -7,7 +7,7 @@ import { rejectBooking } from "@/app/actions/chc-booking-actions";
 import ProposalModal from "@/components/modals/ProposalModal";
 import AssignResourcesModal from "@/components/modals/AssignResourcesModal";
 import MapModal from "@/components/map/MapModal";
-import { Navigation, Map, Receipt, ChevronDown, ChevronUp, Printer } from "lucide-react";
+import { Navigation, Map, Receipt, ChevronDown, ChevronUp, Printer, Phone } from "lucide-react";
 
 type Booking = {
     id: string;
@@ -171,15 +171,23 @@ export default function CHCBookingsPage() {
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start mb-6">
                 <div>
                     <h3 className="text-xl font-bold text-slate-900">{booking.chcService.service.name}</h3>
-                    <p className="text-slate-500 font-medium flex items-center gap-1.5 mt-1">
-                        <span className="text-emerald-600 font-bold">{booking.farmer.name}</span> • {booking.farmer.phone}
+                    <p className="text-slate-500 font-medium flex items-center flex-wrap gap-2 mt-1">
+                        <span className="flex items-center gap-1.5"><span className="text-emerald-600 font-bold">{booking.farmer.name}</span> • {booking.farmer.phone}</span>
+                        {booking.farmer.phone && (
+                            <a
+                                href={`tel:${booking.farmer.phone}`}
+                                className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md hover:bg-blue-100 transition flex items-center gap-1 border border-blue-100"
+                            >
+                                <Phone className="w-3 h-3" /> Call Farmer
+                            </a>
+                        )}
                         {booking.distance != null && (
-                            <span className="text-slate-400 text-sm ml-1">• {booking.distance.toFixed(1)} km away</span>
+                            <span className="text-slate-400 text-sm">• {booking.distance.toFixed(1)} km away</span>
                         )}
                         {booking.farmer.location && (
                             <button
                                 onClick={() => setMapBooking(booking)}
-                                className="ml-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition flex items-center gap-1 border border-emerald-100"
+                                className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition flex items-center gap-1 border border-emerald-100"
                             >
                                 <Map className="w-3 h-3" /> Map
                             </button>
@@ -248,14 +256,22 @@ export default function CHCBookingsPage() {
 
             {/* Assigned Driver Info */}
             {booking.assignedDriver && (
-                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between gap-2 text-sm">
-                    <div className="flex items-center gap-2">
+                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between gap-2 text-sm flex-wrap">
+                    <div className="flex items-center flex-wrap gap-2">
                         <span className="font-bold text-slate-500">Assigned Driver:</span>
                         <span className="font-semibold text-slate-900">{booking.assignedDriver.user.name}</span>
+                        {booking.assignedDriver.user.phone && (
+                            <a
+                                href={`tel:${booking.assignedDriver.user.phone}`}
+                                className="text-xs font-bold text-white bg-slate-900 px-3 py-1.5 rounded-lg hover:bg-slate-800 transition flex items-center gap-1.5 shadow-sm"
+                            >
+                                <Phone className="w-3.5 h-3.5" /> Call Driver
+                            </a>
+                        )}
                         {booking.tripStatus === "STARTED" && booking.workStatus !== "COMPLETED" && (
                             <button
                                 onClick={() => setMapBooking(booking)}
-                                className="ml-2 text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 hover:bg-amber-100 transition flex items-center gap-1.5"
+                                className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 hover:bg-amber-100 transition flex items-center gap-1.5"
                             >
                                 <Navigation className="w-3.5 h-3.5" /> Track Driver
                             </button>
@@ -480,11 +496,12 @@ export default function CHCBookingsPage() {
 
                     {mapBooking && mapBooking.farmer.location && (
                         <MapModal
-                            lat={mapBooking.farmer.location.lat}
-                            lon={mapBooking.farmer.location.lng ?? mapBooking.farmer.location.lon ?? 0}
-                            name={mapBooking.farmer.name}
-                            farmerLat={mapBooking.chc?.location?.lat} // Optional: we don't fetch CHC location here as it's the CHC itself, we can skip or pass undefined
-                            farmerLon={mapBooking.chc?.location?.lng || mapBooking.chc?.location?.lon}
+                            lat={mapBooking.chc?.location?.lat ?? mapBooking.farmer.location.lat}
+                            lon={mapBooking.chc?.location?.lng ?? mapBooking.chc?.location?.lon ?? mapBooking.farmer.location.lng ?? mapBooking.farmer.location.lon ?? 0}
+                            name="Your CHC"
+                            farmerLat={mapBooking.farmer.location.lat}
+                            farmerLon={mapBooking.farmer.location.lng ?? mapBooking.farmer.location.lon}
+                            bookingId={mapBooking.id}
                             onClose={() => setMapBooking(null)}
                         />
                     )}

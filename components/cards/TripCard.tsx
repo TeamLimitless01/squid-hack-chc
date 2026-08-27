@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Loader2, Navigation, Tractor, CheckCircle2, MapPin, Calendar as CalendarIcon, ArrowRight, Map, Clock, Banknote } from "lucide-react";
 import { startTrip, startWork, endWork, closeJob, confirmCashAndCloseJob } from "@/app/actions/driver-trips";
 import MapModal from "@/components/map/MapModal";
@@ -9,6 +9,78 @@ export default function TripCard({ booking, type }: { booking: any, type: "today
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const simulationInterval = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Only track if trip is STARTED and work hasn't started yet
+    if (booking.tripStatus === "STARTED" && booking.workStatus === "NOT_STARTED") {
+      let watchId: number;
+
+      // Real Geolocation Tracking
+      if (!isSimulating && "geolocation" in navigator) {
+        watchId = navigator.geolocation.watchPosition(
+          async (position) => {
+            await fetch('/api/driver/location', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                bookingId: booking.id,
+                lat: position.coords.latitude,
+                lon: position.coords.longitude
+              })
+            });
+          },
+          (error) => console.error("Error watching position:", error),
+          { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        );
+      }
+
+      // Simulation Logic
+      if (isSimulating && booking.chc?.location && booking.farmer?.location) {
+        let currentLat = booking.chc.location.lat;
+        let currentLon = booking.chc.location.lng || booking.chc.location.lon;
+        const targetLat = booking.farmer.location.lat;
+        const targetLon = booking.farmer.location.lng || booking.farmer.location.lon;
+
+        const steps = 100;
+        let step = 0;
+
+        const latStep = (targetLat - currentLat) / steps;
+        const lonStep = (targetLon - currentLon) / steps;
+
+        simulationInterval.current = setInterval(async () => {
+          if (step >= steps) {
+            if (simulationInterval.current) clearInterval(simulationInterval.current);
+            setIsSimulating(false);
+            return;
+          }
+          currentLat += latStep;
+          currentLon += lonStep;
+          step++;
+
+          try {
+            await fetch('/api/driver/location', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                bookingId: booking.id,
+                lat: currentLat,
+                lon: currentLon
+              })
+            });
+          } catch (e) {
+            console.error("Failed to send simulation data", e);
+          }
+        }, 1000);
+      }
+
+      return () => {
+        if (watchId) navigator.geolocation.clearWatch(watchId);
+        if (simulationInterval.current) clearInterval(simulationInterval.current);
+      };
+    }
+  }, [booking.tripStatus, booking.workStatus, booking.id, isSimulating, booking.chc?.location, booking.farmer?.location]);
 
   const handleAction = async (actionFn: (id: string) => Promise<any>) => {
     setIsProcessing(true);
@@ -95,13 +167,22 @@ export default function TripCard({ booking, type }: { booking: any, type: "today
 
     if (booking.tripStatus === "STARTED" && booking.workStatus === "NOT_STARTED") {
       return (
-        <button 
-          onClick={() => handleAction(startWork)}
-          disabled={isProcessing}
-          className="w-full mt-4 bg-blue-600 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors disabled:opacity-70 active:scale-95 shadow-lg shadow-blue-600/20"
-        >
-          {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Tractor className="w-5 h-5" /> Arrived & Start Work</>}
-        </button>
+        <div className="flex flex-col gap-2 mt-4">
+          <button 
+            onClick={() => handleAction(startWork)}
+            disabled={isProcessing}
+            className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors disabled:opacity-70 active:scale-95 shadow-lg shadow-blue-600/20"
+          >
+            {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Tractor className="w-5 h-5" /> Arrived & Start Work</>}
+          </button>
+          <button
+            onClick={() => setIsSimulating(!isSimulating)}
+            className={`w-full py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors border ${isSimulating ? 'bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-200' : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'}`}
+          >
+            <Navigation className="w-4 h-4" />
+            {isSimulating ? "Stop Simulation" : "Simulate Movement"}
+          </button>
+        </div>
       );
     }
 
@@ -179,11 +260,12 @@ export default function TripCard({ booking, type }: { booking: any, type: "today
 
       {isMapOpen && booking.farmer?.location && booking.chc?.location && (
         <MapModal
-          lat={booking.farmer.location.lat}
-          lon={booking.farmer.location.lng || booking.farmer.location.lon}
-          name={booking.farmer.name}
-          farmerLat={booking.chc.location.lat}
-          farmerLon={booking.chc.location.lng || booking.chc.location.lon}
+          lat={booking.chc.location.lat}
+          lon={booking.chc.location.lng || booking.chc.location.lon}
+          name={booking.chc.centerName || "CHC Center"}
+          farmerLat={booking.farmer.location.lat}
+          farmerLon={booking.farmer.location.lng || booking.farmer.location.lon}
+          bookingId={booking.id}
           onClose={() => setIsMapOpen(false)}
         />
       )}

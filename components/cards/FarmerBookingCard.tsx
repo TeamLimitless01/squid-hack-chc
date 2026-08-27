@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Calendar, Layers, Clock, CheckCircle2, XCircle, AlertCircle, FileText, CreditCard, Loader2, Banknote, Receipt, Printer, ChevronDown, ChevronUp, Map } from "lucide-react";
+import { MapPin, Calendar, Layers, Clock, CheckCircle2, XCircle, AlertCircle, FileText, CreditCard, Loader2, Banknote, Receipt, Printer, ChevronDown, ChevronUp, Map, Phone } from "lucide-react";
 import ReviewProposalModal from "@/components/modals/ReviewProposalModal";
 import { createPaymentOrder, verifyPayment, payInCash } from "@/app/actions/payments";
 import MapModal from "@/components/map/MapModal";
@@ -185,16 +185,23 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
             <h3 className="text-xl font-bold text-slate-900">{booking.chcService.service.name}</h3>
-            <p className="text-slate-500 font-medium flex items-center gap-1.5 mt-1">
-              <MapPin className="w-4 h-4 text-emerald-600" />
-              {booking.chc.centerName}
+            <p className="text-slate-500 font-medium flex items-center flex-wrap gap-2 mt-1">
+              <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-emerald-600" /> {booking.chc.centerName}</span>
               {booking.distance != null && (
-                <span className="text-slate-400 text-sm ml-1">• {booking.distance.toFixed(1)} km away</span>
+                <span className="text-slate-400 text-sm">• {booking.distance.toFixed(1)} km away</span>
+              )}
+              {booking.chc.user?.phone && (
+                <a
+                  href={`tel:${booking.chc.user.phone}`}
+                  className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md hover:bg-blue-100 transition flex items-center gap-1 border border-blue-100"
+                >
+                  <Phone className="w-3 h-3" /> Call Center
+                </a>
               )}
               {booking.chc.user?.location && (
                 <button
                   onClick={() => setShowMap(true)}
-                  className="ml-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition flex items-center gap-1 border border-emerald-100"
+                  className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition flex items-center gap-1 border border-emerald-100"
                 >
                   <Map className="w-3 h-3" /> Map
                 </button>
@@ -262,7 +269,17 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">Assigned Driver</p>
               <div className="flex items-center justify-between">
                 <p className="font-bold text-slate-800">{booking.assignedDriver.user.name}</p>
-                <p className="text-sm font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">{booking.assignedDriver.user.phone}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">{booking.assignedDriver.user.phone}</p>
+                  {(booking.tripStatus === "STARTED" || booking.workStatus === "IN_PROGRESS") && booking.assignedDriver.user.phone && (
+                    <a
+                      href={`tel:${booking.assignedDriver.user.phone}`}
+                      className="text-xs font-bold text-white bg-emerald-600 px-3 py-1.5 rounded-md hover:bg-emerald-700 transition flex items-center gap-1.5 shadow-sm"
+                    >
+                      <Phone className="w-3.5 h-3.5" /> Call Driver
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -436,6 +453,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
           name={booking.chc.centerName}
           farmerLat={booking.farmer?.location?.lat}
           farmerLon={booking.farmer?.location?.lng ?? booking.farmer?.location?.lon}
+          bookingId={booking.id}
           onClose={() => setShowMap(false)}
         />
       )}
