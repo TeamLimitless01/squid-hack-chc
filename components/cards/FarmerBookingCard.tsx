@@ -5,11 +5,15 @@ import { MapPin, Calendar, Layers, Clock, CheckCircle2, XCircle, AlertCircle, Fi
 import ReviewProposalModal from "@/components/modals/ReviewProposalModal";
 import { createPaymentOrder, verifyPayment, payInCash } from "@/app/actions/payments";
 import MapModal from "@/components/map/MapModal";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function FarmerBookingCard({ booking }: { booking: any }) {
+  const router = useRouter();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isProcessingCash, setIsProcessingCash] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [showInvoice, setShowInvoice] = useState(false);
   const [showMap, setShowMap] = useState(false);
 
@@ -19,6 +23,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
+      if ((window as any).Razorpay) return resolve(true);
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => resolve(true);
@@ -33,7 +38,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
     // 1. Load Razorpay script
     const res = await loadRazorpayScript();
     if (!res) {
-      alert("Razorpay SDK failed to load. Are you online?");
+      toast.error("Razorpay SDK failed to load. Are you online?");
       setIsProcessingPayment(false);
       return;
     }
@@ -41,7 +46,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
     // 2. Create Payment Order on Backend
     const orderData = await createPaymentOrder(booking.id);
     if (!orderData.success) {
-      alert(orderData.error || "Failed to create order");
+      toast.error(orderData.error || "Failed to create order");
       setIsProcessingPayment(false);
       return;
     }
@@ -55,6 +60,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
       description: `Payment for ${booking.chcService.service.name}`,
       order_id: orderData.orderId,
       handler: async function (response: any) {
+        setIsVerifying(true);
         // 4. Verify Payment on Backend
         const verifyRes = await verifyPayment(
           booking.id,
@@ -64,12 +70,13 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
         );
 
         if (verifyRes.success) {
-          alert("Payment Successful!");
-          window.location.reload();
+          toast.success("Payment Successful!");
+          router.refresh();
         } else {
-          alert("Payment Verification Failed!");
-          setIsProcessingPayment(false);
+          toast.error("Payment Verification Failed!");
         }
+        setIsVerifying(false);
+        setIsProcessingPayment(false);
       },
       prefill: {
         name: booking.farmer?.name || "Farmer",
@@ -83,7 +90,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
 
     const paymentObject = new (window as any).Razorpay(options);
     paymentObject.on("payment.failed", function (response: any) {
-      alert("Payment Failed: " + response.error.description);
+      toast.error("Payment Failed: " + response.error.description);
       setIsProcessingPayment(false);
     });
 
@@ -91,17 +98,17 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
   };
 
   const handleCashPayment = async () => {
-    if (!confirm("Are you sure you want to pay in cash? The driver will need to verify this.")) return;
+    if (!window.confirm("Are you sure you want to pay in cash? The driver will need to verify this.")) return;
 
     setIsProcessingCash(true);
     const res = await payInCash(booking.id);
     if (res.success) {
-      alert("Cash payment requested. Please hand the cash to the driver.");
-      window.location.reload();
+      toast.success("Cash payment requested. Please hand the cash to the driver.");
+      router.refresh();
     } else {
-      alert(res.error || "Failed to request cash payment");
-      setIsProcessingCash(false);
+      toast.error(res.error || "Failed to request cash payment");
     }
+    setIsProcessingCash(false);
   };
 
   const getStatusBadge = (status: string) => {
@@ -326,10 +333,12 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
                 </button>
                 <button
                   onClick={handlePayment}
-                  disabled={isProcessingPayment || isProcessingCash}
+                  disabled={isProcessingPayment || isProcessingCash || isVerifying}
                   className="bg-blue-600 hover:bg-blue-700 text-white text-base font-bold px-6 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-lg shadow-blue-600/20 disabled:opacity-70 active:scale-95 whitespace-nowrap"
                 >
-                  {isProcessingPayment ? (
+                  {isVerifying ? (
+                    <><Loader2 className="w-5 h-5 animate-spin" /> Verifying...</>
+                  ) : isProcessingPayment ? (
                     <><Loader2 className="w-5 h-5 animate-spin" /> Connecting...</>
                   ) : (
                     <><CreditCard className="w-5 h-5" /> Pay Online</>
@@ -441,7 +450,7 @@ export default function FarmerBookingCard({ booking }: { booking: any }) {
           booking={booking}
           onClose={() => {
             setShowReviewModal(false);
-            window.location.reload();
+            router.refresh();
           }}
         />
       )}
